@@ -163,8 +163,8 @@ const UserManagementStore = {
             serverMessages.length > 0
               ? serverMessages.join(' ')
               : i18n.t('pageUserManagement.toast.errorUpdateUser', {
-                username: originalUsername,
-              });
+                  username: originalUsername,
+                });
           throw new Error(message);
         });
     },
