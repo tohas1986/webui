@@ -18,7 +18,7 @@ const UserManagementStore = {
   namespaced: true,
   state: {
     allUsers: [],
-    accountRoles: [],
+    allAccountRoles: [],
     accountLockoutDuration: null,
     accountLockoutThreshold: null,
     accountMinPasswordLength: null,
@@ -28,8 +28,8 @@ const UserManagementStore = {
     allUsers(state) {
       return state.allUsers;
     },
-    accountRoles(state) {
-      return state.accountRoles;
+    allAccountRoles(state) {
+      return state.allAccountRoles;
     },
     accountSettings(state) {
       return {
@@ -48,8 +48,8 @@ const UserManagementStore = {
     setUsers(state, allUsers) {
       state.allUsers = allUsers;
     },
-    setAccountRoles(state, accountRoles) {
-      state.accountRoles = accountRoles;
+    setAccountRoles(state, allAccountRoles) {
+      state.allAccountRoles = allAccountRoles;
     },
     setLockoutDuration(state, lockoutDuration) {
       state.accountLockoutDuration = lockoutDuration;
@@ -99,14 +99,16 @@ const UserManagementStore = {
           throw new Error(message);
         });
     },
-    getAccountRoles({ commit }) {
-      api
+    async getAccountRoles({ commit }) {
+      return await api
         .get('/redfish/v1/AccountService/Roles')
-        .then(({ data: { Members = [] } = {} }) => {
-          const roles = Members.map((role) => {
-            return role['@odata.id'].split('/').pop();
-          });
-          commit('setAccountRoles', roles);
+        .then(({ data: { Members = [] } }) =>
+          Members.map((member) => api.get(member['@odata.id'])),
+        )
+        .then((promises) => api.all(promises))
+        .then((response) => {
+          const data = response.map(({ data }) => data);
+          commit('setAccountRoles', data);
         })
         .catch((error) => console.log(error));
     },
@@ -308,7 +310,35 @@ const UserManagementStore = {
             return toastMessages;
           })
         );
+    },     
+    async createRoles({ dispatch }, data) {
+      return await api
+        .post('/redfish/v1/AccountService/Roles', data)
+        .then(() => dispatch('getAccountRoles'))
+        .then(() => i18n.t('pageUserManagement.toast.successCreateRoles'))
+        .catch((error) => {
+          i18n.t('pageUserManagement.toast.errorCreateRoles');
+          throw new Error(error);
+        });
     },
+    async deleteRoles({ dispatch }, role) {
+      return await api
+        .delete(`/redfish/v1/AccountService/Roles/${role}`)
+        .then(() => dispatch('getAccountRoles'))
+        .then(() =>
+          i18n.t('pageUserManagement.toast.successDeleteRoles', {
+            role,
+          }),
+        )
+        .catch((error) => {
+          console.log(error);
+          const message = i18n.t('pageUserManagement.toast.errorDeleteRoles', {
+            role,
+          });
+          throw new Error(message);
+        });
+    },
+
     async saveAccountSettings(
       { dispatch },
       { lockoutThreshold, lockoutDuration }
