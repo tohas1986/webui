@@ -103,7 +103,7 @@ const UserManagementStore = {
       return await api
         .get('/redfish/v1/AccountService/Roles')
         .then(({ data: { Members = [] } }) =>
-          Members.map((member) => api.get(member['@odata.id'])),
+          Members.map((member) => api.get(member['@odata.id']))
         )
         .then((promises) => api.all(promises))
         .then((response) => {
@@ -310,7 +310,7 @@ const UserManagementStore = {
             return toastMessages;
           })
         );
-    },     
+      },     
     async createRoles({ dispatch }, data) {
       return await api
         .post('/redfish/v1/AccountService/Roles', data)
@@ -328,7 +328,7 @@ const UserManagementStore = {
         .then(() =>
           i18n.t('pageUserManagement.toast.successDeleteRoles', {
             role,
-          }),
+          })
         )
         .catch((error) => {
           console.log(error);
