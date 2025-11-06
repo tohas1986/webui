@@ -2,25 +2,21 @@
   <b-modal
     id="modal-settings"
     ref="modal"
+    size="lg"
+    centered
     :title="$t('pageUserManagement.accountPolicySettings')"
     @hidden="resetForm"
   >
     <b-form id="form-settings" novalidate @submit.prevent="handleSubmit">
       <b-container>
         <b-row>
-          <b-col>
-            <b-form-group
-              :label="$t('pageUserManagement.modal.maxFailedLoginAttempts')"
-              label-for="lockout-threshold"
-            >
-              <b-form-text id="lockout-threshold-help-block">
-                {{
-                  $t('global.form.valueMustBeBetween', {
-                    min: 0,
-                    max: 65535,
-                  })
-                }}
-              </b-form-text>
+          <b-col sm="5" class="align-content-center">
+            <label for="lockout-threshold">
+              {{ $t('pageUserManagement.modal.maxFailedLoginAttempts') }}
+            </label>
+          </b-col>
+          <b-col sm="7">
+            <b-form-group>
               <b-form-input
                 id="lockout-threshold"
                 v-model.number="form.lockoutThreshold"
@@ -30,6 +26,14 @@
                 :state="getValidationState($v.form.lockoutThreshold)"
                 @input="$v.form.lockoutThreshold.$touch()"
               />
+              <b-form-text id="lockout-threshold-help-block">
+                {{
+                  $t('global.form.valueMustBeBetween', {
+                    min: 0,
+                    max: 65535,
+                  })
+                }}
+              </b-form-text>
               <b-form-invalid-feedback role="alert">
                 <template v-if="!$v.form.lockoutThreshold.required">
                   {{ $t('global.form.fieldRequired') }}
@@ -50,33 +54,41 @@
               </b-form-invalid-feedback>
             </b-form-group>
           </b-col>
-          <b-col>
-            <b-form-group
-              :label="$t('pageUserManagement.modal.userUnlockMethod')"
-            >
-              <b-form-radio
-                v-model="form.unlockMethod"
-                name="unlock-method"
-                class="mb-2"
-                :value="0"
-                data-test-id="userManagement-radio-manualUnlock"
-                @input="$v.form.unlockMethod.$touch()"
-              >
-                {{ $t('pageUserManagement.modal.manual') }}
-              </b-form-radio>
-              <b-form-radio
-                v-model="form.unlockMethod"
-                name="unlock-method"
-                :value="1"
-                data-test-id="userManagement-radio-automaticUnlock"
-                @input="$v.form.unlockMethod.$touch()"
-              >
-                {{ $t('pageUserManagement.modal.automaticAfterTimeout') }}
-              </b-form-radio>
-              <div class="mt-3 ml-4">
-                <b-form-text id="lockout-duration-help-block">
-                  {{ $t('pageUserManagement.modal.timeoutDurationSeconds') }}
-                </b-form-text>
+        </b-row>
+        <b-row class="justify-content-end">
+          <b-col sm="5">
+            <label for="lockout-threshold">
+              {{ $t('pageUserManagement.modal.userUnlockMethod') }}
+            </label>
+          </b-col>
+          <b-col sm="7">
+            <b-form-group>
+              <div class="d-flex justify-content-between radio-btn-wrapper">
+                <b-form-radio
+                  v-model="form.unlockMethod"
+                  name="unlock-method"
+                  class="mb-2"
+                  :value="0"
+                  data-test-id="userManagement-radio-manualUnlock"
+                  @input="$v.form.unlockMethod.$touch()"
+                >
+                  {{ $t('pageUserManagement.modal.manual') }}
+                </b-form-radio>
+                <b-form-radio
+                  v-model="form.unlockMethod"
+                  name="unlock-method"
+                  :value="1"
+                  data-test-id="userManagement-radio-automaticUnlock"
+                  @input="$v.form.unlockMethod.$touch()"
+                >
+                  {{ $t('pageUserManagement.modal.automaticAfterTimeout') }}
+                </b-form-radio>
+              </div>
+            </b-form-group>
+          </b-col>
+          <b-col sm="7">
+            <b-form-group>
+              <div>
                 <b-form-input
                   v-model.number="form.lockoutDuration"
                   aria-describedby="lockout-duration-help-block"
@@ -86,6 +98,9 @@
                   :readonly="$v.form.unlockMethod.$model === 0"
                   @input="$v.form.lockoutDuration.$touch()"
                 />
+                <b-form-text id="lockout-duration-help-block">
+                  {{ $t('pageUserManagement.modal.timeoutDurationSeconds') }}
+                </b-form-text>
                 <b-form-invalid-feedback role="alert">
                   <template v-if="!$v.form.lockoutDuration.required">
                     {{ $t('global.form.fieldRequired') }}
@@ -213,3 +228,28 @@ export default {
   },
 };
 </script>
+<style lang="scss" scoped>
+::v-deep .radio-btn-wrapper {
+  display: flex !important;
+  gap: 1rem;
+  @include media-breakpoint-down(md) {
+    flex-direction: column !important;
+    gap: 0;
+  }
+
+  .custom-control-label {
+    align-content: start;
+  }
+  .custom-control-label::before,
+  .custom-control-label::after {
+    top: 0.1rem;
+  }
+}
+.col-sm-5,
+.col-sm-7 {
+  @include media-breakpoint-down(sm) {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+</style>

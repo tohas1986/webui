@@ -1,26 +1,28 @@
 <template>
-  <b-table stacked="sm" hover small :items="items" :fields="fields">
-    <template #cell(administrator)="data">
-      <template v-if="data.value">
-        <checkmark20 />
+  <div class="table-container">
+    <b-table responsive="md" hover small :items="items" :fields="fields">
+      <template #cell(administrator)="data">
+        <template v-if="data.value">
+          <checkmark20 />
+        </template>
       </template>
-    </template>
-    <template #cell(operator)="data">
-      <template v-if="data.value">
-        <checkmark20 />
+      <template #cell(operator)="data">
+        <template v-if="data.value">
+          <checkmark20 />
+        </template>
       </template>
-    </template>
-    <template #cell(readonly)="data">
-      <template v-if="data.value">
-        <checkmark20 />
+      <template #cell(readonly)="data">
+        <template v-if="data.value">
+          <checkmark20 />
+        </template>
       </template>
-    </template>
-    <template #cell(noaccess)="data">
-      <template v-if="data.value">
-        <checkmark20 />
+      <template #cell(noaccess)="data">
+        <template v-if="data.value">
+          <checkmark20 />
+        </template>
       </template>
-    </template>
-  </b-table>
+    </b-table>
+  </div>
 </template>
 
 <script>
@@ -35,7 +37,7 @@ export default {
       items: [
         {
           description: this.$t(
-            'pageUserManagement.tableRoles.configureComponentsManagedByThisService'
+            'pageUserManagement.tableRoles.configureComponentsManagedByThisService',
           ),
           administrator: true,
           operator: true,
@@ -44,7 +46,7 @@ export default {
         },
         {
           description: this.$t(
-            'pageUserManagement.tableRoles.configureManagerResources'
+            'pageUserManagement.tableRoles.configureManagerResources',
           ),
           administrator: true,
           operator: false,
@@ -53,7 +55,7 @@ export default {
         },
         {
           description: this.$t(
-            'pageUserManagement.tableRoles.updatePasswordForCurrentUserAccount'
+            'pageUserManagement.tableRoles.updatePasswordForCurrentUserAccount',
           ),
           administrator: true,
           operator: true,
@@ -62,7 +64,7 @@ export default {
         },
         {
           description: this.$t(
-            'pageUserManagement.tableRoles.configureUsersAndTheirAccounts'
+            'pageUserManagement.tableRoles.configureUsersAndTheirAccounts',
           ),
           administrator: true,
           operator: false,
@@ -71,7 +73,7 @@ export default {
         },
         {
           description: this.$t(
-            'pageUserManagement.tableRoles.logInToTheServiceAndReadResources'
+            'pageUserManagement.tableRoles.logInToTheServiceAndReadResources',
           ),
           administrator: true,
           operator: true,
