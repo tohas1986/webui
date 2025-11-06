@@ -133,8 +133,8 @@ const UserManagementStore = {
             serverMessages.length > 0
               ? serverMessages.join(' ')
               : i18n.t('pageUserManagement.toast.errorCreateUser', {
-                username: username,
-              });
+                  username: username,
+                });
           throw new Error(message);
         });
     },
