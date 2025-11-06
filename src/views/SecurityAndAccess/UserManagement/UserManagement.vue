@@ -122,6 +122,7 @@ import IconChevron from '@carbon/icons-vue/es/chevron--up/20';
 import ModalUser from './ModalUser';
 import ModalSettings from './ModalSettings';
 import PageTitle from '@/components/Global/PageTitle';
+import ModalRoles from './ModalRoles';
 import TableRoles from './TableRoles';
 import TableToolbar from '@/components/Global/TableToolbar';
 import TableRowAction from '@/components/Global/TableRowAction';
@@ -148,6 +149,7 @@ export default {
     TableRoles,
     TableRowAction,
     TableToolbar,
+    ModalRoles,
   },
   mixins: [BVTableSelectableMixin, BVToastMixin, LoadingBarMixin],
   beforeRouteLeave(to, from, next) {
