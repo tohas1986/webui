@@ -208,7 +208,7 @@ export default {
         this.form.networkProtocolRead,
         this.form.networkProtocolModify,
         this.form.virtualMediaRead,
-        this.form.virtualMediaModify,
+        this.form.virtualMediaModify
       );
 
       rolesData.RoleId = this.form.roleId;
