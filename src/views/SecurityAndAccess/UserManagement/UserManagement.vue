@@ -125,7 +125,6 @@ import ModalSettings from './ModalSettings';
 import PageTitle from '@/components/Global/PageTitle';
 import ModalRoles from './ModalRoles';
 import TableRoles from './TableRoles';
-import TableUserRoles from './TableUserRoles';
 import TableToolbar from '@/components/Global/TableToolbar';
 import TableRowAction from '@/components/Global/TableRowAction';
 
@@ -149,7 +148,6 @@ export default {
     ModalUser,
     PageTitle,
     TableRoles,
-    TableUserRoles,
     TableRowAction,
     TableToolbar,
     ModalRoles,
