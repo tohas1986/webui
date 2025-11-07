@@ -180,7 +180,7 @@ export default {
             okTitle: this.$tc('pageUserManagement.deleteRoles'),
             cancelTitle: this.$t('global.action.cancel'),
             centered: true,
-          },
+          }
         )
         .then((deleteConfirmed) => {
           if (deleteConfirmed) {
