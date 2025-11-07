@@ -128,10 +128,10 @@ export default {
                 role.RoleId === 'Administrator'
                   ? false
                   : true && role.RoleId === 'Operator'
-                    ? false
-                    : true && role.RoleId === 'ReadOnly'
-                      ? false
-                      : true,
+                  ? false
+                  : true && role.RoleId === 'ReadOnly'
+                  ? false
+                  : true,
               title: this.$tc('pageUserManagement.deleteUser'),
             },
           ],
