@@ -109,6 +109,7 @@
       @ok="saveUser"
       @hidden="activeUser = null"
     />
+    <modal-roles @ok="saveRoles" />
   </b-container>
 </template>
 
@@ -124,6 +125,7 @@ import ModalSettings from './ModalSettings';
 import PageTitle from '@/components/Global/PageTitle';
 import ModalRoles from './ModalRoles';
 import TableRoles from './TableRoles';
+import TableUserRoles from './TableUserRoles';
 import TableToolbar from '@/components/Global/TableToolbar';
 import TableRowAction from '@/components/Global/TableRowAction';
 
@@ -147,6 +149,7 @@ export default {
     ModalUser,
     PageTitle,
     TableRoles,
+    TableUserRoles,
     TableRowAction,
     TableToolbar,
     ModalRoles,
@@ -256,11 +259,14 @@ export default {
   },
   methods: {
     editEnable(user) {
-      if ('root' === this.$store.getters['global/username']) {
-        return true;
-      } else {
-        return user.UserName === 'root' ? false : true;
-      }
+      const currentUsername = this.$store.getters['global/username'];
+      const me = this.allUsers?.find((u) => u.UserName === currentUsername);
+      const myRole = (me?.RoleId || '').toString().toLowerCase();
+
+      const isAdminOrRoot =
+        currentUsername === 'root' || myRole === 'administrator';
+
+      return isAdminOrRoot || user.UserName !== 'root';
     },
     initModalUser(user) {
       this.activeUser = user;
@@ -310,6 +316,16 @@ export default {
         .dispatch('userManagement/deleteUser', username)
         .then((success) => this.successToast(success))
         .catch(({ message }) => this.errorToast(message))
+        .finally(() => this.endLoader());
+    },
+    saveRoles({ rolesData }) {
+      this.startLoader();
+      this.$store
+        .dispatch('userManagement/createRoles', rolesData)
+        .then((success) => this.successToast(success))
+        .catch(() =>
+          this.errorToast(this.$t('pageUserManagement.toast.errorCreateRoles')),
+        )
         .finally(() => this.endLoader());
     },
     onBatchAction(action) {
