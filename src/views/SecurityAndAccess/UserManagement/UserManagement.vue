@@ -322,7 +322,7 @@ export default {
         .dispatch('userManagement/createRoles', rolesData)
         .then((success) => this.successToast(success))
         .catch(() =>
-          this.errorToast(this.$t('pageUserManagement.toast.errorCreateRoles')),
+          this.errorToast(this.$t('pageUserManagement.toast.errorCreateRoles'))
         )
         .finally(() => this.endLoader());
     },
