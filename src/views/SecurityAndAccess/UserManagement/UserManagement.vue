@@ -140,7 +140,6 @@
 import IconTrashcan from '@carbon/icons-vue/es/trash-can/20';
 import IconEdit from '@carbon/icons-vue/es/edit/20';
 import IconAdd from '@carbon/icons-vue/es/add--alt/20';
-import IconSettings from '@carbon/icons-vue/es/settings/20';
 import IconChevron from '@carbon/icons-vue/es/chevron--up/20';
 
 import ModalUser from './ModalUser';
@@ -149,7 +148,6 @@ import ModalPassword from './ModalPassword';
 import PageTitle from '@/components/Global/PageTitle';
 import ModalRoles from './ModalRoles';
 import TableUserRoles from './TableUserRoles';
-import TableRoles from './TableRoles';
 import TableViewRoles from './TableViewRoles';
 import TableToolbar from '@/components/Global/TableToolbar';
 import TableRowAction from '@/components/Global/TableRowAction';
@@ -168,13 +166,11 @@ export default {
     IconAdd,
     IconChevron,
     IconEdit,
-    IconSettings,
     IconTrashcan,
     ModalSettings,
     ModalUser,
     ModalPassword,
     PageTitle,
-    TableRoles,
     TableViewRoles,
     TableUserRoles,
     TableRowAction,
