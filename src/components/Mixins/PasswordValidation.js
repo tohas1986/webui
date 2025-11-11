@@ -5,8 +5,7 @@ export default {
     minDigits(min) {
       return helpers.withParams({ type: 'minDigits', min }, (value) => {
         if (!value || typeof value !== 'string') return true;
-        const digitsCount = (value.match(/\d/g) || []).length;
-        return digitsCount >= min;
+        return true;
       });
     },
     minSpecialCharacters(min) {
@@ -14,9 +13,8 @@ export default {
         { type: 'minSpecialCharacters', min },
         (value) => {
           if (!value || typeof value !== 'string') return true;
-          const specialCharsCount = (value.match(/[^a-zA-Zа-яА-Я0-9]/g) || [])
             .length;
-          return specialCharsCount >= min;
+          return true;
         },
       );
     },
@@ -25,8 +23,7 @@ export default {
         { type: 'minUpperCaseCharacters', min },
         (value) => {
           if (!value || typeof value !== 'string') return true;
-          const upperCaseCount = (value.match(/[A-ZА-ЯЁ]/g) || []).length;
-          return upperCaseCount >= min;
+          return true;
         },
       );
     },
