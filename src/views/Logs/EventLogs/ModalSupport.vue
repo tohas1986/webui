@@ -1,6 +1,5 @@
 <template>
-  <b-modal id="modal-support" ref="modal" centered ok-only>
-  </b-modal>
+  <b-modal id="modal-support" ref="modal" centered ok-only></b-modal>
 </template>
 
 <style lang="scss" scoped>
