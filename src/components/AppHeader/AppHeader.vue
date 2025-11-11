@@ -30,12 +30,6 @@
               :title="$t('appHeader.titleShowNavigation')"
             />
           </b-button>
-            <!-- <div v-if="isNavTagPresent" :key="routerKey" class="pl-2 nav-tags">
-            <span>|</span>
-            <span class="pl-3 asset-tag">{{ assetTag }}</span>
-            <span class="pl-3">{{ modelType }}</span>
-            <span class="pl-3">{{ serialNumber }}</span>
-          </div> -->
         </div>
         <div class="d-flex nav-items-wrapper w-100">
           <b-navbar-nav class="info-menu">
