@@ -1,14 +1,9 @@
 <template>
   <div :class="isFullWindow ? 'full-window-container' : 'terminal-container'">
     <b-row class="d-flex">
-      <b-col sm="4" md="6">
-        <alert
-          v-if="connection ? false : true"
-          variant="warning"
-          :small="true"
-          class="mt-4"
-        >
-          <p class="col-form-label">
+      <b-col sm="12">
+        <alert v-if="connection ? false : true" variant="danger" class="mt-4">
+          <p>
             {{ $t('pageSerialOverLan.alert.disconnectedAlertMessage') }}
           </p>
         </alert>
@@ -17,11 +12,11 @@
     <b-row class="d-flex">
       <b-col class="d-flex flex-column justify-content-end">
         <dl class="mb-2" sm="6" md="6">
-          <dt class="d-inline font-weight-bold mr-1">
-            {{ $t('pageSerialOverLan.status') }}:
+          <dt class="d-inline mr-3">
+            {{ $t('pageSerialOverLan.status') }}
           </dt>
           <dd class="d-inline">
-            <status-icon :status="serverStatusIcon" />
+            <status-color :status="serverStatusIcon" />
             {{
               connection
                 ? $t('pageSerialOverLan.connected')
@@ -33,8 +28,10 @@
 
       <b-col v-if="!isFullWindow" class="d-flex justify-content-end">
         <b-button variant="link" type="button" @click="openConsoleWindow()">
-          <icon-launch />
-          {{ $t('pageSerialOverLan.openNewTab') }}
+          <span>
+            {{ $t('pageSerialOverLan.openNewTab') }}
+          </span>
+          <icon-launch class="ml-1" />
         </b-button>
       </b-col>
     </b-row>
@@ -49,14 +46,14 @@ import { FitAddon } from 'xterm-addon-fit';
 import { Terminal } from 'xterm';
 import { throttle } from 'lodash';
 import IconLaunch from '@carbon/icons-vue/es/launch/20';
-import StatusIcon from '@/components/Global/StatusIcon';
+import StatusColor from '@/components/Global/StatusColor';
 
 export default {
   name: 'SerialOverLanConsole',
   components: {
     Alert,
     IconLaunch,
-    StatusIcon,
+    StatusColor,
   },
   props: {
     isFullWindow: {
@@ -112,7 +109,7 @@ export default {
       this.term.loadAddon(fitAddon);
 
       const SOL_THEME = {
-        background: '#19273c',
+        background: '#191C22',
         cursor: 'rgba(83, 146, 255, .5)',
         scrollbar: 'rgba(83, 146, 255, .5)',
       };
@@ -135,7 +132,7 @@ export default {
             'websocket console/default closed. code: ' +
               event.code +
               ' reason: ' +
-              event.reason
+              event.reason,
           );
         };
       } catch (error) {
@@ -153,7 +150,7 @@ export default {
       window.open(
         '#/console/serial-over-lan-console',
         '_blank',
-        'directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=no,resizable=yes,width=600,height=550'
+        'directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=no,resizable=yes,width=600,height=550',
       );
     },
   },
@@ -168,7 +165,20 @@ export default {
 }
 
 .full-window-container {
-  width: 97%;
+  width: 95%;
   margin: 1.5%;
+}
+
+.btn-link {
+  color: $purple;
+  font-weight: 400;
+  font-size: clamp(0.875rem, 0.1071rem + 0.9524vw, 1.25rem);
+  text-wrap: nowrap;
+
+  &:hover {
+    span {
+      text-decoration: underline;
+    }
+  }
 }
 </style>

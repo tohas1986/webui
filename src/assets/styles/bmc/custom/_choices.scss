@@ -1,0 +1,93 @@
+.choices::after {
+    content: none !important;
+}
+
+.choices {
+    margin-bottom: 0;
+}
+
+.choices__inner {
+    padding: clamp(0.625rem, -0.0159rem + 0.7949vw, 0.938rem)
+      clamp(1rem, -0.1528rem + 1.4298vw, 1.563rem);
+    height: 100%;
+      
+    background-color: transparent;
+    background-image: url('../src/assets/images/chevrondown.svg');
+    background-size: 10px 10px;
+    background-position: right 1rem center;
+
+    @include media-breakpoint-only(xs) {
+        background-position: right 0.7rem center;
+    }
+
+    background-repeat: no-repeat;
+
+    color: $main-color !important;
+    font-size: clamp(0.875rem, 0.3631rem + 0.6349vw, 1.125rem);
+    align-content: center;
+
+    border-color: rgba($main-color, 0.2) !important;
+    border-radius: 15px !important;
+    transition: all 0.3s;
+
+    @include media-breakpoint-down(sm) {
+        font-size: 0.7rem;
+    }
+}
+
+.login-form {
+    .choices__inner {
+      padding-top: clamp(1.625rem, -0.1667rem + 2.2222vw, 2.5rem);
+      padding-bottom: clamp(0.5rem, -0.319rem + 1.0159vw, 0.9rem);
+      padding-left: 1.563rem;
+      padding-right: 1.563rem;
+    }
+
+    .choices__list--dropdown .choices__item {
+        padding-left: 1.563rem !important;
+        padding-right: 1.563rem;
+    }
+}
+
+
+.is-open .choices__inner {
+    border-radius: 15px !important;
+}
+
+.choices__list--dropdown.is-active {
+    background-color: $gray-light;
+    border-radius: 15px !important;
+    z-index: 1000;
+
+    .choices__item--selectable.is-highlighted,
+    .is-highlighted {
+        background-color: $gray-300;
+    }
+}
+
+.choices.is-focused.is-open .choices__inner {
+    border: 1px solid $main-color !important;
+    color: theme-color('dark');
+      background-color: transparent;
+      box-shadow:
+        inset 0 0 0 3px gray('100'),
+        inset 0 0 0 5px $main-color !important;
+}
+
+.choices__list.choices__list--single {
+    padding: 0;
+}
+
+.choices__list--dropdown .choices__list,
+.choices__list[aria-expanded] .choices__list {
+    @include media-breakpoint-down(sm) {
+        max-height: 25vh !important;
+    }
+}
+
+.choices__list--dropdown .choices__item,
+.choices__list[aria-expanded] .choices__item {
+    @include media-breakpoint-down(sm) {
+        font-size: 0.7rem;
+    }
+}

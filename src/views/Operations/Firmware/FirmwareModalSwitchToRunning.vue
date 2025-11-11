@@ -1,6 +1,8 @@
 <template>
   <b-modal
     id="modal-switch-to-running"
+    size="lg"
+    centered
     :ok-title="$t('pageFirmware.modal.switchImages')"
     :cancel-title="$t('global.action.cancel')"
     :title="$t('pageFirmware.modal.switchRunningImage')"

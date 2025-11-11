@@ -1,17 +1,18 @@
 .table {
   position: relative;
   z-index: $zindex-dropdown;
+  font-size: clamp(0.875rem, 0.3631rem + 0.6349vw, 1.125rem);
 
   td {
-    border-top: 1px solid gray("300");
-    border-bottom: 1px solid gray("300");
-    &:first-of-type {
-      border-left: 1px solid gray("300");
-    }
-    &:last-of-type {
-      border-right: 1px solid gray("300");
-    }
+    padding: clamp(1.25rem, 0.2262rem + 1.2698vw, 1.75rem)
+      clamp(1.625rem, -0.1667rem + 2.2222vw, 2.5rem);
+    border-top: 1px solid $gray-border;
+    border-bottom: 1px solid $gray-border;
     vertical-align: middle;
+
+    @include media-breakpoint-down('xl') {
+      padding: 0.75rem;
+    }
 
     // Table action buttons
     .btn-link {
@@ -21,23 +22,47 @@
       display: inline-flex;
       justify-content: center;
       align-items: center;
+      font-size: clamp(0.875rem, 0.3631rem + 0.6349vw, 1.125rem);
+
+      @include media-breakpoint-down('xl') {
+        width: 35px;
+        height: 35px;
+      }
+
+      svg {
+        @include media-breakpoint-down('xl') {
+          width: 20px;
+          height: 20px;
+        }
+        @include media-breakpoint-down(md) {
+          width: 15px !important;
+          height: 15px !important;
+        }
+      }
     }
   }
 
   // thead-light added for specificity
   .thead-light th {
+    background-color: $gray-light;
+    padding: clamp(1.625rem, -0.1667rem + 2.2222vw, 2.5rem);
     vertical-align: middle;
-    border-top: 1px solid gray("300");
-    border-bottom: 1px solid gray("300");
+    border-top: none;
+    border-bottom: 1px solid $gray-border;
     &:first-of-type {
-      border-left: 1px solid gray("300");
+      border-left: none;
     }
     &:last-of-type {
-      border-right: 1px solid gray("300");
+      border-right: none;
     }
-    color: theme-color("dark");
+    font-weight: 400;
+    color: rgba($main-color, 0.7);
     &:focus {
       outline: none;
+    }
+
+    @include media-breakpoint-down('xl') {
+      padding: 0.75rem;
     }
   }
 
@@ -56,10 +81,9 @@
   }
 
   .b-table-details {
-    background-color: theme-color("light");
+    background-color: $gray-light;
     td {
-      padding-left: calc(50px + (#{$table-cell-padding} * 2));
-      padding-right: calc(50px + (#{$table-cell-padding} * 2));
+      padding-left: clamp(5rem, -0.119rem + 6.349vw, 7.5rem);
     }
     dl {
       margin: 0;
@@ -69,19 +93,22 @@
       clear: left;
       margin-right: $spacer / 2;
     }
-    dd {
-      line-height: 1.2
-    }
   }
 
   .table-row-expand {
     width: 50px;
+    padding: 0;
     .btn {
+      justify-content: center;
       padding: 0;
       width: 50px;
+
+      @include media-breakpoint-down('xl') {
+        width: 30px;
+      }
     }
     svg {
-      fill: theme-color("dark");
+      fill: theme-color('dark');
     }
   }
   .b-table-sort-icon-left {
@@ -104,12 +131,11 @@
 // Table stacked style for small screen only
 @include media-breakpoint-down(xs) {
   .b-table-stacked-sm {
-    border: 1px solid gray("300");
+    border: 1px solid gray('300');
 
     tr {
-
       &:not(:first-child) > td[aria-colindex='1'] {
-        border-top: 1px solid gray("300");
+        border-top: 1px solid gray('300');
         padding-top: 0.625rem;
       }
 
@@ -126,9 +152,9 @@
 
         &:before {
           content: '';
-          background-color: gray("200");
+          background-color: gray('200');
           width: 40%;
-          border-right: 1px solid gray("300");
+          border-right: 1px solid gray('300');
         }
 
         &:after {
@@ -138,7 +164,7 @@
         }
 
         &:nth-child(even)::after {
-          background-color: gray("100"); // Zebra striping for the row
+          background-color: gray('100'); // Zebra striping for the row
         }
       }
 
@@ -157,7 +183,7 @@
   .table.b-table.b-table-stacked-sm > tbody > tr > [data-label] {
     &::before {
       text-align: left;
-      padding-left: $spacer /2;
+      padding-left: $spacer / 2;
     }
 
     > div {
@@ -167,5 +193,85 @@
 
   .table.b-table.b-table-stacked-sm > tbody > tr > :first-child {
     border-top-width: 1px;
+  }
+}
+
+.table-container {
+  position: relative;
+  padding-right: clamp(1.625rem, -0.1667rem + 2.2222vw, 2.5rem);
+  padding-left: clamp(1.625rem, -0.1667rem + 2.2222vw, 2.5rem);
+  padding-bottom: clamp(1.625rem, -0.1667rem + 2.2222vw, 2.5rem);
+  border: 1px solid $gray-border;
+  border-radius: 20px;
+
+  @include media-breakpoint-down('xl') {
+    padding-bottom: 0.75rem;
+  }
+
+  @include media-breakpoint-down(md) {
+    padding: 10px;
+  }
+
+  * {
+    @include media-breakpoint-down(md) {
+      font-size: 12px !important;
+    }
+    @include media-breakpoint-down(sm) {
+      font-size: 10px !important;
+    }
+  }
+}
+
+.b-table-sticky-header {
+  max-height: calc(100vh - 420px);
+
+  @include media-breakpoint-down('xl') {
+    max-height: calc(100vh - 300px);
+  }
+}
+
+.b-table-sticky-header::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+  background-color: rgba($white, 0.2);
+}
+
+.b-table-sticky-header::-webkit-scrollbar-thumb {
+  border-radius: 5px;
+  background-color: rgba($main-color, 0.5);
+}
+
+.event-table,
+.dump-table {
+  .table td,
+  .table th {
+    @include media-breakpoint-down('xl') {
+      padding: 0.75rem 0.5rem;
+    }
+  }
+  .btn-secondary {
+    @include media-breakpoint-down(md) {
+      font-size: 12px;
+    }
+    @include media-breakpoint-down(sm) {
+      font-size: 10px;
+      padding: 8px 10px;
+    }
+  }
+}
+
+.event-table .table td.wide-for-mobile,
+.event-table .table th.wide-for-mobile {
+  @include media-breakpoint-down(md) {
+    word-break: normal !important;
+    word-wrap: normal !important;
+  }
+}
+
+.table-card-information {
+  .table-card-column {
+    dl {
+      margin-bottom: 20px;
+    }
   }
 }

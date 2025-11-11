@@ -1,27 +1,18 @@
 <template>
   <span :class="['status-icon', status]">
-    <icon-info v-if="status === 'info'" />
-    <icon-success v-else-if="status === 'success'" />
-    <icon-warning v-else-if="status === 'warning'" />
-    <icon-danger v-else-if="status === 'danger'" />
-    <icon-secondary v-else />
+    <icon-success v-if="status === 'success' || status === 'info'" />
+    <icon-warning v-else />
   </span>
 </template>
 
 <script>
-import IconInfo from '@carbon/icons-vue/es/information--filled/20';
-import IconCheckmark from '@carbon/icons-vue/es/checkmark--filled/20';
-import IconWarning from '@carbon/icons-vue/es/warning--filled/20';
-import IconError from '@carbon/icons-vue/es/error--filled/20';
-import IconMisuse from '@carbon/icons-vue/es/misuse/20';
+import IconCheckmark from '@/components/icons/IconSuccess';
+import IconWarning from '@/components/icons/IconWarning';
 
 export default {
   name: 'StatusIcon',
   components: {
-    IconInfo: IconInfo,
     iconSuccess: IconCheckmark,
-    iconDanger: IconMisuse,
-    iconSecondary: IconError,
     iconWarning: IconWarning,
   },
   props: {
@@ -35,23 +26,34 @@ export default {
 
 <style lang="scss" scoped>
 .status-icon {
-  vertical-align: text-bottom;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: clamp(2.5rem, -0.0595rem + 3.1746vw, 3.75rem);
+  height: clamp(2.5rem, -0.0595rem + 3.1746vw, 3.75rem);
+  border-radius: 15px;
+  color: $white;
+
+  @include media-breakpoint-down(md) {
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 8px;
+  }
 
   &.info {
-    color: theme-color('info');
+    background-color: $current-bg;
   }
   &.success {
-    color: theme-color('success');
+    background-color: $current-bg;
   }
   &.danger {
-    color: theme-color('danger');
+    background-color: $error-bg;
   }
   &.secondary {
-    color: gray('600');
-    transform: rotate(-45deg);
+    background-color: $error-bg;
   }
   &.warning {
-    color: theme-color('warning');
+    background-color: $error-bg;
   }
 
   svg {

@@ -44,50 +44,48 @@ import i18n from './i18n';
 import { format } from 'date-fns-tz';
 
 // Filters
+const shortTimeZoneFormatter = new Intl.DateTimeFormat('en-US', {
+  timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+  timeZoneName: 'short',
+});
+
 Vue.filter('shortTimeZone', function (value) {
-  const longTZ = value
-    .toString()
-    .match(/\((.*)\)/)
-    .pop();
-  const regexNotUpper = /[*a-z ]/g;
-  return longTZ.replace(regexNotUpper, '');
+  if (!(value instanceof Date)) return '';
+  const parts = shortTimeZoneFormatter.formatToParts(value);
+  const tzPart = parts.find((p) => p.type === 'timeZoneName');
+  return tzPart ? tzPart.value.replace(/^GMT/, 'UTC') : '';
 });
 
 Vue.filter('formatDate', function (value) {
+  if (!(value instanceof Date)) return '';
   const isUtcDisplay = store.getters['global/isUtcDisplay'];
 
-  if (value instanceof Date) {
-    if (isUtcDisplay) {
-      return value.toISOString().substring(0, 10);
-    }
-    const pattern = `yyyy-MM-dd`;
-    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    return format(value, pattern, { timezone });
-  }
+  const pattern = `yyyy-MM-dd`;
+  const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+  return isUtcDisplay
+    ? value.toISOString().substring(0, 10)
+    : format(value, pattern, { timeZone: timezone });
 });
 
 Vue.filter('formatTime', function (value) {
+  if (!(value instanceof Date)) return '';
   const isUtcDisplay = store.getters['global/isUtcDisplay'];
 
-  if (value instanceof Date) {
-    if (isUtcDisplay) {
-      let timeOptions = {
-        timeZone: 'UTC',
-        hourCycle: 'h23',
-      };
-      return `${value.toLocaleTimeString('default', timeOptions)} UTC`;
-    }
-    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    const shortTz = Vue.filter('shortTimeZone')(value);
-    const pattern = `HH:mm:ss ('${shortTz}' O)`;
-    return format(value, pattern, { timezone }).replace('GMT', 'UTC');
+  if (isUtcDisplay) {
+    return value.toLocaleTimeString('default', {
+      timeZone: 'UTC',
+      hourCycle: 'h23',
+    });
   }
+
+  const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const pattern = `HH:mm:ss`;
+
+  return format(value, pattern, { timeZone: timezone });
 });
 
 // Plugins
-Vue.use(AlertPlugin);
-Vue.use(BadgePlugin);
-Vue.use(ButtonPlugin);
 Vue.use(BVConfigPlugin, {
   BFormText: { textVariant: 'secondary' },
   BTable: {
@@ -102,33 +100,39 @@ Vue.use(BVConfigPlugin, {
     variant: 'primary',
   },
 });
-Vue.use(CardPlugin);
-Vue.use(CollapsePlugin);
-Vue.use(DropdownPlugin);
-Vue.use(FormPlugin);
-Vue.use(FormCheckboxPlugin);
-Vue.use(FormDatepickerPlugin);
-Vue.use(FormFilePlugin);
-Vue.use(FormGroupPlugin);
-Vue.use(FormInputPlugin);
-Vue.use(FormRadioPlugin);
-Vue.use(FormSelectPlugin);
-Vue.use(FormTagsPlugin);
-Vue.use(InputGroupPlugin);
-Vue.use(LayoutPlugin);
-Vue.use(LayoutPlugin);
-Vue.use(LinkPlugin);
-Vue.use(ListGroupPlugin);
-Vue.use(ModalPlugin);
-Vue.use(NavbarPlugin);
-Vue.use(NavPlugin);
-Vue.use(PaginationPlugin);
-Vue.use(ProgressPlugin);
-Vue.use(TablePlugin);
-Vue.use(TabsPlugin);
-Vue.use(ToastPlugin);
-Vue.use(TooltipPlugin);
-Vue.use(Vuelidate);
+
+[
+  AlertPlugin,
+  BadgePlugin,
+  ButtonPlugin,
+  BVConfigPlugin,
+  CardPlugin,
+  CollapsePlugin,
+  DropdownPlugin,
+  FormPlugin,
+  FormCheckboxPlugin,
+  FormDatepickerPlugin,
+  FormFilePlugin,
+  FormGroupPlugin,
+  FormInputPlugin,
+  FormRadioPlugin,
+  FormSelectPlugin,
+  FormTagsPlugin,
+  InputGroupPlugin,
+  LayoutPlugin,
+  LinkPlugin,
+  ListGroupPlugin,
+  ModalPlugin,
+  NavbarPlugin,
+  NavPlugin,
+  PaginationPlugin,
+  ProgressPlugin,
+  TablePlugin,
+  TabsPlugin,
+  ToastPlugin,
+  TooltipPlugin,
+  Vuelidate,
+].forEach((plugin) => Vue.use(plugin));
 
 new Vue({
   router,

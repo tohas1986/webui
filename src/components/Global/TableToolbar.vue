@@ -11,15 +11,15 @@
             v-for="(action, index) in actions"
             :key="index"
             :data-test-id="`table-button-${action.value}Selected`"
-            variant="primary"
-            class="d-block"
+            variant="link"
+            class="btn-table"
             @click="$emit('batch-action', action.value)"
           >
             {{ action.label }}
           </b-button>
           <b-button
-            variant="secondary"
-            class="d-block"
+            variant="link"
+            class="btn-table"
             @click="$emit('clear-selected')"
           >
             {{ $t('global.action.cancel') }}
@@ -69,7 +69,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-$toolbar-height: 46px;
+$toolbar-height: 68px;
+$toolbar-height-min: 48px;
 
 .toolbar-container {
   width: 100%;
@@ -79,21 +80,37 @@ $toolbar-height: 46px;
 
 .toolbar-content {
   height: $toolbar-height;
-  background-color: theme-color('primary');
-  color: $white;
+  background-color: $white;
+  color: $main-color;
   position: absolute;
   left: 0;
   right: 0;
-  top: -$toolbar-height;
+  top: -34px;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  border-radius: 15px;
+  font-size: clamp(0.875rem, 0.3631rem + 0.6349vw, 1.125rem);
+
+  @include media-breakpoint-down('xl') {
+    height: $toolbar-height-min;
+    top: -24px;
+  }
 }
 
 .toolbar-selected {
   line-height: $toolbar-height;
   margin: 0;
   padding: 0 $spacer;
+
+  @include media-breakpoint-down('xl') {
+    line-height: $toolbar-height-min;
+  }
+}
+
+.toolbar-actions {
+  gap: 5px;
+  padding: 5px;
 }
 
 // Using v-deep to style export slot child-element

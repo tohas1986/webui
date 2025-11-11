@@ -8,7 +8,7 @@ const LdapStore = {
     isServiceEnabled: null,
     ldap: {
       serviceEnabled: null,
-      serviceAddress: null,
+      serviceAddresses: null,
       bindDn: null,
       baseDn: null,
       userAttribute: null,
@@ -17,7 +17,7 @@ const LdapStore = {
     },
     activeDirectory: {
       serviceEnabled: null,
-      serviceAddress: null,
+      serviceAddresses: null,
       bindDn: null,
       baseDn: null,
       userAttribute: null,
@@ -56,9 +56,9 @@ const LdapStore = {
           } = {},
         } = {},
         RemoteRoleMapping = [],
-      }
+      },
     ) => {
-      state.ldap.serviceAddress = ServiceAddresses[0];
+      state.ldap.serviceAddresses = ServiceAddresses || [];
       state.ldap.serviceEnabled = ServiceEnabled;
       state.ldap.baseDn = BaseDistinguishedNames[0];
       state.ldap.bindDn = Authentication.Username;
@@ -80,10 +80,10 @@ const LdapStore = {
           } = {},
         } = {},
         RemoteRoleMapping = [],
-      }
+      },
     ) => {
       state.activeDirectory.serviceEnabled = ServiceEnabled;
-      state.activeDirectory.serviceAddress = ServiceAddresses[0];
+      state.activeDirectory.serviceAddresses = ServiceAddresses || [];
       state.activeDirectory.bindDn = Authentication.Username;
       state.activeDirectory.baseDn = BaseDistinguishedNames[0];
       state.activeDirectory.userAttribute = UsernameAttribute;
@@ -137,7 +137,7 @@ const LdapStore = {
         .catch((error) => {
           console.log(error);
           throw new Error(
-            i18n.t('pageLdap.toast.errorSaveActiveDirectorySettings')
+            i18n.t('pageLdap.toast.errorSaveActiveDirectorySettings'),
           );
         });
     },
@@ -145,18 +145,19 @@ const LdapStore = {
       { dispatch },
       {
         serviceEnabled,
-        serviceAddress,
+        serviceAddresses,
         activeDirectoryEnabled,
         bindDn,
         bindPassword,
         baseDn,
         userIdAttribute,
         groupIdAttribute,
-      }
+        kerberosEnabled,
+      },
     ) {
       const data = {
         ServiceEnabled: serviceEnabled,
-        ServiceAddresses: [serviceAddress],
+        ServiceAddresses: serviceAddresses || [],
         Authentication: {
           Username: bindDn,
           Password: bindPassword,
@@ -164,6 +165,11 @@ const LdapStore = {
         LDAPService: {
           SearchSettings: {
             BaseDistinguishedNames: [baseDn],
+          },
+        },
+        Oem: {
+          Kerberos: {
+            Enabled: kerberosEnabled,
           },
         },
       };
@@ -180,7 +186,7 @@ const LdapStore = {
     },
     async addNewRoleGroup(
       { dispatch, getters },
-      { groupName, groupPrivilege }
+      { groupName, groupPrivilege },
     ) {
       const data = {};
       const enabledRoleGroups = getters['enabledRoleGroups'];
@@ -203,7 +209,7 @@ const LdapStore = {
         .then(() =>
           i18n.t('pageLdap.toast.successAddRoleGroup', {
             groupName,
-          })
+          }),
         )
         .catch((error) => {
           console.log(error);
@@ -233,7 +239,7 @@ const LdapStore = {
         .patch('/redfish/v1/AccountService', data)
         .then(() => dispatch('getAccountSettings'))
         .then(() =>
-          i18n.t('pageLdap.toast.successSaveRoleGroup', { groupName })
+          i18n.t('pageLdap.toast.successSaveRoleGroup', { groupName }),
         )
         .catch((error) => {
           console.log(error);
@@ -260,12 +266,12 @@ const LdapStore = {
         .patch('/redfish/v1/AccountService', data)
         .then(() => dispatch('getAccountSettings'))
         .then(() =>
-          i18n.tc('pageLdap.toast.successDeleteRoleGroup', roleGroups.length)
+          i18n.tc('pageLdap.toast.successDeleteRoleGroup', roleGroups.length),
         )
         .catch((error) => {
           console.log(error);
           throw new Error(
-            i18n.tc('pageLdap.toast.errorDeleteRoleGroup', roleGroups.length)
+            i18n.tc('pageLdap.toast.errorDeleteRoleGroup', roleGroups.length),
           );
         });
     },

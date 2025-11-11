@@ -36,7 +36,7 @@ const BootSettingsStore = {
         .then(({ data: { Boot } }) => {
           commit(
             'setBootSourceOptions',
-            Boot['BootSourceOverrideTarget@Redfish.AllowableValues']
+            Boot['BootSourceOverrideTarget@Redfish.AllowableValues'],
           );
           commit('setOverrideEnabled', Boot.BootSourceOverrideEnabled);
           commit('setBootSource', Boot.BootSourceOverrideTarget);
@@ -49,10 +49,12 @@ const BootSettingsStore = {
 
       if (overrideEnabled) {
         data.Boot.BootSourceOverrideEnabled = 'Once';
+        data.Boot.BootSourceOverrideMode = 'UEFI';
       } else if (bootSource === 'None') {
         data.Boot.BootSourceOverrideEnabled = 'Disabled';
       } else {
         data.Boot.BootSourceOverrideEnabled = 'Continuous';
+        data.Boot.BootSourceOverrideMode = 'UEFI';
       }
 
       return api
@@ -74,8 +76,12 @@ const BootSettingsStore = {
       // TODO: switch to Redfish when available
       return await api
         .get('/xyz/openbmc_project/control/host0/TPMEnable')
-        .then(({ data: { data: { TPMEnable } } }) =>
-          commit('setTpmPolicy', TPMEnable)
+        .then(
+          ({
+            data: {
+              data: { TPMEnable },
+            },
+          }) => commit('setTpmPolicy', TPMEnable),
         )
         .catch((error) => console.log(error));
     },
@@ -85,7 +91,7 @@ const BootSettingsStore = {
       return api
         .put(
           '/xyz/openbmc_project/control/host0/TPMEnable/attr/TPMEnable',
-          data
+          data,
         )
         .then((response) => {
           // If request success, commit the values
@@ -101,13 +107,13 @@ const BootSettingsStore = {
     },
     async saveSettings(
       { dispatch },
-      { bootSource, overrideEnabled, tpmEnabled }
+      { bootSource, overrideEnabled, tpmEnabled },
     ) {
       const promises = [];
 
       if (bootSource !== null || overrideEnabled !== null) {
         promises.push(
-          dispatch('saveBootSettings', { bootSource, overrideEnabled })
+          dispatch('saveBootSettings', { bootSource, overrideEnabled }),
         );
       }
       if (tpmEnabled !== null) {
@@ -117,17 +123,17 @@ const BootSettingsStore = {
       return await api.all(promises).then(
         api.spread((...responses) => {
           let message = i18n.t(
-            'pageServerPowerOperations.toast.successSaveSettings'
+            'pageServerPowerOperations.toast.successSaveSettings',
           );
           responses.forEach((response) => {
             if (response instanceof Error) {
               throw new Error(
-                i18n.t('pageServerPowerOperations.toast.errorSaveSettings')
+                i18n.t('pageServerPowerOperations.toast.errorSaveSettings'),
               );
             }
           });
           return message;
-        })
+        }),
       );
     },
   },

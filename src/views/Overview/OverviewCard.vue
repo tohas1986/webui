@@ -1,30 +1,24 @@
 <template>
-  <b-card bg-variant="light" border-variant="light" class="mb-4">
-    <div class="justify-content-between align-items-center d-flex flex-wrap">
-      <h3 class="h5 mb-0">{{ title }}</h3>
-      <div class="card-buttons">
-        <b-button
-          v-if="exportButton || downloadButton"
-          :disabled="disabled"
-          :download="download"
-          :href="href"
-          class="p-0"
-          variant="link"
-        >
-          <span v-if="downloadButton">{{ $t('global.action.download') }}</span>
-          <span v-if="exportButton">{{ $t('global.action.exportAll') }}</span>
-        </b-button>
-        <span v-if="exportButton || downloadButton" class="pl-2 pr-2">|</span>
-        <b-link :to="to">{{ $t('pageOverview.viewMore') }}</b-link>
-      </div>
+  <b-card>
+    <div class="card-text">
+      <h3 class="mb-0">{{ title }}</h3>
+
+      <b-link class="card-link" :to="to"
+        >{{ $t('pageOverview.moreInfo') }}
+        <icon-chevron />
+      </b-link>
     </div>
+
     <slot></slot>
   </b-card>
 </template>
 
 <script>
+import IconChevron from '@carbon/icons-vue/es/chevron--right/16';
+
 export default {
   name: 'OverviewCard',
+  components: { IconChevron },
   props: {
     data: {
       type: Array,
@@ -73,9 +67,68 @@ export default {
 <style lang="scss" scoped>
 a {
   vertical-align: middle;
-  font-size: 14px;
 }
+
 .card {
-  min-width: 310px;
+  background-color: transparent;
+}
+
+.card-body {
+  display: flex;
+  padding: clamp(1.625rem, -0.1667rem + 2.2222vw, 2.5rem) 0;
+  border-top: 1px solid $gray-border;
+
+  @include media-breakpoint-down(sm) {
+    flex-wrap: wrap;
+  }
+}
+
+.card-info {
+  @include media-breakpoint-down(sm) {
+    margin-left: 0 !important;
+    margin-top: 10px;
+  }
+}
+
+.card-text {
+  @include media-breakpoint-down(sm) {
+    flex: 0 0 100% !important;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+}
+
+.card-link {
+  @include media-breakpoint-down(sm) {
+    margin-right: -5px;
+  }
+}
+
+dl {
+  display: flex;
+  justify-content: space-between;
+  gap: 4px;
+}
+
+dl dt {
+  @include media-breakpoint-down(sm) {
+    max-width: 50%;
+  }
+}
+
+dl dd {
+  text-align: right;
+  word-break: break-all;
+}
+
+.card-text {
+  flex: 0 0 20%;
+}
+
+.card-info {
+  flex: 0 1 100%;
+  margin-left: 40px;
 }
 </style>

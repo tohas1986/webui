@@ -1,5 +1,11 @@
 <template>
-  <b-modal id="modal-role-group" ref="modal" @ok="onOk" @hidden="resetForm">
+  <b-modal
+    id="modal-role-group"
+    ref="modal"
+    centered
+    @ok="onOk"
+    @hidden="resetForm"
+  >
     <template #modal-title>
       <template v-if="roleGroup">
         {{ $t('pageLdap.modal.editRoleGroup') }}
@@ -10,55 +16,67 @@
     </template>
     <b-container>
       <b-row>
-        <b-col sm="8">
+        <b-col sm="12">
           <b-form id="role-group" @submit.prevent="handleSubmit">
             <!-- Edit role group -->
             <template v-if="roleGroup !== null">
-              <dl class="mb-4">
-                <dt>{{ $t('pageLdap.modal.groupName') }}</dt>
-                <dd>{{ form.groupName }}</dd>
-              </dl>
+              <b-row class="mb-4">
+                <b-col sm="5">{{ $t('pageLdap.modal.groupName') }}</b-col>
+                <b-col sm="7">{{ form.groupName }}</b-col>
+              </b-row>
             </template>
 
             <!-- Add new role group -->
             <template v-else>
-              <b-form-group
-                :label="$t('pageLdap.modal.groupName')"
-                label-for="role-group-name"
-              >
-                <b-form-input
-                  id="role-group-name"
-                  v-model="form.groupName"
-                  :state="getValidationState($v.form.groupName)"
-                  @input="$v.form.groupName.$touch()"
-                />
-                <b-form-invalid-feedback role="alert">
-                  {{ $t('global.form.fieldRequired') }}
-                </b-form-invalid-feedback>
-              </b-form-group>
+              <b-row>
+                <b-col sm="5">
+                  <label for="role-group-name">
+                    {{ $t('pageLdap.modal.groupName') }}
+                  </label>
+                </b-col>
+                <b-col sm="7">
+                  <b-form-group>
+                    <b-form-input
+                      id="role-group-name"
+                      v-model="form.groupName"
+                      :state="getValidationState($v.form.groupName)"
+                      @input="$v.form.groupName.$touch()"
+                    />
+                    <b-form-invalid-feedback role="alert">
+                      {{ $t('global.form.fieldRequired') }}
+                    </b-form-invalid-feedback>
+                  </b-form-group>
+                </b-col>
+              </b-row>
             </template>
 
-            <b-form-group
-              :label="$t('pageLdap.modal.groupPrivilege')"
-              label-for="privilege"
-            >
-              <b-form-select
-                id="privilege"
-                v-model="form.groupPrivilege"
-                :options="accountRoles"
-                :state="getValidationState($v.form.groupPrivilege)"
-                @input="$v.form.groupPrivilege.$touch()"
-              >
-                <template v-if="!roleGroup" #first>
-                  <b-form-select-option :value="null" disabled>
-                    {{ $t('global.form.selectAnOption') }}
-                  </b-form-select-option>
-                </template>
-              </b-form-select>
-              <b-form-invalid-feedback role="alert">
-                {{ $t('global.form.fieldRequired') }}
-              </b-form-invalid-feedback>
-            </b-form-group>
+            <b-row>
+              <b-col sm="5">
+                <label for="privilege">{{
+                  $t('pageLdap.modal.groupPrivilege')
+                }}</label>
+              </b-col>
+              <b-col sm="7">
+                <b-form-group>
+                  <b-form-select
+                    id="privilege"
+                    v-model="form.groupPrivilege"
+                    :options="accountRolesTypes"
+                    :state="getValidationState($v.form.groupPrivilege)"
+                    @input="$v.form.groupPrivilege.$touch()"
+                  >
+                    <template v-if="!roleGroup" #first>
+                      <b-form-select-option :value="null" disabled>
+                        {{ $t('global.form.selectAnOption') }}
+                      </b-form-select-option>
+                    </template>
+                  </b-form-select>
+                  <b-form-invalid-feedback role="alert">
+                    {{ $t('global.form.fieldRequired') }}
+                  </b-form-invalid-feedback>
+                </b-form-group>
+              </b-col>
+            </b-row>
           </b-form>
         </b-col>
       </b-row>
@@ -107,8 +125,13 @@ export default {
     };
   },
   computed: {
-    accountRoles() {
-      return this.$store.getters['userManagement/accountRoles'];
+    allAccountRoles() {
+      return this.$store.getters['userManagement/allAccountRoles'];
+    },
+    accountRolesTypes() {
+      return this.allAccountRoles.map((privilege) => {
+        return privilege.RoleId;
+      });
     },
   },
   watch: {
@@ -162,3 +185,11 @@ export default {
   },
 };
 </script>
+<style lang="scss" scoped>
+.col-sm-5,
+.col-sm-7 {
+  @include media-breakpoint-down(sm) {
+    padding: 0 !important;
+  }
+}
+</style>

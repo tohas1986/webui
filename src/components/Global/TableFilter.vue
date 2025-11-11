@@ -1,28 +1,19 @@
 <template>
   <div class="table-filter d-inline-block">
-    <p class="d-inline-block mb-0">
-      <b-badge v-for="(tag, index) in tags" :key="index" pill>
-        {{ tag }}
-        <b-button-close
-          :disabled="dropdownVisible"
-          :aria-hidden="true"
-          @click="removeTag(tag)"
-        />
-      </b-badge>
-    </p>
     <b-dropdown
-      variant="link"
+      variant="link btn-table"
       no-caret
       right
+      dropup
       data-test-id="tableFilter-dropdown-options"
       @hide="dropdownVisible = false"
       @show="dropdownVisible = true"
     >
       <template #button-content>
         <icon-filter />
-        {{ $t('global.action.filter') }}
+        {{ filterLength }} {{ $t('global.action.filter') }}
       </template>
-      <b-dropdown-form>
+      <b-dropdown-form class="form-container">
         <b-form-group
           v-for="(filter, index) of filters"
           :key="index"
@@ -31,13 +22,12 @@
           <b-form-checkbox-group v-model="tags">
             <b-form-checkbox
               v-for="value in filter.values"
+              :id="value"
               :key="value"
               :value="value"
               :data-test-id="`tableFilter-checkbox-${value}`"
             >
-              <b-dropdown-item>
-                {{ value }}
-              </b-dropdown-item>
+              <label :for="value">{{ value }}</label>
             </b-form-checkbox>
           </b-form-checkbox-group>
         </b-form-group>
@@ -54,7 +44,7 @@
 </template>
 
 <script>
-import IconFilter from '@carbon/icons-vue/es/settings--adjust/20';
+import IconFilter from '@carbon/icons-vue/es/settings--adjust/24';
 
 export default {
   name: 'TableFilter',
@@ -65,7 +55,8 @@ export default {
       default: () => [],
       validator: (prop) => {
         return prop.every(
-          (filter) => 'label' in filter && 'values' in filter && 'key' in filter
+          (filter) =>
+            'label' in filter && 'values' in filter && 'key' in filter,
         );
       },
     },
@@ -76,6 +67,14 @@ export default {
       tags: [],
     };
   },
+  computed: {
+    filterLength() {
+      if (this.tags.length > 0) {
+        return this.tags.length;
+      }
+      return '';
+    },
+  },
   watch: {
     tags: {
       handler() {
@@ -85,16 +84,13 @@ export default {
     },
   },
   methods: {
-    removeTag(removedTag) {
-      this.tags = this.tags.filter((tag) => tag !== removedTag);
-    },
     clearAllTags() {
       this.tags = [];
     },
     emitChange() {
       const activeFilters = this.filters.map(({ key, values }) => {
         const activeValues = values.filter(
-          (value) => this.tags.indexOf(value) !== -1
+          (value) => this.tags.indexOf(value) !== -1,
         );
         return {
           key,
@@ -108,7 +104,23 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.badge {
-  margin-right: $spacer / 2;
+label {
+  margin-bottom: 0;
+  font-size: clamp(0.75rem, -0.0179rem + 0.9524vw, 1.125rem);
+  color: $main-color;
+}
+
+.form-container {
+  @include media-breakpoint-down(sm) {
+    max-height: 30vh;
+    overflow-y: scroll;
+    max-width: 80vw;
+    white-space: wrap;
+    word-break: break-all;
+  }
+}
+
+.b-dropdown-form {
+  padding: 0;
 }
 </style>

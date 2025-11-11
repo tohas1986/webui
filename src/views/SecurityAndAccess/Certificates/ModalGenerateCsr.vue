@@ -3,7 +3,8 @@
     <b-modal
       id="generate-csr"
       ref="modal"
-      size="lg"
+      size="xl"
+      centered
       no-stacking
       :title="$t('pageCertificates.modal.generateACertificateSigningRequest')"
       @ok="onOkGenerateCsrModal"
@@ -13,314 +14,390 @@
       <b-form id="generate-csr-form" novalidate>
         <b-container fluid>
           <b-row>
-            <b-col lg="9">
+            <b-col lg="12">
               <b-row>
-                <b-col lg="6">
-                  <b-form-group
-                    :label="$t('pageCertificates.modal.certificateType')"
-                    label-for="certificate-type"
-                  >
-                    <b-form-select
-                      id="certificate-type"
-                      v-model="form.certificateType"
-                      data-test-id="modalGenerateCsr-select-certificateType"
-                      :options="certificateOptions"
-                      :state="getValidationState($v.form.certificateType)"
-                      @input="$v.form.certificateType.$touch()"
-                    >
-                      <template #first>
-                        <b-form-select-option :value="null" disabled>
-                          {{ $t('global.form.selectAnOption') }}
-                        </b-form-select-option>
-                      </template>
-                    </b-form-select>
-                    <b-form-invalid-feedback role="alert">
-                      {{ $t('global.form.fieldRequired') }}
-                    </b-form-invalid-feedback>
-                  </b-form-group>
+                <b-col>
+                  <b-row>
+                    <b-col lg="5">
+                      <label for="certificate-type">
+                        {{ $t('pageCertificates.modal.certificateType') }}
+                      </label>
+                    </b-col>
+                    <b-col lg="7">
+                      <b-form-group>
+                        <b-form-select
+                          id="certificate-type"
+                          v-model="form.certificateType"
+                          data-test-id="modalGenerateCsr-select-certificateType"
+                          :options="certificateOptions"
+                          :state="getValidationState($v.form.certificateType)"
+                          @input="$v.form.certificateType.$touch()"
+                        >
+                          <template #first>
+                            <b-form-select-option :value="null" disabled>
+                              {{ $t('global.form.selectAnOption') }}
+                            </b-form-select-option>
+                          </template>
+                        </b-form-select>
+                        <b-form-invalid-feedback role="alert">
+                          {{ $t('global.form.fieldRequired') }}
+                        </b-form-invalid-feedback>
+                      </b-form-group>
+                    </b-col>
+                  </b-row>
                 </b-col>
-                <b-col lg="6">
-                  <b-form-group
-                    :label="$t('pageCertificates.modal.country')"
-                    label-for="country"
-                  >
-                    <b-form-select
-                      id="country"
-                      v-model="form.country"
-                      data-test-id="modalGenerateCsr-select-country"
-                      :options="countryOptions"
-                      :state="getValidationState($v.form.country)"
-                      @input="$v.form.country.$touch()"
-                    >
-                      <template #first>
-                        <b-form-select-option :value="null" disabled>
-                          {{ $t('global.form.selectAnOption') }}
-                        </b-form-select-option>
-                      </template>
-                    </b-form-select>
-                    <b-form-invalid-feedback role="alert">
-                      {{ $t('global.form.fieldRequired') }}
-                    </b-form-invalid-feedback>
-                  </b-form-group>
+                <b-col>
+                  <b-row>
+                    <b-col lg="5">
+                      <label for="country">
+                        {{ $t('pageCertificates.modal.country') }}
+                      </label>
+                    </b-col>
+                    <b-col lg="7">
+                      <b-form-group>
+                        <b-form-select
+                          id="country"
+                          v-model="form.country"
+                          data-test-id="modalGenerateCsr-select-country"
+                          :options="countryOptions"
+                          :state="getValidationState($v.form.country)"
+                          @input="$v.form.country.$touch()"
+                        >
+                          <template #first>
+                            <b-form-select-option :value="null" disabled>
+                              {{ $t('global.form.selectAnOption') }}
+                            </b-form-select-option>
+                          </template>
+                        </b-form-select>
+                        <b-form-invalid-feedback role="alert">
+                          {{ $t('global.form.fieldRequired') }}
+                        </b-form-invalid-feedback>
+                      </b-form-group>
+                    </b-col>
+                  </b-row>
                 </b-col>
               </b-row>
               <b-row>
-                <b-col lg="6">
-                  <b-form-group
-                    :label="$t('pageCertificates.modal.state')"
-                    label-for="state"
-                  >
-                    <b-form-input
-                      id="state"
-                      v-model="form.state"
-                      type="text"
-                      data-test-id="modalGenerateCsr-input-state"
-                      :state="getValidationState($v.form.state)"
-                    />
-                    <b-form-invalid-feedback role="alert">
-                      {{ $t('global.form.fieldRequired') }}
-                    </b-form-invalid-feedback>
-                  </b-form-group>
+                <b-col>
+                  <b-row>
+                    <b-col lg="5">
+                      <label for="state">
+                        {{ $t('pageCertificates.modal.state') }}
+                      </label>
+                    </b-col>
+                    <b-col lg="7">
+                      <b-form-group>
+                        <b-form-input
+                          id="state"
+                          v-model="form.state"
+                          type="text"
+                          data-test-id="modalGenerateCsr-input-state"
+                          :state="getValidationState($v.form.state)"
+                        />
+                        <b-form-invalid-feedback role="alert">
+                          {{ $t('global.form.fieldRequired') }}
+                        </b-form-invalid-feedback>
+                      </b-form-group>
+                    </b-col>
+                  </b-row>
                 </b-col>
-                <b-col lg="6">
-                  <b-form-group
-                    :label="$t('pageCertificates.modal.city')"
-                    label-for="city"
-                  >
-                    <b-form-input
-                      id="city"
-                      v-model="form.city"
-                      type="text"
-                      data-test-id="modalGenerateCsr-input-city"
-                      :state="getValidationState($v.form.city)"
-                    />
-                    <b-form-invalid-feedback role="alert">
-                      {{ $t('global.form.fieldRequired') }}
-                    </b-form-invalid-feedback>
-                  </b-form-group>
-                </b-col>
-              </b-row>
-              <b-row>
-                <b-col lg="6">
-                  <b-form-group
-                    :label="$t('pageCertificates.modal.companyName')"
-                    label-for="company-name"
-                  >
-                    <b-form-input
-                      id="company-name"
-                      v-model="form.companyName"
-                      type="text"
-                      data-test-id="modalGenerateCsr-input-companyName"
-                      :state="getValidationState($v.form.companyName)"
-                    />
-                    <b-form-invalid-feedback role="alert">
-                      {{ $t('global.form.fieldRequired') }}
-                    </b-form-invalid-feedback>
-                  </b-form-group>
-                </b-col>
-                <b-col lg="6">
-                  <b-form-group
-                    :label="$t('pageCertificates.modal.companyUnit')"
-                    label-for="company-unit"
-                  >
-                    <b-form-input
-                      id="company-unit"
-                      v-model="form.companyUnit"
-                      type="text"
-                      data-test-id="modalGenerateCsr-input-companyUnit"
-                      :state="getValidationState($v.form.companyUnit)"
-                    />
-                    <b-form-invalid-feedback role="alert">
-                      {{ $t('global.form.fieldRequired') }}
-                    </b-form-invalid-feedback>
-                  </b-form-group>
+                <b-col>
+                  <b-row>
+                    <b-col lg="5">
+                      <label for="city">
+                        {{ $t('pageCertificates.modal.city') }}
+                      </label>
+                    </b-col>
+                    <b-col lg="7">
+                      <b-form-group>
+                        <b-form-input
+                          id="city"
+                          v-model="form.city"
+                          type="text"
+                          data-test-id="modalGenerateCsr-input-city"
+                          :state="getValidationState($v.form.city)"
+                        />
+                        <b-form-invalid-feedback role="alert">
+                          {{ $t('global.form.fieldRequired') }}
+                        </b-form-invalid-feedback>
+                      </b-form-group>
+                    </b-col>
+                  </b-row>
                 </b-col>
               </b-row>
               <b-row>
-                <b-col lg="6">
-                  <b-form-group
-                    :label="$t('pageCertificates.modal.commonName')"
-                    label-for="common-name"
-                  >
-                    <b-form-input
-                      id="common-name"
-                      v-model="form.commonName"
-                      type="text"
-                      data-test-id="modalGenerateCsr-input-commonName"
-                      :state="getValidationState($v.form.commonName)"
-                    />
-                    <b-form-invalid-feedback role="alert">
-                      {{ $t('global.form.fieldRequired') }}
-                    </b-form-invalid-feedback>
-                  </b-form-group>
+                <b-col>
+                  <b-row>
+                    <b-col lg="5">
+                      <label for="company-name">
+                        {{ $t('pageCertificates.modal.companyName') }}
+                      </label>
+                    </b-col>
+                    <b-col lg="7">
+                      <b-form-group>
+                        <b-form-input
+                          id="company-name"
+                          v-model="form.companyName"
+                          type="text"
+                          data-test-id="modalGenerateCsr-input-companyName"
+                          :state="getValidationState($v.form.companyName)"
+                        />
+                        <b-form-invalid-feedback role="alert">
+                          {{ $t('global.form.fieldRequired') }}
+                        </b-form-invalid-feedback>
+                      </b-form-group>
+                    </b-col>
+                  </b-row>
                 </b-col>
-                <b-col lg="6">
-                  <b-form-group label-for="challenge-password">
-                    <template #label>
-                      {{ $t('pageCertificates.modal.challengePassword') }} -
-                      <span class="form-text d-inline">
-                        {{ $t('global.form.optional') }}
-                      </span>
+                <b-col>
+                  <b-row>
+                    <b-col lg="5">
+                      <label for="company-unit">
+                        {{ $t('pageCertificates.modal.companyUnit') }}
+                      </label>
+                    </b-col>
+                    <b-col lg="7">
+                      <b-form-group>
+                        <b-form-input
+                          id="company-unit"
+                          v-model="form.companyUnit"
+                          type="text"
+                          data-test-id="modalGenerateCsr-input-companyUnit"
+                          :state="getValidationState($v.form.companyUnit)"
+                        />
+                        <b-form-invalid-feedback role="alert">
+                          {{ $t('global.form.fieldRequired') }}
+                        </b-form-invalid-feedback>
+                      </b-form-group>
+                    </b-col>
+                  </b-row>
+                </b-col>
+              </b-row>
+              <b-row>
+                <b-col>
+                  <b-row>
+                    <b-col lg="5">
+                      <label for="common-name">
+                        {{ $t('pageCertificates.modal.commonName') }}
+                      </label>
+                    </b-col>
+                    <b-col lg="7">
+                      <b-form-group>
+                        <b-form-input
+                          id="common-name"
+                          v-model="form.commonName"
+                          type="text"
+                          data-test-id="modalGenerateCsr-input-commonName"
+                          :state="getValidationState($v.form.commonName)"
+                        />
+                        <b-form-invalid-feedback role="alert">
+                          {{ $t('global.form.fieldRequired') }}
+                        </b-form-invalid-feedback>
+                      </b-form-group>
+                    </b-col>
+                  </b-row>
+                </b-col>
+                <b-col>
+                  <b-row>
+                    <b-col lg="5">
+                      <label for="challenge-password">
+                        {{ $t('pageCertificates.modal.challengePassword') }}
+                        <span class="form-text">
+                          {{ $t('global.form.optional') }}
+                        </span>
+                      </label>
+                    </b-col>
+                    <b-col lg="7">
+                      <b-form-group>
+                        <b-form-input
+                          id="challenge-password"
+                          v-model="form.challengePassword"
+                          type="text"
+                          data-test-id="modalGenerateCsr-input-challengePassword"
+                        />
+                      </b-form-group>
+                    </b-col>
+                  </b-row>
+                </b-col>
+              </b-row>
+              <b-row>
+                <b-col>
+                  <b-row>
+                    <b-col lg="5">
+                      <label for="contact-person">
+                        {{ $t('pageCertificates.modal.contactPerson') }}
+                        <span class="form-text">
+                          {{ $t('global.form.optional') }}
+                        </span>
+                      </label>
+                    </b-col>
+                    <b-col lg="7">
+                      <b-form-group>
+                        <b-form-input
+                          id="contact-person"
+                          v-model="form.contactPerson"
+                          type="text"
+                          data-test-id="modalGenerateCsr-input-contactPerson"
+                        />
+                      </b-form-group>
+                    </b-col>
+                  </b-row>
+                </b-col>
+                <b-col>
+                  <b-row>
+                    <b-col lg="5">
+                      <label for="email-address">
+                        {{ $t('pageCertificates.modal.emailAddress') }}
+                        <span class="form-text">
+                          {{ $t('global.form.optional') }}
+                        </span>
+                      </label>
+                    </b-col>
+                    <b-col lg="7">
+                      <b-form-group>
+                        <b-form-input
+                          id="email-address"
+                          v-model="form.emailAddress"
+                          type="text"
+                          data-test-id="modalGenerateCsr-input-emailAddress"
+                        />
+                      </b-form-group>
+                    </b-col>
+                  </b-row>
+                </b-col>
+              </b-row>
+              <b-row>
+                <b-col>
+                  <b-row>
+                    <b-col lg="5">
+                      <label for="alternate-name">
+                        {{ $t('pageCertificates.modal.alternateName') }}
+                        <span class="form-text">
+                          {{ $t('global.form.optional') }}
+                        </span>
+                      </label>
+                    </b-col>
+                    <b-col lg="7">
+                      <b-form-group>
+                        <b-form-tags
+                          v-model="form.alternateName"
+                          :remove-on-delete="true"
+                          :tag-pills="true"
+                          input-id="alternate-name"
+                          size="lg"
+                          separator=" "
+                          :input-attrs="{
+                            'aria-describedby': 'alternate-name-help-block',
+                          }"
+                          :duplicate-tag-text="
+                            $t('pageCertificates.modal.duplicateAlternateName')
+                          "
+                          placeholder=""
+                          data-test-id="modalGenerateCsr-input-alternateName"
+                        >
+                          <template #add-button-text>
+                            <icon-add /> {{ $t('global.action.add') }}
+                          </template>
+                        </b-form-tags>
+                        <b-form-text id="alternate-name-help-block">
+                          {{
+                            $t('pageCertificates.modal.alternateNameHelperText')
+                          }}
+                        </b-form-text>
+                      </b-form-group>
+                    </b-col>
+                  </b-row>
+                </b-col>
+                <b-col>
+                  <b-row>
+                    <b-col sm="5">
+                      <p class="col-form-label">
+                        {{ $t('pageCertificates.modal.privateKey') }}
+                      </p>
+                      <label for="key-pair-algorithm">
+                        {{ $t('pageCertificates.modal.keyPairAlgorithm') }}
+                      </label>
+                    </b-col>
+                    <b-col sm="7">
+                      <b-form-group>
+                        <b-form-select
+                          id="key-pair-algorithm"
+                          v-model="form.keyPairAlgorithm"
+                          data-test-id="modalGenerateCsr-select-keyPairAlgorithm"
+                          :options="keyPairAlgorithmOptions"
+                          :state="getValidationState($v.form.keyPairAlgorithm)"
+                          @input="$v.form.keyPairAlgorithm.$touch()"
+                        >
+                          <template #first>
+                            <b-form-select-option :value="null" disabled>
+                              {{ $t('global.form.selectAnOption') }}
+                            </b-form-select-option>
+                          </template>
+                        </b-form-select>
+                        <b-form-invalid-feedback role="alert">
+                          {{ $t('global.form.fieldRequired') }}
+                        </b-form-invalid-feedback>
+                      </b-form-group>
+                    </b-col>
+                  </b-row>
+                  <b-row>
+                    <template v-if="$v.form.keyPairAlgorithm.$model === 'EC'">
+                      <b-col sm="5">
+                        <label for="key-curve-id">
+                          {{ $t('pageCertificates.modal.keyCurveId') }}
+                        </label>
+                      </b-col>
+                      <b-col sm="7">
+                        <b-form-group>
+                          <b-form-select
+                            id="key-curve-id"
+                            v-model="form.keyCurveId"
+                            data-test-id="modalGenerateCsr-select-keyCurveId"
+                            :options="keyCurveIdOptions"
+                            :state="getValidationState($v.form.keyCurveId)"
+                            @input="$v.form.keyCurveId.$touch()"
+                          >
+                            <template #first>
+                              <b-form-select-option :value="null" disabled>
+                                {{ $t('global.form.selectAnOption') }}
+                              </b-form-select-option>
+                            </template>
+                          </b-form-select>
+                          <b-form-invalid-feedback role="alert">
+                            {{ $t('global.form.fieldRequired') }}
+                          </b-form-invalid-feedback>
+                        </b-form-group>
+                      </b-col>
                     </template>
-                    <b-form-input
-                      id="challenge-password"
-                      v-model="form.challengePassword"
-                      type="text"
-                      data-test-id="modalGenerateCsr-input-challengePassword"
-                    />
-                  </b-form-group>
-                </b-col>
-              </b-row>
-              <b-row>
-                <b-col lg="6">
-                  <b-form-group label-for="contact-person">
-                    <template #label>
-                      {{ $t('pageCertificates.modal.contactPerson') }} -
-                      <span class="form-text d-inline">
-                        {{ $t('global.form.optional') }}
-                      </span>
+                    <template v-if="$v.form.keyPairAlgorithm.$model === 'RSA'">
+                      <b-col sm="5">
+                        <label for="key-bit-length">
+                          {{ $t('pageCertificates.modal.keyBitLength') }}
+                        </label>
+                      </b-col>
+                      <b-col sm="7">
+                        <b-form-group>
+                          <b-form-select
+                            id="key-bit-length"
+                            v-model="form.keyBitLength"
+                            data-test-id="modalGenerateCsr-select-keyBitLength"
+                            :options="keyBitLengthOptions"
+                            :state="getValidationState($v.form.keyBitLength)"
+                            @input="$v.form.keyBitLength.$touch()"
+                          >
+                            <template #first>
+                              <b-form-select-option :value="null" disabled>
+                                {{ $t('global.form.selectAnOption') }}
+                              </b-form-select-option>
+                            </template>
+                          </b-form-select>
+                          <b-form-invalid-feedback role="alert">
+                            {{ $t('global.form.fieldRequired') }}
+                          </b-form-invalid-feedback>
+                        </b-form-group>
+                      </b-col>
                     </template>
-                    <b-form-input
-                      id="contact-person"
-                      v-model="form.contactPerson"
-                      type="text"
-                      data-test-id="modalGenerateCsr-input-contactPerson"
-                    />
-                  </b-form-group>
-                </b-col>
-                <b-col lg="6">
-                  <b-form-group label-for="email-address">
-                    <template #label>
-                      {{ $t('pageCertificates.modal.emailAddress') }} -
-                      <span class="form-text d-inline">
-                        {{ $t('global.form.optional') }}
-                      </span>
-                    </template>
-                    <b-form-input
-                      id="email-address"
-                      v-model="form.emailAddress"
-                      type="text"
-                      data-test-id="modalGenerateCsr-input-emailAddress"
-                    />
-                  </b-form-group>
-                </b-col>
-              </b-row>
-              <b-row>
-                <b-col lg="12">
-                  <b-form-group label-for="alternate-name">
-                    <template #label>
-                      {{ $t('pageCertificates.modal.alternateName') }} -
-                      <span class="form-text d-inline">
-                        {{ $t('global.form.optional') }}
-                      </span>
-                    </template>
-                    <b-form-text id="alternate-name-help-block">
-                      {{ $t('pageCertificates.modal.alternateNameHelperText') }}
-                    </b-form-text>
-                    <b-form-tags
-                      v-model="form.alternateName"
-                      :remove-on-delete="true"
-                      :tag-pills="true"
-                      input-id="alternate-name"
-                      size="lg"
-                      separator=" "
-                      :input-attrs="{
-                        'aria-describedby': 'alternate-name-help-block',
-                      }"
-                      :duplicate-tag-text="
-                        $t('pageCertificates.modal.duplicateAlternateName')
-                      "
-                      placeholder=""
-                      data-test-id="modalGenerateCsr-input-alternateName"
-                    >
-                      <template #add-button-text>
-                        <icon-add /> {{ $t('global.action.add') }}
-                      </template>
-                    </b-form-tags>
-                  </b-form-group>
-                </b-col>
-              </b-row>
-            </b-col>
-            <b-col lg="3">
-              <b-row>
-                <b-col lg="12">
-                  <p class="col-form-label">
-                    {{ $t('pageCertificates.modal.privateKey') }}
-                  </p>
-                  <b-form-group
-                    :label="$t('pageCertificates.modal.keyPairAlgorithm')"
-                    label-for="key-pair-algorithm"
-                  >
-                    <b-form-select
-                      id="key-pair-algorithm"
-                      v-model="form.keyPairAlgorithm"
-                      data-test-id="modalGenerateCsr-select-keyPairAlgorithm"
-                      :options="keyPairAlgorithmOptions"
-                      :state="getValidationState($v.form.keyPairAlgorithm)"
-                      @input="$v.form.keyPairAlgorithm.$touch()"
-                    >
-                      <template #first>
-                        <b-form-select-option :value="null" disabled>
-                          {{ $t('global.form.selectAnOption') }}
-                        </b-form-select-option>
-                      </template>
-                    </b-form-select>
-                    <b-form-invalid-feedback role="alert">
-                      {{ $t('global.form.fieldRequired') }}
-                    </b-form-invalid-feedback>
-                  </b-form-group>
-                </b-col>
-              </b-row>
-              <b-row>
-                <b-col lg="12">
-                  <template v-if="$v.form.keyPairAlgorithm.$model === 'EC'">
-                    <b-form-group
-                      :label="$t('pageCertificates.modal.keyCurveId')"
-                      label-for="key-curve-id"
-                    >
-                      <b-form-select
-                        id="key-curve-id"
-                        v-model="form.keyCurveId"
-                        data-test-id="modalGenerateCsr-select-keyCurveId"
-                        :options="keyCurveIdOptions"
-                        :state="getValidationState($v.form.keyCurveId)"
-                        @input="$v.form.keyCurveId.$touch()"
-                      >
-                        <template #first>
-                          <b-form-select-option :value="null" disabled>
-                            {{ $t('global.form.selectAnOption') }}
-                          </b-form-select-option>
-                        </template>
-                      </b-form-select>
-                      <b-form-invalid-feedback role="alert">
-                        {{ $t('global.form.fieldRequired') }}
-                      </b-form-invalid-feedback>
-                    </b-form-group>
-                  </template>
-                  <template v-if="$v.form.keyPairAlgorithm.$model === 'RSA'">
-                    <b-form-group
-                      :label="$t('pageCertificates.modal.keyBitLength')"
-                      label-for="key-bit-length"
-                    >
-                      <b-form-select
-                        id="key-bit-length"
-                        v-model="form.keyBitLength"
-                        data-test-id="modalGenerateCsr-select-keyBitLength"
-                        :options="keyBitLengthOptions"
-                        :state="getValidationState($v.form.keyBitLength)"
-                        @input="$v.form.keyBitLength.$touch()"
-                      >
-                        <template #first>
-                          <b-form-select-option :value="null" disabled>
-                            {{ $t('global.form.selectAnOption') }}
-                          </b-form-select-option>
-                        </template>
-                      </b-form-select>
-                      <b-form-invalid-feedback role="alert">
-                        {{ $t('global.form.fieldRequired') }}
-                      </b-form-invalid-feedback>
-                    </b-form-group>
-                  </template>
+                  </b-row>
                 </b-col>
               </b-row>
             </b-col>
@@ -497,3 +574,27 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+.form-text {
+  margin-top: 0;
+}
+
+.text-secondary {
+  margin-top: 5px;
+}
+
+.col-form-label {
+  padding: 0;
+}
+
+.modal-body p {
+  margin-bottom: 0;
+}
+
+.col-lg-12 .row {
+  @include media-breakpoint-down(sm) {
+    flex-direction: column;
+  }
+}
+</style>

@@ -1,18 +1,17 @@
 <template>
-  <b-row class="mb-2">
-    <b-col class="d-sm-flex">
-      <b-form-group
-        :label="$t('global.table.fromDate')"
-        label-for="input-from-date"
-        class="mr-3 my-0 w-100"
-      >
+  <b-row>
+    <b-col class="d-flex form-group-fields justify-content-end mb-3 mb-md-0">
+      <b-form-group class="form-group-date">
+        <label for="input-from-date" class="invisible d-none">
+          {{ $t('global.table.fromDate') }}
+        </label>
         <b-input-group>
           <b-form-input
             id="input-from-date"
             v-model="fromDate"
-            placeholder="YYYY-MM-DD"
+            :placeholder="$t('global.table.fromDate')"
             :state="getValidationState($v.fromDate)"
-            class="form-control-with-button mb-3 mb-md-0"
+            class="form-control-with-button input-date from-date"
             @blur="$v.fromDate.$touch()"
           />
           <b-form-invalid-feedback role="alert">
@@ -47,18 +46,17 @@
           </b-form-datepicker>
         </b-input-group>
       </b-form-group>
-      <b-form-group
-        :label="$t('global.table.toDate')"
-        label-for="input-to-date"
-        class="my-0 w-100"
-      >
+      <b-form-group class="form-group-date">
+        <label for="input-to-date" class="invisible d-none">
+          {{ $t('global.table.toDate') }}
+        </label>
         <b-input-group>
           <b-form-input
             id="input-to-date"
             v-model="toDate"
-            placeholder="YYYY-MM-DD"
+            :placeholder="$t('global.table.toDate')"
             :state="getValidationState($v.toDate)"
-            class="form-control-with-button"
+            class="form-control-with-button input-date to-date"
             @blur="$v.toDate.$touch()"
           />
           <b-form-invalid-feedback role="alert">
@@ -98,7 +96,7 @@
 </template>
 
 <script>
-import IconCalendar from '@carbon/icons-vue/es/calendar/20';
+import IconCalendar from '@/components/icons/IconCalendar';
 import { helpers } from 'vuelidate/lib/validators';
 
 import VuelidateMixin from '@/components/Mixins/VuelidateMixin.js';
@@ -163,3 +161,63 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+.input-date {
+  padding-left: 1.5625rem;
+  padding-right: 1.5625rem;
+  padding-top: 0.9375rem;
+  padding-bottom: 0.9375rem;
+  min-width: clamp(11.563rem, 0.045rem + 14.29vw, 17.188rem);
+}
+
+.input-date.from-date {
+  border-radius: 15px 0 0 15px;
+  @include media-breakpoint-down(xs) {
+    border-radius: 15px;
+  }
+}
+
+.input-date.to-date {
+  border-radius: 0 15px 15px 0;
+  @include media-breakpoint-down(xs) {
+    border-radius: 15px;
+  }
+}
+
+.btn-datepicker {
+  top: 0;
+  bottom: 0;
+}
+
+.btn-link {
+  color: $main-color;
+}
+
+.form-group-date {
+  @include media-breakpoint-down(sm) {
+    width: 50%;
+    margin-bottom: 0;
+  }
+  @include media-breakpoint-down(xs) {
+    width: 100%;
+  }
+}
+
+.form-group-fields {
+  flex-direction: row;
+  @include media-breakpoint-only(xs) {
+    flex-direction: column;
+    gap: 1rem;
+  }
+}
+
+::v-deep .b-form-datepicker .dropdown-menu {
+  @include media-breakpoint-down(sm) {
+    top: 100% !important;
+    left: auto !important;
+    right: 0;
+    transform: none !important;
+  }
+}
+</style>

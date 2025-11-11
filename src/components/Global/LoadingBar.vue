@@ -88,6 +88,6 @@ export default {
   }
 }
 .progress-bar {
-  background-color: $loading-color;
+  background-color: $purple;
 }
 </style>

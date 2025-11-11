@@ -30,7 +30,7 @@ export default {
   },
   methods: {
     handleScroll() {
-      document.documentElement.scrollTop > 500
+      document.documentElement.scrollTop > 800
         ? (this.showButton = true)
         : (this.showButton = false);
     },
@@ -57,8 +57,7 @@ export default {
   z-index: $zindex-fixed;
 
   @media (min-width: 1600px) {
-    left: 1485px;
-    right: auto;
+    right: 44px;
   }
 }
 .show-btn {

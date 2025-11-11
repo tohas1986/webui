@@ -123,10 +123,10 @@ $yellow: $yellow-500;
 
 ```scss
 $colors: (
-  "blue": $blue,
-  "green": $green,
-  "red": $red,
-  "yellow": $yellow,
+  'blue': $blue,
+  'green': $green,
+  'red': $red,
+  'yellow': $yellow,
 );
 ```
 
@@ -149,12 +149,12 @@ $warning: $yellow;
 
 ```scss
 $theme-colors: (
-  "primary": $primary,
-  "secondary": $secondary,
-  "dark": $dark,
-  "light": $light,
-  "danger": $danger,
-  "info": $info "success": $success "warning": $warning,
+  'primary': $primary,
+  'secondary': $secondary,
+  'dark': $dark,
+  'light': $light,
+  'danger': $danger,
+  'info': $info 'success': $success 'warning': $warning,
 );
 ```
 
@@ -333,21 +333,25 @@ CSS styles correctly.
 
 ```html
 <style lang="scss" scoped>
-  .page-section {
-    margin-bottom: $spacer * 2;
-  }
-
-  h2 {
-    @include font-size($h3-font-size);
-    margin-bottom: $spacer;
-    &::after {
-      content: "";
-      display: block;
-      width: 100px;
-      border: 1px solid $gray-300;
-      margin-top: 10px;
+    .page-section {
+      margin-bottom: $spacer * 2;
     }
-  }
+
+    h2 {
+      @include font-size($h3-font-size);
+      margin-bottom: $spacer;
+      &::after {
+  <<<<<<< HEAD
+        content: '';
+  =======
+        content: "";
+  >>>>>>> 96a1efd826492616d434ef3b38186c7e2a4a6427
+        display: block;
+        width: 100px;
+        border: 1px solid $gray-300;
+        margin-top: 10px;
+      }
+    }
 </style>
 ```
 

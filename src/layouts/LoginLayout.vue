@@ -1,32 +1,13 @@
 <template>
   <main>
     <div class="login-container">
-      <div class="login-main">
-        <div>
-          <div class="login-brand mb-5">
-            <img
-              width="90px"
-              src="@/assets/images/login-company-logo.svg"
-              :alt="altLogo"
-            />
-          </div>
-          <h1 v-if="customizableGuiName" class="h3 mb-5">
-            {{ customizableGuiName }}
-          </h1>
-          <router-view class="login=form form-background" />
+      <div class="login-aside">
+        <div class="login-brand">
+          <img svg-inline src="@/assets/images/logo-OY.svg" :alt="altLogo" />
         </div>
       </div>
-      <div class="login-aside">
-        <div class="login-aside__logo-brand">
-          <!-- Add Secondary brand logo if needed -->
-        </div>
-        <div class="login-aside__logo-bmc">
-          <img
-            height="60px"
-            src="@/assets/images/built-on-openbmc-logo.svg"
-            alt="Built on OpenBMC"
-          />
-        </div>
+      <div class="login-main">
+        <router-view class="login=form form-background" />
       </div>
     </div>
   </main>
@@ -37,7 +18,7 @@ export default {
   name: 'LoginLayout',
   data() {
     return {
-      altLogo: process.env.VUE_APP_COMPANY_NAME || 'OpenBMC',
+      altLogo: process.env.VUE_APP_COMPANY_NAME || 'OpenYard',
       customizableGuiName: process.env.VUE_APP_GUI_NAME || '',
     };
   },
@@ -46,67 +27,89 @@ export default {
 
 <style lang="scss" scoped>
 .login-container {
-  background: gray('100');
+  position: relative;
   display: flex;
   flex-direction: column;
-  gap: $spacer * 2;
-  max-width: 1400px;
-  min-width: 320px;
-  min-height: 100vh;
-  justify-content: space-around;
+  min-width: 100%;
+  height: 100%;
+  background: $form-color;
 
   @include media-breakpoint-up('md') {
-    background: $white;
     flex-direction: row;
   }
 }
 
 .login-main {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   min-height: 50vh;
-  padding: $spacer * 3;
+  padding: clamp(1.25rem, 3vw, 3.125rem);
 
   @include media-breakpoint-up('md') {
-    background: gray('100');
-    display: flex;
-    flex-direction: column;
-    flex: 1 1 75%;
-    min-height: 100vh;
-    justify-content: center;
-    align-items: center;
+    background: $form-color;
+    flex-grow: 1;
+    position: relative;
+    height: 100vh;
+    z-index: 1;
+  }
+
+  &:before {
+    content: '';
+    position: absolute;
+    width: calc(100% + 1.25rem);
+    height: 100%;
+    left: -20px;
+    z-index: -1;
+    top: 0;
+    background-color: $form-color;
+    border-radius: 20px 0 0 20px;
   }
 }
 
 .login-form {
   @include media-breakpoint-up('md') {
-    max-width: 360px;
+    width: 100%;
   }
 }
 
 .login-aside {
   display: flex;
-  align-items: flex-end;
-  justify-content: flex-end;
-  gap: $spacer * 1.5;
-  margin-right: $spacer * 3;
-  margin-bottom: $spacer;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  background-color: $login-background;
+  background-image: url('../assets/images/login-background-image.png');
+  background-repeat: no-repeat;
+  background-size: cover;
 
   @include media-breakpoint-up('md') {
-    min-height: 100vh;
-    padding-bottom: $spacer;
-    flex: 1 1 25%;
-    margin-bottom: 0;
+    width: clamp(300px, 45.5vw, 920px);
+    align-items: flex-start;
+    flex: 0 0 auto;
+  }
+  @include media-breakpoint-up('xxl') {
+    width: 45%;
   }
 }
 
-.login-aside__logo-brand:not(:empty) {
-  &::after {
-    content: '';
-    display: inline-block;
-    height: 2.5rem;
-    width: 2px;
-    background-color: gray('200');
-    margin-left: $spacer * 1.5;
-    vertical-align: middle;
+.login-brand {
+  margin-top: 40px;
+
+  @include media-breakpoint-up('md') {
+    margin-left: 30px;
   }
+}
+
+.login-brand img {
+  display: block;
+  max-width: 100%;
+  height: auto;
 }
 </style>

@@ -26,7 +26,7 @@ const BmcStore = {
       bmc.lastResetTime = new Date(data.LastResetTime);
       bmc.identifyLed = data.LocationIndicatorActive;
       bmc.locationNumber = data.Location?.PartLocation?.ServiceLabel;
-      bmc.manufacturer = data.manufacturer;
+      bmc.manufacturer = data.Manufacturer;
       bmc.managerType = data.ManagerType;
       bmc.model = data.Model;
       bmc.name = data.Name;
@@ -64,11 +64,11 @@ const BmcStore = {
           console.log('error', error);
           if (led.identifyLed) {
             throw new Error(
-              i18n.t('pageInventory.toast.errorEnableIdentifyLed')
+              i18n.t('pageInventory.toast.errorEnableIdentifyLed'),
             );
           } else {
             throw new Error(
-              i18n.t('pageInventory.toast.errorDisableIdentifyLed')
+              i18n.t('pageInventory.toast.errorDisableIdentifyLed'),
             );
           }
         });

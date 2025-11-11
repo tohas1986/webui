@@ -1,26 +1,26 @@
 <template>
   <div>
     <b-row>
-      <b-col md="9">
+      <b-col md="12">
         <alert :show="isServiceEnabled === false" variant="info">
           {{ $t('pageLdap.tableRoleGroups.alertContent') }}
         </alert>
       </b-col>
     </b-row>
     <b-row>
-      <b-col class="text-right" md="9">
+      <b-col class="text-right" md="12">
         <b-btn
-          variant="primary"
+          variant="secondary"
           :disabled="!isServiceEnabled"
           @click="initRoleGroupModal(null)"
         >
-          <icon-add />
           {{ $t('pageLdap.addRoleGroup') }}
+          <icon-add />
         </b-btn>
       </b-col>
     </b-row>
     <b-row>
-      <b-col md="9">
+      <b-col md="12">
         <table-toolbar
           ref="toolbar"
           :selected-items-count="selectedRows.length"
@@ -28,59 +28,61 @@
           @clear-selected="clearSelectedRows($refs.table)"
           @batch-action="onBatchAction"
         />
-        <b-table
-          ref="table"
-          responsive
-          selectable
-          show-empty
-          no-select-on-click
-          hover
-          no-sort-reset
-          sort-icon-left
-          :busy="isBusy"
-          :items="tableItems"
-          :fields="fields"
-          :empty-text="$t('global.table.emptyMessage')"
-          @row-selected="onRowSelected($event, tableItems.length)"
-        >
-          <!-- Checkbox column -->
-          <template #head(checkbox)>
-            <b-form-checkbox
-              v-model="tableHeaderCheckboxModel"
-              :indeterminate="tableHeaderCheckboxIndeterminate"
-              :disabled="!isServiceEnabled"
-              @change="onChangeHeaderCheckbox($refs.table)"
-            >
-              <span class="sr-only">{{ $t('global.table.selectAll') }}</span>
-            </b-form-checkbox>
-          </template>
-          <template #cell(checkbox)="row">
-            <b-form-checkbox
-              v-model="row.rowSelected"
-              :disabled="!isServiceEnabled"
-              @change="toggleSelectRow($refs.table, row.index)"
-            >
-              <span class="sr-only">{{ $t('global.table.selectItem') }}</span>
-            </b-form-checkbox>
-          </template>
+        <div class="table-container">
+          <b-table
+            ref="table"
+            responsive
+            selectable
+            show-empty
+            no-select-on-click
+            hover
+            no-sort-reset
+            sort-icon-left
+            :busy="isBusy"
+            :items="tableItems"
+            :fields="fields"
+            :empty-text="$t('global.table.emptyMessage')"
+            @row-selected="onRowSelected($event, tableItems.length)"
+          >
+            <!-- Checkbox column -->
+            <template #head(checkbox)>
+              <b-form-checkbox
+                v-model="tableHeaderCheckboxModel"
+                :indeterminate="tableHeaderCheckboxIndeterminate"
+                :disabled="!isServiceEnabled"
+                @change="onChangeHeaderCheckbox($refs.table)"
+              >
+                <span class="sr-only">{{ $t('global.table.selectAll') }}</span>
+              </b-form-checkbox>
+            </template>
+            <template #cell(checkbox)="row">
+              <b-form-checkbox
+                v-model="row.rowSelected"
+                :disabled="!isServiceEnabled"
+                @change="toggleSelectRow($refs.table, row.index)"
+              >
+                <span class="sr-only">{{ $t('global.table.selectItem') }}</span>
+              </b-form-checkbox>
+            </template>
 
-          <!-- table actions column -->
-          <template #cell(actions)="{ item }">
-            <table-row-action
-              v-for="(action, index) in item.actions"
-              :key="index"
-              :value="action.value"
-              :enabled="action.enabled"
-              :title="action.title"
-              @click-table-action="onTableRowAction($event, item)"
-            >
-              <template #icon>
-                <icon-edit v-if="action.value === 'edit'" />
-                <icon-trashcan v-if="action.value === 'delete'" />
-              </template>
-            </table-row-action>
-          </template>
-        </b-table>
+            <!-- table actions column -->
+            <template #cell(actions)="{ item }">
+              <table-row-action
+                v-for="(action, index) in item.actions"
+                :key="index"
+                :value="action.value"
+                :enabled="action.enabled"
+                :title="action.title"
+                @click-table-action="onTableRowAction($event, item)"
+              >
+                <template #icon>
+                  <icon-edit v-if="action.value === 'edit'" />
+                  <icon-trashcan v-if="action.value === 'delete'" />
+                </template>
+              </table-row-action>
+            </template>
+          </b-table>
+        </div>
       </b-col>
     </b-row>
     <modal-add-role-group
@@ -93,8 +95,8 @@
 
 <script>
 import IconEdit from '@carbon/icons-vue/es/edit/20';
-import IconTrashcan from '@carbon/icons-vue/es/trash-can/20';
-import IconAdd from '@carbon/icons-vue/es/add--alt/20';
+import IconTrashcan from '@/components/icons/IconTrashcan';
+import IconAdd from '@/components/icons/IconAdd';
 import { mapGetters } from 'vuex';
 
 import Alert from '@/components/Global/Alert';
@@ -191,13 +193,13 @@ export default {
         .msgBoxConfirm(
           this.$tc(
             'pageLdap.modal.deleteRoleGroupBatchConfirmMessage',
-            this.selectedRows.length
+            this.selectedRows.length,
           ),
           {
             title: this.$t('pageLdap.modal.deleteRoleGroup'),
             okTitle: this.$t('global.action.delete'),
             cancelTitle: this.$t('global.action.cancel'),
-          }
+          },
         )
         .then((deleteConfirmed) => {
           if (deleteConfirmed) {
@@ -227,7 +229,7 @@ export default {
                 title: this.$t('pageLdap.modal.deleteRoleGroup'),
                 okTitle: this.$t('global.action.delete'),
                 cancelTitle: this.$t('global.action.cancel'),
-              }
+              },
             )
             .then((deleteConfirmed) => {
               if (deleteConfirmed) {
@@ -267,3 +269,23 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+.btn-secondary {
+  margin-bottom: 20px;
+  padding: clamp(0.625rem, 0.1131rem + 0.6349vw, 0.875rem)
+    clamp(1rem, -0.0238rem + 1.2698vw, 1.5rem);
+
+  svg {
+    margin-left: 1.25rem;
+    margin-right: 0;
+  }
+}
+
+.col-sm-5,
+.col-sm-7 {
+  @include media-breakpoint-down(sm) {
+    padding: 0 !important;
+  }
+}
+</style>

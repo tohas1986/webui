@@ -1,5 +1,43 @@
 .card {
-  .bg-success {
-    background-color: theme-color-light('success')!important;
+  border: none;
+}
+
+.card.overview-inventory .card-body {
+  padding-bottom: 0;
+}
+
+.card-header {
+  padding: 0 0.7rem;
+  background-color: $gray-light;
+  border-bottom: none;
+
+  .nav-tabs {
+    border-bottom: none;
+  }
+
+  .nav-tabs .nav-link {
+    margin-bottom: 0;
+    padding: clamp(0.625rem, 0.1131rem + 0.6349vw, 0.875rem)
+      clamp(1rem, -0.0238rem + 1.2698vw, 1.5rem);
+    color: $main-color;
+    border: 1px solid $gray-border;
+    border-radius: 15px;
+    font-size: clamp(0.875rem, 0.3631rem + 0.6349vw, 1.125rem);
+
+    &:hover {
+      background-color: $btn-background;
+    }
+
+    @include media-breakpoint-down('xl') {
+      padding: 0.5rem 0.5rem;
+    }
+  }
+
+  .nav-tabs .nav-link.active {
+    border: 1px solid $main-color;
+  }
+
+  .nav-tabs .nav-link.disabled {
+    opacity: 0.4;
   }
 }

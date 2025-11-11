@@ -1,58 +1,38 @@
 <template>
-  <b-container fluid="xl">
+  <b-container fluid>
     <page-title />
-    <b-row>
-      <b-col sm="6" lg="5" xl="4">
-        <page-section :section-title="$t('pageDumps.initiateDump')">
-          <dumps-form />
-        </page-section>
+    <b-row class="align-items-start">
+      <b-col class="d-sm-flex align-items-end">
+        <search
+          :placeholder="$t('pageDumps.table.searchDumps')"
+          @change-search="onChangeSearchInput"
+          @clear-search="onClearSearchInput"
+        />
+        <div class="ml-sm-4">
+          <table-cell-count
+            :filtered-items-count="filteredRows"
+            :total-number-of-cells="allDumps.length"
+          ></table-cell-count>
+        </div>
+      </b-col>
+      <b-col class="form-group-wrapper">
+        <table-date-filter @change="onChangeDateTimeFilter" />
       </b-col>
     </b-row>
     <b-row>
-      <b-col xl="10">
-        <page-section :section-title="$t('pageDumps.dumpsAvailableOnBmc')">
-          <b-row class="align-items-start">
-            <b-col sm="8" xl="6" class="d-sm-flex align-items-end">
-              <search
-                :placeholder="$t('pageDumps.table.searchDumps')"
-                @change-search="onChangeSearchInput"
-                @clear-search="onClearSearchInput"
-              />
-              <div class="ml-sm-4">
-                <table-cell-count
-                  :filtered-items-count="filteredRows"
-                  :total-number-of-cells="allDumps.length"
-                ></table-cell-count>
-              </div>
-            </b-col>
-            <b-col sm="8" md="7" xl="6">
-              <table-date-filter @change="onChangeDateTimeFilter" />
-            </b-col>
-          </b-row>
-          <b-row>
-            <b-col class="text-right">
-              <table-filter
-                :filters="tableFilters"
-                @filter-change="onFilterChange"
-              />
-            </b-col>
-          </b-row>
-          <table-toolbar
-            :selected-items-count="selectedRows.length"
-            :actions="batchActions"
-            @clear-selected="clearSelectedRows($refs.table)"
-            @batch-action="onTableBatchAction"
-          />
+      <b-col>
+        <div class="table-container">
           <b-table
             ref="table"
+            responsive="md"
+            class="dump-table"
             show-empty
             hover
-            sort-icon-left
             no-sort-reset
             sort-desc
             selectable
+            sticky-header
             no-select-on-click
-            responsive="md"
             sort-by="dateTime"
             :fields="fields"
             :items="filteredDumps"
@@ -60,8 +40,8 @@
             :empty-filtered-text="$t('global.table.emptySearchMessage')"
             :filter="searchFilter"
             :busy="isBusy"
-            @filtered="onChangeSearchFilter"
-            @row-selected="onRowSelected($event, filteredTableItems.length)"
+            @filtered="onFiltered"
+            @row-selected="onRowSelected($event, filteredDumps.length)"
           >
             <!-- Checkbox column -->
             <template #head(checkbox)>
@@ -84,8 +64,10 @@
 
             <!-- Date and Time column -->
             <template #cell(dateTime)="{ value }">
-              <p class="mb-0">{{ value | formatDate }}</p>
-              <p class="mb-0">{{ value | formatTime }}</p>
+              <p class="mb-0">
+                {{ value | formatDate }} {{ value | formatTime }}
+              </p>
+              <p class="mb-0">({{ timezone }})</p>
             </template>
 
             <!-- Size column -->
@@ -105,18 +87,45 @@
                 @click-table-action="onTableRowAction($event, row.item)"
               >
                 <template #icon>
-                  <icon-download v-if="action.value === 'download'" />
-                  <icon-delete v-if="action.value === 'delete'" />
+                  <icon-export v-if="action.value === 'download'" />
+                  <icon-trashcan v-if="action.value === 'delete'" />
                 </template>
               </table-row-action>
             </template>
           </b-table>
-        </page-section>
+        </div>
+        <table-toolbar
+          ref="toolbar"
+          :selected-items-count="selectedRows.length"
+          :actions="batchActions"
+          @clear-selected="clearSelectedRows($refs.table)"
+          @batch-action="onTableBatchAction"
+        />
+        <b-row class="justify-content-center">
+          <div class="btn-container">
+            <b-button variant="link" class="btn-table" @click="initiateDump">
+              <icon-replace /> {{ $t('pageDumps.form.initiateDump') }}
+            </b-button>
+            <b-button
+              variant="link"
+              class="btn-table"
+              :disabled="allDumps.length === 0"
+              @click="deleteAllDumps"
+            >
+              <span class="d-inline-block d-sm-none">
+                <icon-trashcan /> {{ $t('global.action.deleteAllMobile') }}
+              </span>
+              <span class="d-none d-sm-inline-block">
+                <icon-trashcan /> {{ $t('global.action.deleteAll') }}
+              </span>
+            </b-button>
+          </div>
+        </b-row>
       </b-col>
     </b-row>
     <!-- Table pagination -->
-    <b-row>
-      <b-col sm="6" xl="5">
+    <b-row class="table-pagination-container">
+      <b-col sm="6">
         <b-form-group
           class="table-pagination-select"
           :label="$t('global.table.itemsPerPage')"
@@ -129,7 +138,7 @@
           />
         </b-form-group>
       </b-col>
-      <b-col sm="6" xl="5">
+      <b-col sm="6">
         <b-pagination
           v-model="currentPage"
           first-number
@@ -144,10 +153,8 @@
 </template>
 
 <script>
-import IconDelete from '@carbon/icons-vue/es/trash-can/20';
-import IconDownload from '@carbon/icons-vue/es/download/20';
-import DumpsForm from './DumpsForm';
-import PageSection from '@/components/Global/PageSection';
+import IconTrashcan from '@/components/icons/IconTrashcan';
+import IconExport from '@/components/icons/IconExport';
 import PageTitle from '@/components/Global/PageTitle';
 import Search from '@/components/Global/Search';
 import TableCellCount from '@/components/Global/TableCellCount';
@@ -169,22 +176,21 @@ import LoadingBarMixin from '@/components/Mixins/LoadingBarMixin';
 import SearchFilterMixin, {
   searchFilter,
 } from '@/components/Mixins/SearchFilterMixin';
-import TableFilter from '@/components/Global/TableFilter';
 import TableFilterMixin from '@/components/Mixins/TableFilterMixin';
+import IconReplace from '@carbon/icons-vue/es/renew/20';
+import LocalTimezoneLabelMixin from '@/components/Mixins/LocalTimezoneLabelMixin';
 
 export default {
   components: {
-    DumpsForm,
-    IconDelete,
-    IconDownload,
-    PageSection,
+    IconTrashcan,
+    IconExport,
     PageTitle,
     Search,
     TableCellCount,
     TableDateFilter,
     TableRowAction,
     TableToolbar,
-    TableFilter,
+    IconReplace,
   },
   mixins: [
     BVTableSelectableMixin,
@@ -193,6 +199,7 @@ export default {
     LoadingBarMixin,
     SearchFilterMixin,
     TableFilterMixin,
+    LocalTimezoneLabelMixin,
   ],
   beforeRouteLeave(to, from, next) {
     // Hide loader if the user navigates to another page
@@ -209,6 +216,11 @@ export default {
           sortable: false,
         },
         {
+          key: 'id',
+          label: this.$t('pageDumps.table.id'),
+          sortable: true,
+        },
+        {
           key: 'dateTime',
           label: this.$t('pageDumps.table.dateAndTime'),
           sortable: true,
@@ -216,17 +228,10 @@ export default {
         {
           key: 'dumpType',
           label: this.$t('pageDumps.table.dumpType'),
-          sortable: true,
-        },
-        {
-          key: 'id',
-          label: this.$t('pageDumps.table.id'),
-          sortable: true,
         },
         {
           key: 'size',
           label: this.$t('pageDumps.table.size'),
-          sortable: true,
         },
         {
           key: 'actions',
@@ -267,6 +272,9 @@ export default {
     };
   },
   computed: {
+    href() {
+      return `data:text/json;charset=utf-8,${this.exportAllDumps()}`;
+    },
     filteredRows() {
       return this.searchFilter
         ? this.searchTotalFilteredRows
@@ -294,19 +302,25 @@ export default {
         this.allDumps,
         this.filterStartDate,
         this.filterEndDate,
-        'dateTime'
+        'dateTime',
       );
     },
     filteredDumps() {
       return this.getFilteredTableData(
         this.filteredDumpsByDate,
-        this.activeFilters
+        this.activeFilters,
       );
+    },
+    isUtcDisplay() {
+      return this.$store.getters['global/isUtcDisplay'];
+    },
+    timezone() {
+      return this.localOffset(this.isUtcDisplay);
     },
   },
   created() {
     this.startLoader();
-    this.$store.dispatch('dumps/getBmcDumpEntries').finally(() => {
+    this.$store.dispatch('dumps/getAllDumps').finally(() => {
       this.endLoader();
       this.isBusy = false;
     });
@@ -332,6 +346,9 @@ export default {
             title: this.$tc('pageDumps.modal.deleteDump'),
             okTitle: this.$tc('pageDumps.modal.deleteDump'),
             cancelTitle: this.$t('global.action.cancel'),
+            autoFocusButton: 'ok',
+            size: 'lg',
+            centered: true,
           })
           .then((deleteConfrimed) => {
             if (deleteConfrimed) {
@@ -356,23 +373,25 @@ export default {
           .msgBoxConfirm(
             this.$tc(
               'pageDumps.modal.deleteDumpConfirmation',
-              this.selectedRows.length
+              this.selectedRows.length,
             ),
             {
               title: this.$tc(
                 'pageDumps.modal.deleteDump',
-                this.selectedRows.length
+                this.selectedRows.length,
               ),
               okTitle: this.$tc(
                 'pageDumps.modal.deleteDump',
-                this.selectedRows.length
+                this.selectedRows.length,
               ),
               cancelTitle: this.$t('global.action.cancel'),
-            }
+              autoFocusButton: 'ok',
+              centered: true,
+            },
           )
           .then((deleteConfrimed) => {
             if (deleteConfrimed) {
-              if (this.selectedRows.length === this.dumps.length) {
+              if (this.selectedRows.length === this.allDumps.length) {
                 this.$store
                   .dispatch('dumps/deleteAllDumps')
                   .then((success) => this.successToast(success))
@@ -399,6 +418,49 @@ export default {
       filename = filename.replace(RegExp(' ', 'g'), '_');
       return filename;
     },
+    deleteAllDumps() {
+      this.$bvModal
+        .msgBoxConfirm(this.$t('pageDumps.modal.deleteAllMessage'), {
+          title: this.$t('pageDumps.modal.deleteAllTitle'),
+          okTitle: this.$t('global.action.delete'),
+          okVariant: 'danger',
+          cancelTitle: this.$t('global.action.cancel'),
+          size: 'lg',
+          centered: true,
+        })
+        .then((deleteConfirmed) => {
+          if (deleteConfirmed) {
+            this.$store
+              .dispatch('dumps/deleteAllDumps', this.allDumps)
+              .then((message) => this.successToast(message))
+              .catch(({ message }) => this.errorToast(message));
+          }
+        });
+    },
+    initiateDump() {
+      this.$store
+        .dispatch('dumps/createBmcDump')
+        .then(() =>
+          this.infoToast(this.$t('pageDumps.toast.successStartBmcDump'), {
+            title: this.$t('pageDumps.toast.successStartBmcDumpTitle'),
+            timestamp: true,
+          }),
+        )
+        .catch(({ message }) => this.errorToast(message));
+    },
   },
 };
 </script>
+<style lang="scss" scoped>
+.form-group-wrapper {
+  @include media-breakpoint-down(md) {
+    align-self: end;
+  }
+}
+.table-pagination-container {
+  @include media-breakpoint-down(md) {
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+}
+</style>

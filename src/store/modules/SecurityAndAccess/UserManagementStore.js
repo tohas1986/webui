@@ -23,6 +23,9 @@ const UserManagementStore = {
     accountLockoutThreshold: null,
     accountMinPasswordLength: null,
     accountMaxPasswordLength: null,
+    accountMinimumPasswordDigits: null,
+    accountMinimumPasswordSpecialCharacters: null,
+    accountMinimumPasswordUpperCaseCharacter: null,
   },
   getters: {
     allUsers(state) {
@@ -41,6 +44,10 @@ const UserManagementStore = {
       return {
         minLength: state.accountMinPasswordLength,
         maxLength: state.accountMaxPasswordLength,
+        minimumDigits: state.accountMinimumPasswordDigits,
+        minimumSpecialCharacters: state.accountMinimumPasswordSpecialCharacters,
+        minimumUpperCaseCharacters:
+          state.accountMinimumPasswordUpperCaseCharacter,
       };
     },
   },
@@ -63,13 +70,23 @@ const UserManagementStore = {
     setAccountMaxPasswordLength(state, maxPasswordLength) {
       state.accountMaxPasswordLength = maxPasswordLength;
     },
+    setMinimumpPasswordDigits(state, minimumDigits) {
+      state.accountMinimumPasswordDigits = minimumDigits;
+    },
+    setMinimumPasswordSpecialCharacters(state, MinimumSpecialCharacters) {
+      state.accountMinimumPasswordSpecialCharacters = MinimumSpecialCharacters;
+    },
+    setMinimumPasswordUpperCaseCharacters(state, MinimumUpperCaseCharacters) {
+      state.accountMinimumPasswordUpperCaseCharacter =
+        MinimumUpperCaseCharacters;
+    },
   },
   actions: {
     async getUsers({ commit }) {
       return await api
         .get('/redfish/v1/AccountService/Accounts')
         .then((response) =>
-          response.data.Members.map((user) => user['@odata.id'])
+          response.data.Members.map((user) => user['@odata.id']),
         )
         .then((userIds) => api.all(userIds.map((user) => api.get(user))))
         .then((users) => {
@@ -90,11 +107,20 @@ const UserManagementStore = {
           commit('setLockoutThreshold', data.AccountLockoutThreshold);
           commit('setAccountMinPasswordLength', data.MinPasswordLength);
           commit('setAccountMaxPasswordLength', data.MaxPasswordLength);
+          commit('setMinimumpPasswordDigits', data.MinimumDigits);
+          commit(
+            'setMinimumPasswordSpecialCharacters',
+            data.MinimumSpecialCharacters,
+          );
+          commit(
+            'setMinimumPasswordUpperCaseCharacters',
+            data.MinimumUpperCaseCharacters,
+          );
         })
         .catch((error) => {
           console.log(error);
           const message = i18n.t(
-            'pageUserManagement.toast.errorLoadAccountSettings'
+            'pageUserManagement.toast.errorLoadAccountSettings',
           );
           throw new Error(message);
         });
@@ -103,7 +129,7 @@ const UserManagementStore = {
       return await api
         .get('/redfish/v1/AccountService/Roles')
         .then(({ data: { Members = [] } }) =>
-          Members.map((member) => api.get(member['@odata.id']))
+          Members.map((member) => api.get(member['@odata.id'])),
         )
         .then((promises) => api.all(promises))
         .then((response) => {
@@ -125,7 +151,7 @@ const UserManagementStore = {
         .then(() =>
           i18n.t('pageUserManagement.toast.successCreateUser', {
             username,
-          })
+          }),
         )
         .catch((error) => {
           let serverMessages = getServerErrorMessages(error);
@@ -140,7 +166,7 @@ const UserManagementStore = {
     },
     async updateUser(
       { dispatch },
-      { originalUsername, username, password, privilege, status, locked }
+      { originalUsername, username, password, privilege, status, locked },
     ) {
       const data = {};
       if (username) data.UserName = username;
@@ -154,7 +180,7 @@ const UserManagementStore = {
         .then(() =>
           i18n.t('pageUserManagement.toast.successUpdateUser', {
             username: originalUsername,
-          })
+          }),
         )
         .catch((error) => {
           console.log(error);
@@ -175,7 +201,7 @@ const UserManagementStore = {
         .then(() =>
           i18n.t('pageUserManagement.toast.successDeleteUser', {
             username,
-          })
+          }),
         )
         .catch((error) => {
           console.log(error);
@@ -208,7 +234,7 @@ const UserManagementStore = {
             if (successCount) {
               const message = i18n.tc(
                 'pageUserManagement.toast.successBatchDelete',
-                successCount
+                successCount,
               );
               toastMessages.push({ type: 'success', message });
             }
@@ -216,13 +242,13 @@ const UserManagementStore = {
             if (errorCount) {
               const message = i18n.tc(
                 'pageUserManagement.toast.errorBatchDelete',
-                errorCount
+                errorCount,
               );
               toastMessages.push({ type: 'error', message });
             }
 
             return toastMessages;
-          })
+          }),
         );
     },
     async enableUsers({ dispatch }, users) {
@@ -251,7 +277,7 @@ const UserManagementStore = {
             if (successCount) {
               const message = i18n.tc(
                 'pageUserManagement.toast.successBatchEnable',
-                successCount
+                successCount,
               );
               toastMessages.push({ type: 'success', message });
             }
@@ -259,13 +285,13 @@ const UserManagementStore = {
             if (errorCount) {
               const message = i18n.tc(
                 'pageUserManagement.toast.errorBatchEnable',
-                errorCount
+                errorCount,
               );
               toastMessages.push({ type: 'error', message });
             }
 
             return toastMessages;
-          })
+          }),
         );
     },
     async disableUsers({ dispatch }, users) {
@@ -294,7 +320,7 @@ const UserManagementStore = {
             if (successCount) {
               const message = i18n.tc(
                 'pageUserManagement.toast.successBatchDisable',
-                successCount
+                successCount,
               );
               toastMessages.push({ type: 'success', message });
             }
@@ -302,13 +328,13 @@ const UserManagementStore = {
             if (errorCount) {
               const message = i18n.tc(
                 'pageUserManagement.toast.errorBatchDisable',
-                errorCount
+                errorCount,
               );
               toastMessages.push({ type: 'error', message });
             }
 
             return toastMessages;
-          })
+          }),
         );
     },
     async createRoles({ dispatch }, data) {
@@ -328,7 +354,7 @@ const UserManagementStore = {
         .then(() =>
           i18n.t('pageUserManagement.toast.successDeleteRoles', {
             role,
-          })
+          }),
         )
         .catch((error) => {
           console.log(error);
@@ -338,10 +364,17 @@ const UserManagementStore = {
           throw new Error(message);
         });
     },
-
     async saveAccountSettings(
       { dispatch },
-      { lockoutThreshold, lockoutDuration }
+      {
+        lockoutThreshold,
+        lockoutDuration,
+        minPasswordLength,
+        maxPasswordLength,
+        minimumDigits,
+        minimumSpecialCharacters,
+        minimumUpperCaseCharacters,
+      },
     ) {
       const data = {};
       if (lockoutThreshold !== undefined) {
@@ -350,6 +383,21 @@ const UserManagementStore = {
       if (lockoutDuration !== undefined) {
         data.AccountLockoutDuration = lockoutDuration;
       }
+      if (minPasswordLength !== undefined) {
+        data.MinPasswordLength = Number(minPasswordLength);
+        await api.patch('/redfish/v1/AccountService', {
+          MinPasswordLength: Number(minPasswordLength),
+        });
+      }
+      if (maxPasswordLength !== undefined) {
+        data.MaxPasswordLength = Number(maxPasswordLength);
+        await api.patch('/redfish/v1/AccountService', {
+          MaxPasswordLength: Number(maxPasswordLength),
+        });
+      }
+      data.MinimumDigits = minimumDigits ? 1 : 0;
+      data.MinimumSpecialCharacters = minimumSpecialCharacters ? 1 : 0;
+      data.MinimumUpperCaseCharacters = minimumUpperCaseCharacters ? 1 : 0;
 
       return await api
         .patch('/redfish/v1/AccountService', data)

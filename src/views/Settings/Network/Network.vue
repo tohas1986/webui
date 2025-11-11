@@ -1,5 +1,5 @@
 <template>
-  <b-container fluid="xl">
+  <b-container fluid>
     <page-title :description="$t('pageNetwork.pageDescription')" />
     <!-- Global settings for all interfaces -->
     <network-global-settings />
@@ -8,11 +8,7 @@
       <b-row>
         <b-col>
           <b-card no-body>
-            <b-tabs
-              active-nav-item-class="font-weight-bold"
-              card
-              content-class="mt-3"
-            >
+            <b-tabs card>
               <b-tab
                 v-for="(data, index) in ethernetData"
                 :key="data.Id"
@@ -33,7 +29,12 @@
     </page-section>
     <!-- Modals -->
     <modal-ipv4 :default-gateway="defaultGateway" @ok="saveIpv4Address" />
-    <modal-dns @ok="saveDnsAddress" />
+    <modal-dns
+      :is-edit="isEditing"
+      :initial-value="currentEditDns"
+      @ok="onModalDnsOk"
+      @hidden="onModalHidden"
+    />
     <modal-hostname :hostname="currentHostname" @ok="saveSettings" />
     <modal-mac-address :mac-address="currentMacAddress" @ok="saveSettings" />
   </b-container>
@@ -81,6 +82,9 @@ export default {
       defaultGateway: '',
       loading,
       tabIndex: 0,
+      isEditing: false,
+      currentEditDns: '',
+      editIndex: null,
     };
   },
   computed: {
@@ -93,6 +97,11 @@ export default {
   },
   created() {
     this.startLoader();
+    this.$root.$on('start-edit-dns', (dnsValue, index) => {
+      this.isEditing = true;
+      this.currentEditDns = dnsValue;
+      this.editIndex = index;
+    });
     const globalSettings = new Promise((resolve) => {
       this.$root.$on('network-global-settings-complete', () => resolve());
     });
@@ -117,24 +126,27 @@ export default {
   },
   methods: {
     getModalInfo() {
-      this.defaultGateway = this.$store.getters[
-        'network/globalNetworkSettings'
-      ][this.tabIndex].defaultGateway;
+      this.defaultGateway =
+        this.$store.getters['network/globalNetworkSettings'][
+          this.tabIndex
+        ].defaultGateway;
 
-      this.currentHostname = this.$store.getters[
-        'network/globalNetworkSettings'
-      ][this.tabIndex].hostname;
+      this.currentHostname =
+        this.$store.getters['network/globalNetworkSettings'][
+          this.tabIndex
+        ].hostname;
 
-      this.currentMacAddress = this.$store.getters[
-        'network/globalNetworkSettings'
-      ][this.tabIndex].macAddress;
+      this.currentMacAddress =
+        this.$store.getters['network/globalNetworkSettings'][
+          this.tabIndex
+        ].macAddress;
     },
     getTabIndex(selectedIndex) {
       this.tabIndex = selectedIndex;
       this.$store.dispatch('network/setSelectedTabIndex', this.tabIndex);
       this.$store.dispatch(
         'network/setSelectedTabId',
-        this.ethernetData[selectedIndex].Id
+        this.ethernetData[selectedIndex].Id,
       );
       this.getModalInfo();
     },
@@ -162,6 +174,45 @@ export default {
         .catch(({ message }) => this.errorToast(message))
         .finally(() => this.endLoader());
     },
+    onModalDnsOk([newAddress]) {
+      if (this.isEditing) {
+        const currentDns =
+          this.$store.state.network.ethernetData[
+            this.$store.state.network.selectedInterfaceIndex
+          ]?.StaticNameServers || [];
+        const dnsList = [...currentDns];
+        dnsList[this.editIndex] = newAddress;
+
+        this.startLoader();
+        this.$store
+          .dispatch('network/editDnsAddress', dnsList)
+          .then((msg) => this.successToast(msg))
+          .catch((err) => this.errorToast(err.message))
+          .finally(() => this.endLoader());
+      } else {
+        this.startLoader();
+        this.$store
+          .dispatch('network/saveDnsAddress', newAddress)
+          .then((msg) => this.successToast(msg))
+          .catch((err) => this.errorToast(err.message))
+          .finally(() => this.endLoader());
+      }
+    },
+    onModalHidden() {
+      this.isEditing = false;
+      this.currentEditDns = '';
+      this.editIndex = null;
+    },
   },
 };
 </script>
+
+<style lang="scss" scoped>
+.card {
+  background-color: $gray-light;
+}
+
+.card-body {
+  padding: 0;
+}
+</style>

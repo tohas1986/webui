@@ -14,87 +14,82 @@
         ></table-cell-count>
       </b-col>
     </b-row>
-    <b-table
-      sort-icon-left
-      no-sort-reset
-      hover
-      responsive="md"
-      sort-by="health"
-      show-empty
-      :items="fans"
-      :fields="fields"
-      :sort-desc="true"
-      :sort-compare="sortCompare"
-      :filter="searchFilter"
-      :empty-text="$t('global.table.emptyMessage')"
-      :empty-filtered-text="$t('global.table.emptySearchMessage')"
-      :busy="isBusy"
-      @filtered="onFiltered"
-    >
-      <!-- Expand chevron icon -->
-      <template #cell(expandRow)="row">
-        <b-button
-          variant="link"
-          data-test-id="hardwareStatus-button-expandFans"
-          :title="expandRowLabel"
-          class="btn-icon-only"
-          @click="toggleRowDetails(row)"
-        >
-          <icon-chevron />
-          <span class="sr-only">{{ expandRowLabel }}</span>
-        </b-button>
-      </template>
+    <div class="table-container">
+      <b-table
+        no-sort-reset
+        hover
+        responsive
+        sort-by="health"
+        show-empty
+        :items="fans"
+        :fields="fields"
+        :sort-desc="true"
+        :sort-compare="sortCompare"
+        :filter="searchFilter"
+        :empty-text="$t('global.table.emptyMessage')"
+        :empty-filtered-text="$t('global.table.emptySearchMessage')"
+        :busy="isBusy"
+        @filtered="onFiltered"
+      >
+        <!-- Expand chevron icon -->
+        <template #cell(expandRow)="row">
+          <b-button
+            variant="link"
+            data-test-id="hardwareStatus-button-expandFans"
+            :title="expandRowLabel"
+            class="btn-icon-only"
+            @click="toggleRowDetails(row)"
+          >
+            <icon-chevron />
+            <span class="sr-only">{{ expandRowLabel }}</span>
+          </b-button>
+        </template>
 
-      <!-- Health -->
-      <template #cell(health)="{ value }">
-        <status-icon :status="statusIcon(value)" />
-        {{ value }}
-      </template>
+        <template #cell(speed)="{ value }">
+          {{ value }} {{ $t('unit.RPM') }}
+        </template>
 
-      <template #row-details="{ item }">
-        <b-container fluid>
-          <b-row>
-            <b-col sm="6" xl="4">
-              <dl>
-                <!-- Name -->
-                <dt>{{ $t('pageInventory.table.name') }}:</dt>
-                <dd>{{ dataFormatter(item.name) }}</dd>
-              </dl>
-              <dl>
-                <!-- Serial number -->
-                <dt>{{ $t('pageInventory.table.serialNumber') }}:</dt>
-                <dd>{{ dataFormatter(item.serialNumber) }}</dd>
-              </dl>
-              <dl>
-                <!-- Part number -->
-                <dt>{{ $t('pageInventory.table.partNumber') }}:</dt>
-                <dd>{{ dataFormatter(item.partNumber) }}</dd>
-              </dl>
-              <dl>
-                <!-- Fan speed -->
-                <dt>{{ $t('pageInventory.table.fanSpeed') }}:</dt>
-                <dd>
-                  {{ dataFormatter(item.speed) }}
-                  {{ $t('unit.RPM') }}
-                </dd>
-              </dl>
-            </b-col>
-            <b-col sm="6" xl="4">
-              <dl>
-                <!-- Status state -->
-                <dt>{{ $t('pageInventory.table.statusState') }}:</dt>
-                <dd>{{ dataFormatter(item.statusState) }}</dd>
-              </dl>
-              <dl>
-                <!-- Health Rollup state -->
-                <dt>{{ $t('pageInventory.table.statusHealthRollup') }}:</dt>
-                <dd>{{ dataFormatter(item.healthRollup) }}</dd>
-              </dl>
-            </b-col>
-          </b-row>
-        </b-container>
-      </template>
-    </b-table>
+        <!-- Health -->
+        <template #cell(health)="{ value }">
+          <status-color :status="statusIcon(value)" />
+          <span class="text-status">{{ value }}</span>
+        </template>
+
+        <template #row-details="{ item }">
+          <b-container fluid>
+            <b-row>
+              <b-col sm="6" xl="4">
+                <dl>
+                  <!-- ID -->
+                  <dt>{{ $t('pageInventory.table.id') }}:</dt>
+                  <dd>{{ dataFormatter(item.id) }}</dd>
+                </dl>
+                <dl>
+                  <!-- Fan speed -->
+                  <dt>{{ $t('pageInventory.table.fanSpeed') }}:</dt>
+                  <dd>
+                    {{ dataFormatter(item.speed) }}
+                    {{ $t('unit.RPM') }}
+                  </dd>
+                </dl>
+              </b-col>
+              <b-col sm="6" xl="4">
+                <dl>
+                  <!-- Status state -->
+                  <dt>{{ $t('pageInventory.table.statusState') }}:</dt>
+                  <dd>{{ dataFormatter(item.statusState) }}</dd>
+                </dl>
+                <dl>
+                  <!-- Health Rollup state -->
+                  <dt>{{ $t('pageInventory.table.healthRollup') }}:</dt>
+                  <dd>{{ dataFormatter(item.health) }}</dd>
+                </dl>
+              </b-col>
+            </b-row>
+          </b-container>
+        </template>
+      </b-table>
+    </div>
   </page-section>
 </template>
 
@@ -103,7 +98,7 @@ import PageSection from '@/components/Global/PageSection';
 import IconChevron from '@carbon/icons-vue/es/chevron--down/20';
 import TableCellCount from '@/components/Global/TableCellCount';
 
-import StatusIcon from '@/components/Global/StatusIcon';
+import StatusColor from '@/components/Global/StatusColor';
 import DataFormatterMixin from '@/components/Mixins/DataFormatterMixin';
 import TableSortMixin from '@/components/Mixins/TableSortMixin';
 import Search from '@/components/Global/Search';
@@ -115,7 +110,7 @@ import TableRowExpandMixin, {
 } from '@/components/Mixins/TableRowExpandMixin';
 
 export default {
-  components: { IconChevron, PageSection, StatusIcon, Search, TableCellCount },
+  components: { IconChevron, PageSection, StatusColor, Search, TableCellCount },
   mixins: [
     TableRowExpandMixin,
     DataFormatterMixin,
@@ -139,22 +134,16 @@ export default {
           sortable: true,
         },
         {
+          key: 'speed',
+          label: this.$t('pageInventory.table.speed'),
+          formatter: this.dataFormatter,
+        },
+        {
           key: 'health',
           label: this.$t('pageInventory.table.health'),
           formatter: this.dataFormatter,
           sortable: true,
           tdClass: 'text-nowrap',
-        },
-        {
-          key: 'partNumber',
-          label: this.$t('pageInventory.table.partNumber'),
-          formatter: this.dataFormatter,
-          sortable: true,
-        },
-        {
-          key: 'serialNumber',
-          label: this.$t('pageInventory.table.serialNumber'),
-          formatter: this.dataFormatter,
         },
       ],
       searchFilter: searchFilter,

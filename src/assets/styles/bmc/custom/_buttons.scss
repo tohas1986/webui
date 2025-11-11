@@ -10,49 +10,102 @@
     margin-right: $spacer / 4;
   }
   &:disabled {
-    color: gray("600");
+    color: rgba($main-color, 0.4);
     fill: currentColor;
     box-shadow: none !important;
+    svg {
+      color: rgba($main-color, 0.4);
+    }
     &:not(.btn-link) {
-      border-color: gray("400");
-      background-color: gray("400");
+      border-color: $main-color;
+      background-color: $gray-light;
     }
   }
 }
 
 .btn-primary {
+  padding: clamp(1rem, -0.0238rem + 1.2698vw, 1.5rem)
+    clamp(1.625rem, -0.1667rem + 2.2222vw, 2.5rem);
   fill: currentColor;
+  font-size: clamp(0.875rem, 0.1071rem + 0.9524vw, 1.25rem);
+  font-weight: 500;
+  background-color: $btn-color;
+  border: none;
+  border-radius: 20px;
+
+  &:hover {
+    background-color: $btn-hover;
+  }
+
+  &:disabled {
+    background-color: rgba($main-color, 0.4) !important;
+    color: $white;
+  }
+
   &:focus,
   &:not(:disabled):not(.disabled):active:focus {
+    background-color: $main-color;
     border-color: $white;
-    box-shadow: inset 0 0 0 3px theme-color('primary'), inset 0 0 0 5px $white;
+    box-shadow:
+      inset 0 0 0 3px $main-color,
+      inset 0 0 0 5px $white;
   }
 }
 
 .btn-secondary {
+  padding: clamp(1rem, -0.0238rem + 1.2698vw, 1.5rem)
+    clamp(1.625rem, -0.1667rem + 2.2222vw, 2.5rem);
   fill: currentColor;
+  font-size: clamp(0.875rem, 0.1071rem + 0.9524vw, 1.125rem);
+  font-weight: 500;
+  background-color: $gray-light;
+  color: $main-color;
+  border: 1px solid $main-color;
+  border-radius: 20px;
+
+  &:hover:enabled {
+    background-color: $btn-background;
+    color: $main-color;
+  }
+
+  &:disabled {
+    color: rgba($main-color, 0.4) !important;
+  }
   &:focus,
   &:not(:disabled):not(.disabled):active:focus {
+    color: $main-color;
+    background-color: $gray-light !important;
     border-color: $white;
-    box-shadow: inset 0 0 0 3px theme-color('secondary'), inset 0 0 0 5px $white;
+    box-shadow:
+      inset 0 0 0 3px $main-color,
+      inset 0 0 0 5px $white;
   }
+}
+
+.btn-danger {
+  padding: clamp(1rem, -0.0238rem + 1.2698vw, 1.5rem)
+    clamp(1.625rem, -0.1667rem + 2.2222vw, 2.5rem);
+  font-size: clamp(0.875rem, 0.1071rem + 0.9524vw, 1.25rem);
+  font-weight: 500;
+  border: 1px solid $main-color;
+  border-radius: 20px;
 }
 
 // Global style for all button link
 .btn-link {
   font-weight: $headings-font-weight;
-  fill: theme-color("primary");
+  fill: currentColor;
+  color: $main-color;
   text-decoration: none !important;
   &:hover {
-    background-color: gray("200");
-    color: theme-color("primary");
+    color: $purple;
   }
   &:active {
-    background-color: gray("300");
+    background-color: gray('300');
   }
   &:focus {
-    box-shadow: inset 0 0 0 2px theme-color("primary");
-    color: theme-color("primary");
+    box-shadow: inset 0 0 0 2px $purple;
+    color: $purple;
     outline: none;
   }
   &:disabled {
@@ -69,9 +122,48 @@
 .input-action-btn,
 .btn-datepicker {
   position: absolute;
-  right: 0;
-  top: 0;
-  z-index: $zindex-dropdown + 1;
+  top: 25px;
+  right: 1%;
+  color: currentColor;
+
+  &:hover {
+    background-color: transparent;
+    color: $purple;
+  }
+
+  @include media-breakpoint-down(lg) {
+    top: 10px;
+  }
+}
+
+.btn-datepicker {
+  svg {
+    @include media-breakpoint-down(lg) {
+      width: 18px;
+      height: 18px;
+    }
+  }
+}
+
+.snmp-form,
+.smtp-form,
+.ldap-section,
+.profile-form {
+  .input-action-btn {
+    top: 10px;
+
+    @include media-breakpoint-down('xl') {
+      top: 2px;
+    }
+  }
+}
+
+.date-time-form .dropdown-toggle {
+  top: -18px;
+
+  @include media-breakpoint-down('xl') {
+    top: -10px;
+  }
 }
 
 // Contain input buttons within input
@@ -79,4 +171,84 @@
 .input-action-btn {
   padding: 7px;
   margin: 1px;
+}
+
+.card-link {
+  display: inline-block;
+  margin-top: 4px;
+  font-size: clamp(0.625rem, 0.1131rem + 0.6349vw, 0.875rem);
+  color: $purple !important;
+  z-index: 2;
+  white-space: nowrap;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.icon-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: clamp(1.844rem, -0.0111rem + 2.301vw, 2.75rem);
+  height: clamp(1.844rem, -0.0111rem + 2.301vw, 2.75rem);
+  background-color: $white;
+  border-radius: clamp(0.625rem, -0.1429rem + 0.9524vw, 1rem);
+}
+
+.btn-container {
+  display: flex;
+  position: absolute;
+  bottom: -35px;
+  gap: 5px;
+  padding: 5px;
+  background-color: $white;
+  border-radius: 25px;
+  z-index: $zindex-dropdown;
+
+  @include media-breakpoint-down('lg') {
+    bottom: -20px;
+  }
+}
+
+.btn-table {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.5rem, -0.5238rem + 1.2698vw, 1rem);
+  padding: clamp(0.375rem, -0.7778rem + 1.4298vw, 0.938rem);
+  border: 1px solid $gray-border;
+  border-radius: 20px;
+  font-size: clamp(0.75rem, -0.0179rem + 0.9524vw, 1.125rem);
+
+  &:hover {
+    background-color: $main-color;
+    color: $white;
+  }
+
+  svg {
+    width: 24px;
+    height: 24px;
+
+    @include media-breakpoint-down('xl') {
+      width: 18px;
+      height: 18px;
+    }
+  }
+}
+
+.btn-secondary-container {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1.25rem;
+}
+
+.btn-mt {
+  margin-top: clamp(0.813rem, -0.0818rem + 1.1098vw, 1.25rem);
+  @include media-breakpoint-down(md) {
+    margin-top: 0;
+  }
+}
+
+.span-sessions .btn-link {
+  width: auto !important;
 }

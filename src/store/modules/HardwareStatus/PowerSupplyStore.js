@@ -12,10 +12,10 @@ const PowerSupplyStore = {
     setPowerSupply: (state, data) => {
       state.powerSupplies = data.map((powerSupply) => {
         const {
-          EfficiencyPercent,
+          EfficiencyRatings = [],
           FirmwareVersion,
           LocationIndicatorActive,
-          MemberId,
+          Id,
           Manufacturer,
           Model,
           Name,
@@ -25,13 +25,14 @@ const PowerSupplyStore = {
           SparePartNumber,
           Location,
           Status = {},
+          RedundancyMode,
         } = powerSupply;
         return {
-          id: MemberId,
+          id: Id,
           health: Status.Health,
           partNumber: PartNumber,
           serialNumber: SerialNumber,
-          efficiencyPercent: EfficiencyPercent,
+          efficiencyPercent: EfficiencyRatings[0].EfficiencyPercent,
           firmwareVersion: FirmwareVersion,
           identifyLed: LocationIndicatorActive,
           manufacturer: Manufacturer,
@@ -41,6 +42,7 @@ const PowerSupplyStore = {
           sparePartNumber: SparePartNumber,
           locationNumber: Location?.PartLocation?.ServiceLabel,
           statusState: Status.State,
+          redundancyMode: RedundancyMode,
         };
       });
     },
@@ -50,7 +52,7 @@ const PowerSupplyStore = {
       return await api
         .get('/redfish/v1/Chassis')
         .then(({ data: { Members } }) =>
-          Members.map((member) => member['@odata.id'])
+          Members.map((member) => member['@odata.id']),
         )
         .catch((error) => console.log(error));
     },
@@ -62,7 +64,7 @@ const PowerSupplyStore = {
         .then((supplies) => {
           let suppliesList = [];
           supplies.forEach(
-            (supply) => (suppliesList = [...suppliesList, ...supply])
+            (supply) => (suppliesList = [...suppliesList, ...supply]),
           );
           commit('setPowerSupply', suppliesList);
         })
@@ -70,8 +72,20 @@ const PowerSupplyStore = {
     },
     async getChassisPower(_, id) {
       return await api
-        .get(`${id}/Power`)
-        .then(({ data: { PowerSupplies } }) => PowerSupplies || [])
+        .get(`${id}/PowerSubsystem`)
+        .then((response) => {
+          return api.get(`${response.data.PowerSupplies['@odata.id']}`);
+        })
+        .then(({ data: { Members } }) => {
+          const promises = Members.map((member) =>
+            api.get(member['@odata.id']),
+          );
+          return api.all(promises);
+        })
+        .then((response) => {
+          const data = response.map(({ data }) => data);
+          return data;
+        })
         .catch((error) => console.log(error));
     },
   },

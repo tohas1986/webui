@@ -1,27 +1,29 @@
 <template>
-  <b-container fluid="xl">
+  <b-container fluid>
     <page-title />
     <b-row>
-      <b-col md="8" lg="8" xl="6">
+      <b-col xl="12">
         <page-section>
-          <b-row>
-            <b-col>
-              <dl>
-                <dt>
-                  {{ $t('pageRebootBmc.lastReboot') }}
-                </dt>
-                <dd v-if="lastBmcRebootTime">
-                  {{ lastBmcRebootTime | formatDate }}
-                  {{ lastBmcRebootTime | formatTime }}
-                </dd>
-                <dd v-else>--</dd>
-              </dl>
-            </b-col>
-          </b-row>
-          {{ $t('pageRebootBmc.rebootInformation') }}
+          <div class="section-container">
+            <b-row>
+              <b-col sm="12" md="4" class="text-divider">
+                <h3>{{ $t('pageRebootBmc.lastReboot') }}</h3>
+              </b-col>
+              <b-col sm="12" md="8">
+                <dl>
+                  <dd v-if="lastBmcRebootTime">
+                    {{ lastBmcRebootTime | formatDate }}
+                    {{ lastBmcRebootTime | formatTime }} ({{ timezone }})
+                  </dd>
+                  <dd v-else>--</dd>
+                  <dd>{{ $t('pageRebootBmc.rebootInformation') }}</dd>
+                </dl>
+              </b-col>
+            </b-row>
+          </div>
           <b-button
             variant="primary"
-            class="d-block mt-5"
+            class="btn-block btn-mt"
             data-test-id="rebootBmc-button-reboot"
             @click="onClick"
           >
@@ -38,11 +40,12 @@ import PageTitle from '@/components/Global/PageTitle';
 import PageSection from '@/components/Global/PageSection';
 import BVToastMixin from '@/components/Mixins/BVToastMixin';
 import LoadingBarMixin from '@/components/Mixins/LoadingBarMixin';
+import LocalTimezoneLabelMixin from '@/components/Mixins/LocalTimezoneLabelMixin';
 
 export default {
   name: 'RebootBmc',
   components: { PageTitle, PageSection },
-  mixins: [BVToastMixin, LoadingBarMixin],
+  mixins: [BVToastMixin, LoadingBarMixin, LocalTimezoneLabelMixin],
   beforeRouteLeave(to, from, next) {
     this.hideLoader();
     next();
@@ -50,6 +53,12 @@ export default {
   computed: {
     lastBmcRebootTime() {
       return this.$store.getters['controls/lastBmcRebootTime'];
+    },
+    isUtcDisplay() {
+      return this.$store.getters['global/isUtcDisplay'];
+    },
+    timezone() {
+      return this.localOffset(this.isUtcDisplay);
     },
   },
   created() {
@@ -65,6 +74,8 @@ export default {
           title: this.$t('pageRebootBmc.modal.confirmTitle'),
           okTitle: this.$t('global.action.confirm'),
           cancelTitle: this.$t('global.action.cancel'),
+          size: 'lg',
+          centered: true,
         })
         .then((confirmed) => {
           if (confirmed) this.rebootBmc();
@@ -79,5 +90,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss" scoped></style>

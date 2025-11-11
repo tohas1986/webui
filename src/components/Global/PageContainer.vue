@@ -20,18 +20,14 @@ export default {
 main {
   width: 100%;
   height: 100%;
-  padding-top: $spacer * 1.5;
-  padding-bottom: $spacer * 3;
-  padding-left: $spacer;
-  padding-right: $spacer;
+  padding: clamp(1rem, -0.0238rem + 1.2698vw, 1.5rem)
+    clamp(1.2rem, -1.4619rem + 3.3016vw, 2.5rem)
+    clamp(1.375rem, 0.0952rem + 1.5873vw, 2rem)
+    clamp(1.2rem, -1.4619rem + 3.3016vw, 2.5rem);
 
   &:focus-visible {
     box-shadow: inset 0 0 0 2px theme-color('primary');
     outline: none;
-  }
-
-  @include media-breakpoint-up($responsive-layout-bp) {
-    padding-left: $spacer * 2;
   }
 }
 </style>

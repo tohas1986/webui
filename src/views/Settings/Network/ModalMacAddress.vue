@@ -2,16 +2,18 @@
   <b-modal
     id="modal-mac-address"
     ref="modal"
+    size="lg"
+    centered
     :title="$t('pageNetwork.modal.editMacAddressTitle')"
     @hidden="resetForm"
   >
     <b-form id="mac-settings" @submit.prevent="handleSubmit">
       <b-row>
-        <b-col sm="6">
-          <b-form-group
-            :label="$t('pageNetwork.macAddress')"
-            label-for="macAddress"
-          >
+        <b-col sm="4" class="align-content-center">
+          <label for="macAddress">{{ $t('pageNetwork.macAddress') }}</label>
+        </b-col>
+        <b-col sm="8">
+          <b-form-group>
             <b-form-input
               id="mac-address"
               v-model.trim="form.macAddress"

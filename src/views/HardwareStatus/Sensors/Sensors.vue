@@ -1,27 +1,90 @@
 <template>
-  <b-container fluid="xl">
+  <b-container fluid>
     <page-title />
     <b-row class="align-items-end">
-      <b-col sm="6" md="5" xl="4">
+      <b-col class="d-sm-flex align-items-end">
         <search
           :placeholder="$t('pageSensors.searchForSensors')"
           data-test-id="sensors-input-searchForSensors"
           @change-search="onChangeSearchInput"
           @clear-search="onClearSearchInput"
         />
-      </b-col>
-      <b-col sm="3" md="3" xl="2">
-        <table-cell-count
-          :filtered-items-count="filteredRows"
-          :total-number-of-cells="allSensors.length"
-        ></table-cell-count>
-      </b-col>
-      <b-col sm="3" md="4" xl="6" class="text-right">
-        <table-filter :filters="tableFilters" @filter-change="onFilterChange" />
+        <div class="ml-sm-4">
+          <table-cell-count
+            :filtered-items-count="filteredRows"
+            :total-number-of-cells="allSensors.length"
+          ></table-cell-count>
+        </div>
       </b-col>
     </b-row>
     <b-row>
       <b-col xl="12">
+        <div class="table-container">
+          <b-table
+            id="my-table"
+            ref="table"
+            responsive
+            selectable
+            no-select-on-click
+            hover
+            no-sort-reset
+            sticky-header
+            sort-by="status"
+            show-empty
+            :no-border-collapse="true"
+            :items="filteredSensors"
+            :fields="fields"
+            :sort-desc="true"
+            :sort-compare="sortCompare"
+            :filter="searchFilter"
+            :empty-text="$t('global.table.emptyMessage')"
+            :empty-filtered-text="$t('global.table.emptySearchMessage')"
+            :busy="isBusy"
+            :per-page="perPage"
+            :current-page="currentPage"
+            @filtered="onFiltered"
+            @row-selected="onRowSelected($event, filteredSensors.length)"
+          >
+            <!-- Checkbox column -->
+            <template #head(checkbox)>
+              <b-form-checkbox
+                v-model="tableHeaderCheckboxModel"
+                :indeterminate="tableHeaderCheckboxIndeterminate"
+                @change="onChangeHeaderCheckbox($refs.table)"
+              >
+                <span class="sr-only">{{ $t('global.table.selectAll') }}</span>
+              </b-form-checkbox>
+            </template>
+            <template #cell(checkbox)="row">
+              <b-form-checkbox
+                v-model="row.rowSelected"
+                @change="toggleSelectRow($refs.table, row.index)"
+              >
+                <span class="sr-only">{{ $t('global.table.selectItem') }}</span>
+              </b-form-checkbox>
+            </template>
+
+            <template #cell(status)="{ value }">
+              <status-color :status="statusIcon(value)" />
+              <span class="text-status">{{ value }}</span>
+            </template>
+            <template #cell(currentValue)="data">
+              {{ data.value }} {{ data.item.units }}
+            </template>
+            <template #cell(lowerCaution)="data">
+              {{ data.value }} {{ data.item.units }}
+            </template>
+            <template #cell(upperCaution)="data">
+              {{ data.value }} {{ data.item.units }}
+            </template>
+            <template #cell(lowerCritical)="data">
+              {{ data.value }} {{ data.item.units }}
+            </template>
+            <template #cell(upperCritical)="data">
+              {{ data.value }} {{ data.item.units }}
+            </template>
+          </b-table>
+        </div>
         <table-toolbar
           ref="toolbar"
           :selected-items-count="selectedRows.length"
@@ -34,67 +97,55 @@
             />
           </template>
         </table-toolbar>
-        <b-table
-          ref="table"
-          responsive="md"
-          selectable
-          no-select-on-click
-          sort-icon-left
-          hover
-          no-sort-reset
-          sticky-header="75vh"
-          sort-by="status"
-          show-empty
-          :no-border-collapse="true"
-          :items="filteredSensors"
-          :fields="fields"
-          :sort-desc="true"
-          :sort-compare="sortCompare"
-          :filter="searchFilter"
-          :empty-text="$t('global.table.emptyMessage')"
-          :empty-filtered-text="$t('global.table.emptySearchMessage')"
-          :busy="isBusy"
-          @filtered="onFiltered"
-          @row-selected="onRowSelected($event, filteredSensors.length)"
+        <b-row class="justify-content-center">
+          <div class="btn-container">
+            <table-filter
+              :filters="tableFilters"
+              @filter-change="onFilterChange"
+            />
+            <b-button
+              v-if="updateOn"
+              variant="link"
+              class="btn-table"
+              @click="updateTableOn"
+              ><icon-replace />{{ $t('pageSensors.updateOn') }}</b-button
+            >
+            <b-button
+              v-if="updateOff"
+              variant="link"
+              class="btn-table"
+              @click="updateTableOff"
+            >
+              <icon-replace />{{ $t('pageSensors.updateOff') }}</b-button
+            >
+          </div>
+        </b-row>
+      </b-col>
+    </b-row>
+    <!-- Table pagination -->
+    <b-row class="table-pagination-container">
+      <b-col sm="6">
+        <b-form-group
+          class="table-pagination-select"
+          :label="$t('global.table.itemsPerPage')"
+          label-for="pagination-items-per-page"
         >
-          <!-- Checkbox column -->
-          <template #head(checkbox)>
-            <b-form-checkbox
-              v-model="tableHeaderCheckboxModel"
-              :indeterminate="tableHeaderCheckboxIndeterminate"
-              @change="onChangeHeaderCheckbox($refs.table)"
-            >
-              <span class="sr-only">{{ $t('global.table.selectAll') }}</span>
-            </b-form-checkbox>
-          </template>
-          <template #cell(checkbox)="row">
-            <b-form-checkbox
-              v-model="row.rowSelected"
-              @change="toggleSelectRow($refs.table, row.index)"
-            >
-              <span class="sr-only">{{ $t('global.table.selectItem') }}</span>
-            </b-form-checkbox>
-          </template>
-
-          <template #cell(status)="{ value }">
-            <status-icon :status="statusIcon(value)" /> {{ value }}
-          </template>
-          <template #cell(currentValue)="data">
-            {{ data.value }} {{ data.item.units }}
-          </template>
-          <template #cell(lowerCaution)="data">
-            {{ data.value }} {{ data.item.units }}
-          </template>
-          <template #cell(upperCaution)="data">
-            {{ data.value }} {{ data.item.units }}
-          </template>
-          <template #cell(lowerCritical)="data">
-            {{ data.value }} {{ data.item.units }}
-          </template>
-          <template #cell(upperCritical)="data">
-            {{ data.value }} {{ data.item.units }}
-          </template>
-        </b-table>
+          <b-form-select
+            id="pagination-items-per-page"
+            v-model="perPage"
+            :options="itemsPerPageOptions"
+          />
+        </b-form-group>
+      </b-col>
+      <b-col sm="6">
+        <b-pagination
+          v-model="currentPage"
+          first-number
+          last-number
+          :per-page="perPage"
+          :total-rows="getTotalRowCount(filteredRows)"
+          aria-controls="table-sensors-entries"
+        />
       </b-col>
     </b-row>
   </b-container>
@@ -103,7 +154,8 @@
 <script>
 import PageTitle from '@/components/Global/PageTitle';
 import Search from '@/components/Global/Search';
-import StatusIcon from '@/components/Global/StatusIcon';
+import StatusColor from '@/components/Global/StatusColor';
+import IconReplace from '@carbon/icons-vue/es/renew/20';
 import TableFilter from '@/components/Global/TableFilter';
 import TableToolbar from '@/components/Global/TableToolbar';
 import TableToolbarExport from '@/components/Global/TableToolbarExport';
@@ -121,17 +173,24 @@ import TableSortMixin from '@/components/Mixins/TableSortMixin';
 import SearchFilterMixin, {
   searchFilter,
 } from '@/components/Mixins/SearchFilterMixin';
+import BVToastMixin from '@/components/Mixins/BVToastMixin';
+import BVPaginationMixin, {
+  currentPage,
+  perPage,
+  itemsPerPageOptions,
+} from '@/components/Mixins/BVPaginationMixin';
 
 export default {
   name: 'Sensors',
   components: {
     PageTitle,
     Search,
-    StatusIcon,
+    StatusColor,
     TableCellCount,
     TableFilter,
     TableToolbar,
     TableToolbarExport,
+    IconReplace,
   },
   mixins: [
     TableFilterMixin,
@@ -140,6 +199,8 @@ export default {
     DataFormatterMixin,
     TableSortMixin,
     SearchFilterMixin,
+    BVToastMixin,
+    BVPaginationMixin,
   ],
   beforeRouteLeave(to, from, next) {
     this.hideLoader();
@@ -148,6 +209,9 @@ export default {
   data() {
     return {
       isBusy: true,
+      updateOn: true,
+      timer: '',
+      updateOff: false,
       fields: [
         {
           key: 'checkbox',
@@ -158,6 +222,7 @@ export default {
           key: 'name',
           sortable: true,
           label: this.$t('pageSensors.table.name'),
+          class: 'text-nowrap',
         },
         {
           key: 'status',
@@ -209,6 +274,9 @@ export default {
       selectedRows: selectedRows,
       tableHeaderCheckboxModel: tableHeaderCheckboxModel,
       tableHeaderCheckboxIndeterminate: tableHeaderCheckboxIndeterminate,
+      currentPage: currentPage,
+      itemsPerPageOptions: itemsPerPageOptions,
+      perPage: perPage,
     };
   },
   computed: {
@@ -230,6 +298,9 @@ export default {
       this.endLoader();
       this.isBusy = false;
     });
+  },
+  beforeDestroy() {
+    this.cancelAutoUpdate();
   },
   methods: {
     sortCompare(a, b, key) {
@@ -255,6 +326,31 @@ export default {
         date.toString().split(':').join('-').split(' ')[4];
       return this.$t('pageSensors.exportFilePrefix') + date;
     },
+    updateTableOn() {
+      this.timer = setInterval(() => {
+        this.$store.dispatch('sensors/getAllSensors');
+      }, 5000);
+      this.successToast(this.$t('pageSensors.toast.updateOn'));
+      this.updateOn = false;
+      this.updateOff = true;
+    },
+    updateTableOff() {
+      this.cancelAutoUpdate();
+      this.successToast(this.$t('pageSensors.toast.updateOff'));
+      this.updateOn = true;
+      this.updateOff = false;
+    },
+    cancelAutoUpdate() {
+      clearInterval(this.timer);
+    },
   },
 };
 </script>
+<style lang="scss" scoped>
+.table-pagination-container {
+  @include media-breakpoint-down(md) {
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+}
+</style>

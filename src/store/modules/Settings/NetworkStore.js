@@ -9,6 +9,7 @@ const NetworkStore = {
     globalNetworkSettings: [],
     selectedInterfaceId: '', // which tab is selected
     selectedInterfaceIndex: 0, // which tab is selected
+    networkAdapters: [],
   },
   getters: {
     ethernetData: (state) => state.ethernetData,
@@ -16,6 +17,7 @@ const NetworkStore = {
     globalNetworkSettings: (state) => state.globalNetworkSettings,
     selectedInterfaceId: (state) => state.selectedInterfaceId,
     selectedInterfaceIndex: (state) => state.selectedInterfaceIndex,
+    adapters: (state) => state.networkAdapters,
   },
   mutations: {
     setDomainNameState: (state, domainState) =>
@@ -34,11 +36,17 @@ const NetworkStore = {
           IPv4StaticAddresses,
           LinkStatus,
           MACAddress,
+          Id,
+          NameServers,
         } = data;
+        localStorage.removeItem('hostName');
+        localStorage.setItem('hostName', HostName);
         return {
+          id: Id,
+          nameServers: NameServers,
           defaultGateway: IPv4StaticAddresses[0]?.Gateway, //First static gateway is the default gateway
           dhcpAddress: IPv4Addresses.filter(
-            (ipv4) => ipv4.AddressOrigin === 'DHCP'
+            (ipv4) => ipv4.AddressOrigin === 'DHCP',
           ),
           dhcpEnabled: DHCPv4.DHCPEnabled,
           hostname: HostName,
@@ -56,6 +64,9 @@ const NetworkStore = {
       (state.selectedInterfaceId = selectedInterfaceId),
     setSelectedInterfaceIndex: (state, selectedInterfaceIndex) =>
       (state.selectedInterfaceIndex = selectedInterfaceIndex),
+    setNetworkAdapters: (state, adapters) => {
+      state.networkAdapters = adapters;
+    },
   },
   actions: {
     async getEthernetData({ commit }) {
@@ -63,19 +74,19 @@ const NetworkStore = {
         .get('/redfish/v1/Managers/bmc/EthernetInterfaces')
         .then((response) =>
           response.data.Members.map(
-            (ethernetInterface) => ethernetInterface['@odata.id']
-          )
+            (ethernetInterface) => ethernetInterface['@odata.id'],
+          ),
         )
         .then((ethernetInterfaceIds) =>
           api.all(
             ethernetInterfaceIds.map((ethernetInterface) =>
-              api.get(ethernetInterface)
-            )
-          )
+              api.get(ethernetInterface),
+            ),
+          ),
         )
         .then((ethernetInterfaces) => {
           const ethernetData = ethernetInterfaces.map(
-            (ethernetInterface) => ethernetInterface.data
+            (ethernetInterface) => ethernetInterface.data,
           );
           const firstInterfaceId = ethernetData[0].Id;
 
@@ -97,7 +108,7 @@ const NetworkStore = {
       return api
         .patch(
           `/redfish/v1/Managers/bmc/EthernetInterfaces/${state.selectedInterfaceId}`,
-          data
+          data,
         )
         .then(dispatch('getEthernetData'))
         .then(() => {
@@ -110,7 +121,7 @@ const NetworkStore = {
           throw new Error(
             i18n.t('pageNetwork.toast.errorSaveNetworkSettings', {
               setting: i18n.t('pageNetwork.dhcp'),
-            })
+            }),
           );
         });
     },
@@ -126,7 +137,7 @@ const NetworkStore = {
       return api
         .patch(
           `/redfish/v1/Managers/bmc/EthernetInterfaces/${state.firstInterfaceId}`,
-          data
+          data,
         )
         .then(() => {
           return i18n.t('pageNetwork.toast.successSaveNetworkSettings', {
@@ -139,7 +150,7 @@ const NetworkStore = {
           throw new Error(
             i18n.t('pageNetwork.toast.errorSaveNetworkSettings', {
               setting: i18n.t('pageNetwork.domainName'),
-            })
+            }),
           );
         });
     },
@@ -155,7 +166,7 @@ const NetworkStore = {
       return api
         .patch(
           `/redfish/v1/Managers/bmc/EthernetInterfaces/${state.firstInterfaceId}`,
-          data
+          data,
         )
         .then(() => {
           return i18n.t('pageNetwork.toast.successSaveNetworkSettings', {
@@ -168,7 +179,7 @@ const NetworkStore = {
           throw new Error(
             i18n.t('pageNetwork.toast.errorSaveNetworkSettings', {
               setting: i18n.t('pageNetwork.dns'),
-            })
+            }),
           );
         });
     },
@@ -184,7 +195,7 @@ const NetworkStore = {
       return api
         .patch(
           `/redfish/v1/Managers/bmc/EthernetInterfaces/${state.firstInterfaceId}`,
-          data
+          data,
         )
         .then(() => {
           return i18n.t('pageNetwork.toast.successSaveNetworkSettings', {
@@ -197,7 +208,7 @@ const NetworkStore = {
           throw new Error(
             i18n.t('pageNetwork.toast.errorSaveNetworkSettings', {
               setting: i18n.t('pageNetwork.ntp'),
-            })
+            }),
           );
         });
     },
@@ -222,7 +233,7 @@ const NetworkStore = {
       return api
         .patch(
           `/redfish/v1/Managers/bmc/EthernetInterfaces/${state.selectedInterfaceId}`,
-          { IPv4StaticAddresses: originalAddresses.concat(newAddress) }
+          { IPv4StaticAddresses: originalAddresses.concat(newAddress) },
         )
         .then(dispatch('getEthernetData'))
         .then(() => {
@@ -235,7 +246,7 @@ const NetworkStore = {
           throw new Error(
             i18n.t('pageNetwork.toast.errorSaveNetworkSettings', {
               setting: i18n.t('pageNetwork.ipv4'),
-            })
+            }),
           );
         });
     },
@@ -243,7 +254,7 @@ const NetworkStore = {
       return api
         .patch(
           `/redfish/v1/Managers/bmc/EthernetInterfaces/${state.selectedInterfaceId}`,
-          { IPv4StaticAddresses: ipv4TableData }
+          { IPv4StaticAddresses: ipv4TableData },
         )
         .then(dispatch('getEthernetData'))
         .then(() => {
@@ -256,7 +267,7 @@ const NetworkStore = {
           throw new Error(
             i18n.t('pageNetwork.toast.errorSaveNetworkSettings', {
               setting: i18n.t('pageNetwork.ipv4'),
-            })
+            }),
           );
         });
     },
@@ -264,7 +275,7 @@ const NetworkStore = {
       return api
         .patch(
           `/redfish/v1/Managers/bmc/EthernetInterfaces/${state.selectedInterfaceId}`,
-          interfaceSettingsForm
+          interfaceSettingsForm,
         )
         .then(dispatch('getEthernetData'))
         .then(() => {
@@ -277,7 +288,7 @@ const NetworkStore = {
           throw new Error(
             i18n.t('pageNetwork.toast.errorSaveNetworkSettings', {
               setting: i18n.t('pageNetwork.network'),
-            })
+            }),
           );
         });
     },
@@ -289,7 +300,7 @@ const NetworkStore = {
       return api
         .patch(
           `/redfish/v1/Managers/bmc/EthernetInterfaces/${state.selectedInterfaceId}`,
-          { StaticNameServers: newDnsArray }
+          { StaticNameServers: newDnsArray },
         )
         .then(dispatch('getEthernetData'))
         .then(() => {
@@ -302,7 +313,7 @@ const NetworkStore = {
           throw new Error(
             i18n.t('pageNetwork.toast.errorSaveNetworkSettings', {
               setting: i18n.t('pageNetwork.dns'),
-            })
+            }),
           );
         });
     },
@@ -310,7 +321,7 @@ const NetworkStore = {
       return api
         .patch(
           `/redfish/v1/Managers/bmc/EthernetInterfaces/${state.selectedInterfaceId}`,
-          { StaticNameServers: dnsTableData }
+          { StaticNameServers: dnsTableData },
         )
         .then(dispatch('getEthernetData'))
         .then(() => {
@@ -323,9 +334,53 @@ const NetworkStore = {
           throw new Error(
             i18n.t('pageNetwork.toast.errorSaveNetworkSettings', {
               setting: i18n.t('pageNetwork.dns'),
-            })
+            }),
           );
         });
+    },
+    async getNetworkAdaptersInfo({ commit }) {
+      try {
+        const response = await api.get(
+          '/redfish/v1/Systems/system/NetworkAdapters',
+        );
+        const adapters = response.data.Members || [];
+        const adapterPromises = adapters.map(async (adapter) => {
+          const adapterId = adapter['@odata.id'];
+          const adapterResponse = await api.get(adapterId);
+          const adapterData = adapterResponse.data;
+          let macAddresses = [];
+          try {
+            const portsResponse = await api.get(`${adapterId}/NetworkPorts`);
+            const ports = portsResponse.data.NetworkPorts || [];
+            const portPromises = ports.map(async (port) => {
+              const portId = port['@odata.id'];
+              const portResponse = await api.get(portId);
+
+              return (
+                portResponse.data.AssociatedNetworkAddresses?.[0][0] || null
+              );
+            });
+
+            macAddresses = await Promise.all(portPromises);
+          } catch (error) {
+            console.error('Failed to get network ports:', error);
+          }
+
+          return {
+            id: adapterData.Id,
+            model: adapterData.Model,
+            manufacturer: adapterData.Manufacturer,
+            firmwarePackageVersion: adapterData.FirmwarePackageVersion,
+            macAddresses: macAddresses.filter(Boolean),
+          };
+        });
+
+        const adaptersData = await Promise.all(adapterPromises);
+        commit('setNetworkAdapters', adaptersData);
+      } catch (error) {
+        console.error('Network Adapters Data:', error);
+        throw error;
+      }
     },
   },
 };

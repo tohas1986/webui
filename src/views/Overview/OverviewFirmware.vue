@@ -3,22 +3,24 @@
     :title="$t('pageOverview.firmwareInformation')"
     :to="`/operations/firmware`"
   >
-    <b-row class="mt-3">
-      <b-col sm="6">
-        <dl>
-          <dt>{{ $t('pageOverview.runningVersion') }}</dt>
-          <dd>{{ dataFormatter(runningVersion) }}</dd>
-          <dt>{{ $t('pageOverview.backupVersion') }}</dt>
-          <dd>{{ dataFormatter(backupVersion) }}</dd>
-        </dl>
-      </b-col>
-      <b-col sm="6">
-        <dl>
-          <dt>{{ $t('pageOverview.firmwareVersion') }}</dt>
-          <dd>{{ dataFormatter(firmwareVersion) }}</dd>
-        </dl>
-      </b-col>
-    </b-row>
+    <div class="card-info">
+      <dl>
+        <dt>{{ $t('pageOverview.runningVersion') }}</dt>
+        <dd>{{ dataFormatter(runningVersion) }}</dd>
+      </dl>
+      <dl>
+        <dt>{{ $t('pageOverview.backupVersion') }}</dt>
+        <dd>{{ dataFormatter(backupVersion) }}</dd>
+      </dl>
+      <!-- <dl>
+        <dt>{{ $t('pageOverview.firmwareVersion') }}</dt>
+        <dd>{{ dataFormatter(firmwareVersion) }}</dd>
+      </dl> -->
+      <dl>
+        <dt>{{ $t('pageOverview.biosVersion') }}</dt>
+        <dd>{{ dataFormatter(bioVersion) }}</dd>
+      </dl>
+    </div>
   </overview-card>
 </template>
 
@@ -50,6 +52,12 @@ export default {
       },
       runningVersion() {
         return this.activeBmcFirmware?.version;
+      },
+      activeHostFirmware() {
+        return this.$store.getters['firmware/activeHostFirmware'];
+      },
+      bioVersion() {
+        return this.activeHostFirmware;
       },
     }),
   },

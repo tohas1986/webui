@@ -1,5 +1,5 @@
 <template>
-  <b-container fluid="xl">
+  <b-container fluid>
     <page-title />
     <alerts-server-power
       v-if="isServerPowerOffRequired"
@@ -7,29 +7,28 @@
     />
 
     <!-- Firmware cards -->
-    <b-row>
-      <b-col xl="10">
-        <!-- BMC Firmware -->
-        <bmc-cards :is-page-disabled="isPageDisabled" />
+    <div>
+      <!-- BMC Firmware -->
+      <bmc-cards
+        :is-page-disabled="isPageDisabled"
+        :is-server-off="isServerOff"
+      />
 
-        <!-- Host Firmware -->
-        <host-cards v-if="!isSingleFileUploadEnabled" />
-      </b-col>
-    </b-row>
+      <!-- Host Firmware -->
+      <host-cards v-if="!isSingleFileUploadEnabled" />
+    </div>
 
     <!-- Update firmware-->
     <page-section
       :section-title="$t('pageFirmware.sectionTitleUpdateFirmware')"
     >
-      <b-row>
-        <b-col sm="8" md="6" xl="4">
-          <!-- Update form -->
-          <form-update
-            :is-server-off="isServerOff"
-            :is-page-disabled="isPageDisabled"
-          />
-        </b-col>
-      </b-row>
+      <div>
+        <!-- Update form -->
+        <form-update
+          :is-server-off="isServerOff"
+          :is-page-disabled="isPageDisabled"
+        />
+      </div>
     </page-section>
   </b-container>
 </template>

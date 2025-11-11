@@ -23,6 +23,7 @@ const ChassisStore = {
           LocationIndicatorActive,
           AssetTag,
           Model,
+          Oem,
           MaxPowerWatts,
           MinPowerWatts,
           Name,
@@ -41,6 +42,7 @@ const ChassisStore = {
           healthRollup: Status.HealthRollup,
           assetTag: AssetTag,
           model: Model,
+          fru: Oem?.ProductName,
           maxPowerWatts: MaxPowerWatts,
           minPowerWatts: MinPowerWatts,
           name: Name,
@@ -56,7 +58,7 @@ const ChassisStore = {
       return await api
         .get('/redfish/v1/Chassis')
         .then(({ data: { Members = [] } }) =>
-          Members.map((member) => api.get(member['@odata.id']))
+          Members.map((member) => api.get(member['@odata.id'])),
         )
         .then((promises) => api.all(promises))
         .then((response) => {
@@ -78,11 +80,11 @@ const ChassisStore = {
           console.log('error', error);
           if (led.identifyLed) {
             throw new Error(
-              i18n.t('pageInventory.toast.errorEnableIdentifyLed')
+              i18n.t('pageInventory.toast.errorEnableIdentifyLed'),
             );
           } else {
             throw new Error(
-              i18n.t('pageInventory.toast.errorDisableIdentifyLed')
+              i18n.t('pageInventory.toast.errorDisableIdentifyLed'),
             );
           }
         });

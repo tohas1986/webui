@@ -1,5 +1,5 @@
 <template>
-  <b-alert :show="show" :variant="variant" :class="{ small }">
+  <b-alert :show="show" :class="{ small }">
     <div
       v-if="
         variant == 'info' ||

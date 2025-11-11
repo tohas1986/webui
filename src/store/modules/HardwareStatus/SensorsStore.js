@@ -13,11 +13,13 @@ const SensorsStore = {
     setSensors: (state, sensors) => {
       state.sensors = uniqBy([...sensors, ...state.sensors], 'name');
     },
+    setSensorsDefault: () => {},
   },
   actions: {
     async getAllSensors({ dispatch }) {
       const collection = await dispatch('getChassisCollection');
       if (!collection) return;
+      dispatch('resetSensors');
       const promises = collection.reduce((acc, id) => {
         acc.push(dispatch('getSensors', id));
         acc.push(dispatch('getThermalSensors', id));
@@ -30,9 +32,12 @@ const SensorsStore = {
       return await api
         .get('/redfish/v1/Chassis')
         .then(({ data: { Members } }) =>
-          Members.map((member) => member['@odata.id'])
+          Members.map((member) => member['@odata.id']),
         )
         .catch((error) => console.log(error));
+    },
+    async resetSensors({ commit }) {
+      commit('setSensorsDefault');
     },
     async getSensors({ commit }, id) {
       const sensors = await api

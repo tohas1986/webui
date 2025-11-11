@@ -1,9 +1,9 @@
 <template>
-  <b-container fluid="xl">
+  <b-container fluid>
     <page-title />
     <b-row>
-      <b-col md="8" xl="6">
-        <alert variant="info" class="mb-4">
+      <b-col xl="12">
+        <alert variant="danger" class="mb-4">
           <span>
             {{ $t('pageDateTime.alert.message') }}
             <b-link to="/profile-settings">
@@ -14,178 +14,208 @@
       </b-col>
     </b-row>
     <page-section>
-      <b-row>
-        <b-col lg="3">
-          <dl>
-            <dt>{{ $t('pageDateTime.form.date') }}</dt>
-            <dd v-if="bmcTime">{{ bmcTime | formatDate }}</dd>
-            <dd v-else>--</dd>
-          </dl>
-        </b-col>
-        <b-col lg="3">
-          <dl>
-            <dt>{{ $t('pageDateTime.form.time.label') }}</dt>
-            <dd v-if="bmcTime">{{ bmcTime | formatTime }}</dd>
-            <dd v-else>--</dd>
-          </dl>
-        </b-col>
-      </b-row>
+      <div class="section-container">
+        <b-row>
+          <b-col sm="5" class="text-divider">
+            <dl>
+              <dt>{{ $t('pageDateTime.form.date') }}</dt>
+              <dd v-if="bmcTime">{{ bmcTime | formatDate }}</dd>
+              <dd v-else>--</dd>
+            </dl>
+          </b-col>
+          <b-col sm="7">
+            <dl>
+              <dt>{{ $t('pageDateTime.form.time.label') }}</dt>
+              <dd v-if="bmcTime">
+                {{ bmcTime | formatTime }} ({{ timezone }})
+              </dd>
+              <dd v-else>--</dd>
+            </dl>
+          </b-col>
+        </b-row>
+      </div>
     </page-section>
-    <page-section :section-title="$t('pageDateTime.configureSettings')">
-      <b-form novalidate @submit.prevent="submitForm">
+    <page-section
+      class="mb-0"
+      :section-title="$t('pageDateTime.configureSettings')"
+    >
+      <b-form class="date-time-form" novalidate @submit.prevent="submitForm">
         <b-form-group
+          class="mb-0"
           label="Configure date and time"
           :disabled="loading"
           label-sr-only
         >
-          <b-form-radio
-            v-model="form.configurationSelected"
-            value="manual"
-            data-test-id="dateTime-radio-configureManual"
-          >
-            {{ $t('pageDateTime.form.manual') }}
-          </b-form-radio>
-          <b-row class="mt-3 ml-3">
-            <b-col sm="6" lg="4" xl="3">
-              <b-form-group
-                :label="$t('pageDateTime.form.date')"
-                label-for="input-manual-date"
-              >
-                <b-form-text id="date-format-help">YYYY-MM-DD</b-form-text>
-                <b-input-group>
-                  <b-form-input
-                    id="input-manual-date"
-                    v-model="form.manual.date"
-                    :state="getValidationState($v.form.manual.date)"
-                    :disabled="ntpOptionSelected"
-                    data-test-id="dateTime-input-manualDate"
-                    class="form-control-with-button"
-                    @blur="$v.form.manual.date.$touch()"
-                  />
-                  <b-form-invalid-feedback role="alert">
-                    <div v-if="!$v.form.manual.date.pattern">
-                      {{ $t('global.form.invalidFormat') }}
-                    </div>
-                    <div v-if="!$v.form.manual.date.required">
-                      {{ $t('global.form.fieldRequired') }}
-                    </div>
-                  </b-form-invalid-feedback>
-                  <b-form-datepicker
-                    v-model="form.manual.date"
-                    class="btn-datepicker btn-icon-only"
-                    button-only
-                    right
-                    :hide-header="true"
-                    :locale="locale"
-                    :label-help="
-                      $t('global.calendar.useCursorKeysToNavigateCalendarDates')
-                    "
-                    :title="$t('global.calendar.selectDate')"
-                    :disabled="ntpOptionSelected"
-                    button-variant="link"
-                    aria-controls="input-manual-date"
-                  >
-                    <template #button-content>
-                      <icon-calendar />
-                      <span class="sr-only">
-                        {{ $t('global.calendar.selectDate') }}
-                      </span>
-                    </template>
-                  </b-form-datepicker>
-                </b-input-group>
-              </b-form-group>
-            </b-col>
-            <b-col sm="6" lg="4" xl="3">
-              <b-form-group
-                :label="$t('pageDateTime.form.time.timezone', { timezone })"
-                label-for="input-manual-time"
-              >
-                <b-form-text id="time-format-help">HH:MM</b-form-text>
-                <b-input-group>
-                  <b-form-input
-                    id="input-manual-time"
-                    v-model="form.manual.time"
-                    :state="getValidationState($v.form.manual.time)"
-                    :disabled="ntpOptionSelected"
-                    data-test-id="dateTime-input-manualTime"
-                    @blur="$v.form.manual.time.$touch()"
-                  />
-                  <b-form-invalid-feedback role="alert">
-                    <div v-if="!$v.form.manual.time.pattern">
-                      {{ $t('global.form.invalidFormat') }}
-                    </div>
-                    <div v-if="!$v.form.manual.time.required">
-                      {{ $t('global.form.fieldRequired') }}
-                    </div>
-                  </b-form-invalid-feedback>
-                </b-input-group>
-              </b-form-group>
-            </b-col>
-          </b-row>
-          <b-form-radio
-            v-model="form.configurationSelected"
-            value="ntp"
-            data-test-id="dateTime-radio-configureNTP"
-          >
-            NTP
-          </b-form-radio>
-          <b-row class="mt-3 ml-3">
-            <b-col sm="6" lg="4" xl="3">
-              <b-form-group
-                :label="$t('pageDateTime.form.ntpServers.server1')"
-                label-for="input-ntp-1"
-              >
-                <b-input-group>
-                  <b-form-input
-                    id="input-ntp-1"
-                    v-model="form.ntp.firstAddress"
-                    :state="getValidationState($v.form.ntp.firstAddress)"
-                    :disabled="manualOptionSelected"
-                    data-test-id="dateTime-input-ntpServer1"
-                    @blur="$v.form.ntp.firstAddress.$touch()"
-                  />
-                  <b-form-invalid-feedback role="alert">
-                    <div v-if="!$v.form.ntp.firstAddress.required">
-                      {{ $t('global.form.fieldRequired') }}
-                    </div>
-                  </b-form-invalid-feedback>
-                </b-input-group>
-              </b-form-group>
-            </b-col>
-            <b-col sm="6" lg="4" xl="3">
-              <b-form-group
-                :label="$t('pageDateTime.form.ntpServers.server2')"
-                label-for="input-ntp-2"
-              >
-                <b-input-group>
-                  <b-form-input
-                    id="input-ntp-2"
-                    v-model="form.ntp.secondAddress"
-                    :disabled="manualOptionSelected"
-                    data-test-id="dateTime-input-ntpServer2"
-                  />
-                </b-input-group>
-              </b-form-group>
-            </b-col>
-            <b-col sm="6" lg="4" xl="3">
-              <b-form-group
-                :label="$t('pageDateTime.form.ntpServers.server3')"
-                label-for="input-ntp-3"
-              >
-                <b-input-group>
-                  <b-form-input
-                    id="input-ntp-3"
-                    v-model="form.ntp.thirdAddress"
-                    :disabled="manualOptionSelected"
-                    data-test-id="dateTime-input-ntpServer3"
-                  />
-                </b-input-group>
-              </b-form-group>
-            </b-col>
-          </b-row>
+          <div class="section-container">
+            <b-row>
+              <b-col sm="12" lg="3">
+                <b-form-radio
+                  v-model="form.configurationSelected"
+                  value="manual"
+                  data-test-id="dateTime-radio-configureManual"
+                >
+                  {{ $t('pageDateTime.form.manual') }}
+                </b-form-radio>
+              </b-col>
+              <b-col sm="12" lg="9">
+                <b-row>
+                  <b-col sm="12" lg="6" class="input-wrapper">
+                    <label for="input-manual-date">
+                      {{ $t('pageDateTime.form.date') }}
+                      <span>(YYYY-MM-DD)</span>
+                    </label>
+                    <b-form-group class="mb-0">
+                      <b-input-group>
+                        <b-form-input
+                          id="input-manual-date"
+                          v-model="form.manual.date"
+                          :state="getValidationState($v.form.manual.date)"
+                          :disabled="ntpOptionSelected"
+                          data-test-id="dateTime-input-manualDate"
+                          class="form-control-with-button"
+                          autocomplete="off"
+                          @blur="$v.form.manual.date.$touch()"
+                        />
+                        <b-form-invalid-feedback role="alert">
+                          <div v-if="!$v.form.manual.date.pattern">
+                            {{ $t('global.form.invalidFormat') }}
+                          </div>
+                          <div v-if="!$v.form.manual.date.required">
+                            {{ $t('global.form.fieldRequired') }}
+                          </div>
+                        </b-form-invalid-feedback>
+                        <b-form-datepicker
+                          v-model="form.manual.date"
+                          class="btn-datepicker btn-icon-only"
+                          button-only
+                          right
+                          :hide-header="true"
+                          :locale="locale"
+                          :label-help="
+                            $t(
+                              'global.calendar.useCursorKeysToNavigateCalendarDates',
+                            )
+                          "
+                          :title="$t('global.calendar.selectDate')"
+                          :disabled="ntpOptionSelected"
+                          button-variant="link"
+                          aria-controls="input-manual-date"
+                        >
+                          <template #button-content>
+                            <icon-calendar />
+                            <span class="sr-only">
+                              {{ $t('global.calendar.selectDate') }}
+                            </span>
+                          </template>
+                        </b-form-datepicker>
+                      </b-input-group>
+                    </b-form-group>
+                  </b-col>
+                  <b-col sm="12" lg="6" class="input-wrapper">
+                    <label for="input-manual-time">
+                      {{ $t('pageDateTime.form.time.timezone', { timezone }) }}
+                    </label>
+                    <b-form-group class="mb-0">
+                      <b-input-group>
+                        <b-form-input
+                          id="input-manual-time"
+                          v-model="form.manual.time"
+                          :state="getValidationState($v.form.manual.time)"
+                          :disabled="ntpOptionSelected"
+                          data-test-id="dateTime-input-manualTime"
+                          @blur="$v.form.manual.time.$touch()"
+                        />
+                        <b-form-invalid-feedback role="alert">
+                          <div v-if="!$v.form.manual.time.pattern">
+                            {{ $t('global.form.invalidFormat') }}
+                          </div>
+                          <div v-if="!$v.form.manual.time.required">
+                            {{ $t('global.form.fieldRequired') }}
+                          </div>
+                        </b-form-invalid-feedback>
+                      </b-input-group>
+                    </b-form-group>
+                  </b-col>
+                </b-row>
+              </b-col>
+            </b-row>
+          </div>
+          <div class="section-container">
+            <b-row>
+              <b-col sm="12" lg="3">
+                <b-form-radio
+                  v-model="form.configurationSelected"
+                  value="ntp"
+                  data-test-id="dateTime-radio-configureNTP"
+                >
+                  NTP
+                </b-form-radio>
+              </b-col>
+              <b-col sm="12" lg="9">
+                <b-row>
+                  <b-col sm="12" lg="4" class="input-wrapper">
+                    <b-form-group
+                      class="mb-0"
+                      :label="$t('pageDateTime.form.ntpServers.server1')"
+                      label-for="input-ntp-1"
+                    >
+                      <b-input-group>
+                        <b-form-input
+                          id="input-ntp-1"
+                          v-model="form.ntp.firstAddress"
+                          :state="getValidationState($v.form.ntp.firstAddress)"
+                          :disabled="manualOptionSelected"
+                          data-test-id="dateTime-input-ntpServer1"
+                          @blur="$v.form.ntp.firstAddress.$touch()"
+                        />
+                        <b-form-invalid-feedback role="alert">
+                          <div v-if="!$v.form.ntp.firstAddress.required">
+                            {{ $t('global.form.fieldRequired') }}
+                          </div>
+                        </b-form-invalid-feedback>
+                      </b-input-group>
+                    </b-form-group>
+                  </b-col>
+                  <b-col sm="12" lg="4" class="input-wrapper">
+                    <b-form-group
+                      class="mb-0"
+                      :label="$t('pageDateTime.form.ntpServers.server2')"
+                      label-for="input-ntp-2"
+                    >
+                      <b-input-group>
+                        <b-form-input
+                          id="input-ntp-2"
+                          v-model="form.ntp.secondAddress"
+                          :disabled="manualOptionSelected"
+                          data-test-id="dateTime-input-ntpServer2"
+                        />
+                      </b-input-group>
+                    </b-form-group>
+                  </b-col>
+                  <b-col sm="12" lg="4" class="input-wrapper">
+                    <b-form-group
+                      class="mb-0"
+                      :label="$t('pageDateTime.form.ntpServers.server3')"
+                      label-for="input-ntp-3"
+                    >
+                      <b-input-group>
+                        <b-form-input
+                          id="input-ntp-3"
+                          v-model="form.ntp.thirdAddress"
+                          :disabled="manualOptionSelected"
+                          data-test-id="dateTime-input-ntpServer3"
+                        />
+                      </b-input-group>
+                    </b-form-group>
+                  </b-col>
+                </b-row>
+              </b-col>
+            </b-row>
+          </div>
           <b-button
             variant="primary"
             type="submit"
+            class="btn-block"
             data-test-id="dateTime-button-saveSettings"
           >
             {{ $t('global.action.saveSettings') }}
@@ -198,7 +228,7 @@
 
 <script>
 import Alert from '@/components/Global/Alert';
-import IconCalendar from '@carbon/icons-vue/es/calendar/20';
+import IconCalendar from '@/components/icons/IconCalendar';
 import PageTitle from '@/components/Global/PageTitle';
 import PageSection from '@/components/Global/PageSection';
 
@@ -297,7 +327,7 @@ export default {
     },
     bmcTime() {
       this.form.manual.date = this.$options.filters.formatDate(
-        this.$store.getters['global/bmcTime']
+        this.$store.getters['global/bmcTime'],
       );
       this.form.manual.time = this.$options.filters
         .formatTime(this.$store.getters['global/bmcTime'])
@@ -408,10 +438,56 @@ export default {
         parseInt(datesArray[1]) - 1, // User input month
         datesArray[2], // User input day
         timeArray[0], // User input hour
-        timeArray[1] // User input minute
+        timeArray[1], // User input minute
       );
       return new Date(utcDate);
     },
   },
 };
 </script>
+
+<style lang="scss" scoped>
+dt {
+  color: rgba($main-color, 0.7);
+}
+dd {
+  margin-top: 12px;
+}
+
+svg {
+  height: 22px;
+
+  @include media-breakpoint-down('xl') {
+    height: 20px;
+  }
+}
+
+.btn-primary {
+  margin-top: 1.25rem;
+}
+
+.input-wrapper:not(:last-child) {
+  @include media-breakpoint-down(md) {
+    margin-bottom: 0.7rem;
+  }
+}
+.input-wrapper:first-child {
+  @include media-breakpoint-down(md) {
+    margin-top: 0.7rem;
+  }
+}
+.btn-block {
+  @include media-breakpoint-down(md) {
+    margin-top: 0 !important;
+  }
+}
+::v-deep .b-form-datepicker .dropdown-menu {
+  @include media-breakpoint-down(sm) {
+    top: 100% !important;
+    bottom: auto !important;
+    left: auto !important;
+    right: 0;
+    transform: none !important;
+  }
+}
+</style>

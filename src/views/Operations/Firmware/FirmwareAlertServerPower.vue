@@ -1,6 +1,6 @@
 <template>
   <b-row>
-    <b-col xl="10">
+    <b-col xl="12">
       <!-- Operation in progress alert -->
       <alert v-if="isOperationInProgress" variant="info" class="mb-5">
         <p>
@@ -21,7 +21,7 @@
           </li>
         </ul>
         <template #action>
-          <b-link to="/operations/server-power-operations">
+          <b-link class="card-link" to="/operations/server-power-operations">
             {{ $t('pageFirmware.alert.viewServerPowerOperations') }}
           </b-link>
         </template>
@@ -39,6 +39,7 @@ export default {
     isServerOff: {
       required: true,
       type: Boolean,
+      default: true,
     },
   },
   computed: {

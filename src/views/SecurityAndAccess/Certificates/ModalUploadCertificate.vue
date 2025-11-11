@@ -1,5 +1,12 @@
 <template>
-  <b-modal id="upload-certificate" ref="modal" @ok="onOk" @hidden="resetForm">
+  <b-modal
+    id="upload-certificate"
+    ref="modal"
+    size="lg"
+    centered
+    @ok="onOk"
+    @hidden="resetForm"
+  >
     <template #modal-title>
       <template v-if="certificate">
         {{ $t('pageCertificates.replaceCertificate') }}

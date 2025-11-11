@@ -12,35 +12,35 @@ const BVToastMixin = {
       const titleWithIcon = this.$createElement(
         'strong',
         { class: 'toast-icon' },
-        [statusIcon, title]
+        [statusIcon, title],
       );
       return titleWithIcon;
     },
     $_BVToastMixin_createBody(messageBody) {
       if (Array.isArray(messageBody)) {
         return messageBody.map((message) =>
-          this.$createElement('p', { class: 'mb-0' }, message)
+          this.$createElement('p', { class: 'mb-0' }, message),
         );
       } else {
-        return [this.$createElement('p', { class: 'mb-0' }, messageBody)];
+        return [this.$createElement('p', { class: 'mb-0 mt-1' }, messageBody)];
       }
     },
     $_BVToastMixin_createTimestamp() {
       const timestamp = this.$options.filters.formatTime(new Date());
-      return this.$createElement('p', { class: 'mt-3 mb-0' }, timestamp);
+      return this.$createElement('p', { class: 'mt-2 mb-0' }, timestamp);
     },
     $_BVToastMixin_createRefreshAction() {
       return this.$createElement(
         'BLink',
         {
-          class: 'd-inline-block mt-3',
+          class: 'd-inline-block mt-3 card-link',
           on: {
             click: () => {
               this.$root.$emit('refresh-application');
             },
           },
         },
-        this.$t('global.action.refresh')
+        this.$t('global.action.refresh'),
       );
     },
     $_BVToastMixin_initToast(body, title, variant) {
@@ -48,9 +48,10 @@ const BVToastMixin = {
         title,
         variant,
         autoHideDelay: 10000, //auto hide in milliseconds
-        noAutoHide: variant !== 'success',
+        noAutoHide: !['success', 'info'].includes(variant),
         isStatus: true,
         solid: true,
+        toaster: 'b-toaster-bottom-right',
       });
     },
     successToast(
@@ -59,7 +60,7 @@ const BVToastMixin = {
         title: t = this.$t('global.status.success'),
         timestamp,
         refreshAction,
-      } = {}
+      } = {},
     ) {
       const body = this.$_BVToastMixin_createBody(message);
       const title = this.$_BVToastMixin_createTitle(t, 'success');
@@ -73,7 +74,7 @@ const BVToastMixin = {
         title: t = this.$t('global.status.error'),
         timestamp,
         refreshAction,
-      } = {}
+      } = {},
     ) {
       const body = this.$_BVToastMixin_createBody(message);
       const title = this.$_BVToastMixin_createTitle(t, 'danger');
@@ -87,7 +88,7 @@ const BVToastMixin = {
         title: t = this.$t('global.status.warning'),
         timestamp,
         refreshAction,
-      } = {}
+      } = {},
     ) {
       const body = this.$_BVToastMixin_createBody(message);
       const title = this.$_BVToastMixin_createTitle(t, 'warning');
@@ -101,7 +102,7 @@ const BVToastMixin = {
         title: t = this.$t('global.status.informational'),
         timestamp,
         refreshAction,
-      } = {}
+      } = {},
     ) {
       const body = this.$_BVToastMixin_createBody(message);
       const title = this.$_BVToastMixin_createTitle(t, 'info');

@@ -1,0 +1,206 @@
+<template>
+  <b-modal
+    id="configure-connection"
+    ref="modal"
+    size="lg"
+    centered
+    @ok="onOk"
+    @hidden="resetForm"
+    @show="initModal"
+  >
+    <template #modal-title>
+      {{ $t('pageKvm.modal.title') }}
+    </template>
+    <b-form>
+      <b-row class="mb-3">
+        <b-col sm="5">
+          <label for="serverUri">
+            {{ $t('pageKvm.modal.serverUri') }}
+          </label>
+        </b-col>
+        <b-col sm="7">
+          <b-form-group>
+            <b-form-input
+              id="serverUri"
+              v-model="form.serverUri"
+              type="text"
+              :state="getValidationState($v.form.serverUri)"
+              data-test-id="configureConnection-input-serverUri"
+              @input="$v.form.serverUri.$touch()"
+            />
+            <b-form-invalid-feedback role="alert">
+              <template v-if="!$v.form.serverUri.required">
+                {{ $t('global.form.fieldRequired') }}
+              </template>
+            </b-form-invalid-feedback>
+          </b-form-group>
+        </b-col>
+      </b-row>
+      <b-row class="mb-3">
+        <b-col sm="5">
+          <label for="username">
+            {{ $t('pageKvm.modal.username') }}
+          </label>
+        </b-col>
+        <b-col sm="7">
+          <b-form-group>
+            <b-form-input
+              id="username"
+              v-model="form.username"
+              type="text"
+              data-test-id="configureConnection-input-username"
+            />
+          </b-form-group>
+        </b-col>
+      </b-row>
+      <b-row class="mb-3">
+        <b-col sm="5">
+          <label for="password">
+            {{ $t('pageKvm.modal.password') }}
+          </label>
+        </b-col>
+        <b-col sm="7">
+          <b-form-group>
+            <b-form-input
+              id="password"
+              v-model="form.password"
+              type="password"
+              data-test-id="configureConnection-input-password"
+            />
+          </b-form-group>
+        </b-col>
+      </b-row>
+      <b-row class="mb-3 checkbox-container">
+        <b-col sm="5">
+          <label>
+            {{ $t('pageKvm.modal.rw') }}
+          </label>
+        </b-col>
+        <b-col sm="7">
+          <b-form-group>
+            <b-form-checkbox
+              v-model="form.isRW"
+              data-test-id="configureConnection-input-isRW"
+              name="check-button"
+            >
+            </b-form-checkbox>
+          </b-form-group>
+        </b-col>
+      </b-row>
+      <b-row class="checkbox-container">
+        <b-col sm="5">
+          <label>
+            {{ $t('pageKvm.modal.mountAsCd') }}
+          </label>
+        </b-col>
+        <b-col sm="7">
+          <b-form-group>
+            <b-form-checkbox v-model="form.isCD" name="check-button-mount">
+            </b-form-checkbox>
+          </b-form-group>
+        </b-col>
+      </b-row>
+    </b-form>
+    <template #modal-ok>
+      {{ $t('global.action.save') }}
+    </template>
+    <template #modal-cancel>
+      {{ $t('global.action.cancel') }}
+    </template>
+  </b-modal>
+</template>
+
+<script>
+import { required } from 'vuelidate/lib/validators';
+import VuelidateMixin from '@/components/Mixins/VuelidateMixin.js';
+
+export default {
+  mixins: [VuelidateMixin],
+  props: {
+    connection: {
+      type: Object,
+      default: null,
+      validator: (prop) => {
+        console.log(prop);
+        return true;
+      },
+    },
+  },
+  data() {
+    return {
+      form: {
+        serverUri: null,
+        username: null,
+        password: null,
+        isRW: false,
+        isCD: false,
+      },
+    };
+  },
+  watch: {
+    connection: function (value) {
+      if (value === null) return;
+      Object.assign(this.form, value);
+    },
+  },
+  validations() {
+    return {
+      form: {
+        serverUri: {
+          required,
+        },
+      },
+    };
+  },
+  methods: {
+    handleSubmit() {
+      this.$v.$touch();
+      if (this.$v.$invalid) return;
+      let connectionData = {};
+      Object.assign(connectionData, this.form);
+      this.$emit('ok', connectionData);
+      this.closeModal();
+    },
+    initModal() {
+      if (this.connection) {
+        Object.assign(this.form, this.connection);
+      }
+    },
+    closeModal() {
+      this.$nextTick(() => {
+        this.$refs.modal.hide();
+      });
+    },
+    resetForm() {
+      this.form.serverUri = null;
+      this.form.username = null;
+      this.form.password = null;
+      this.form.isRW = false;
+      this.form.isCD = false;
+      this.$v.$reset();
+    },
+    onOk(bvModalEvt) {
+      bvModalEvt.preventDefault();
+      this.handleSubmit();
+    },
+  },
+};
+</script>
+<style lang="scss" scoped>
+.mb-3 {
+  @include media-breakpoint-down(sm) {
+    margin-bottom: 0 !important;
+  }
+}
+.checkbox-container {
+  @include media-breakpoint-down(xs) {
+    flex-wrap: nowrap;
+  }
+
+  .col-sm-7 {
+    @include media-breakpoint-down(xs) {
+      width: max-content;
+    }
+  }
+}
+</style>

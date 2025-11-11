@@ -1,8 +1,8 @@
 <template>
-  <b-container fluid="xl">
+  <b-container fluid>
     <page-title />
     <b-row class="align-items-start">
-      <b-col sm="8" xl="6" class="d-sm-flex align-items-end mb-4">
+      <b-col class="d-sm-flex align-items-end">
         <search
           :placeholder="$t('pageEventLogs.table.searchLogs')"
           data-test-id="eventLogs-input-searchLogs"
@@ -16,32 +16,116 @@
           ></table-cell-count>
         </div>
       </b-col>
-      <b-col sm="8" md="7" xl="6">
+      <b-col>
         <table-date-filter @change="onChangeDateTimeFilter" />
       </b-col>
     </b-row>
     <b-row>
-      <b-col class="text-right">
-        <table-filter :filters="tableFilters" @filter-change="onFilterChange" />
-        <b-button
-          variant="link"
-          :disabled="allLogs.length === 0"
-          @click="deleteAllLogs"
-        >
-          <icon-delete /> {{ $t('global.action.deleteAll') }}
-        </b-button>
-        <b-button
-          variant="primary"
-          :class="{ disabled: allLogs.length === 0 }"
-          :download="exportFileNameByDate()"
-          :href="href"
-        >
-          <icon-export /> {{ $t('global.action.exportAll') }}
-        </b-button>
-      </b-col>
-    </b-row>
-    <b-row>
       <b-col>
+        <div class="table-container">
+          <b-table
+            id="table-event-logs"
+            ref="table"
+            class="event-table"
+            responsive="md"
+            selectable
+            no-select-on-click
+            hover
+            no-sort-reset
+            sort-desc
+            sticky-header
+            show-empty
+            sort-by="id"
+            :fields="fields"
+            :items="filteredLogs"
+            :sort-compare="onSortCompare"
+            :empty-text="$t('global.table.emptyMessage')"
+            :empty-filtered-text="$t('global.table.emptySearchMessage')"
+            :per-page="perPage"
+            :current-page="currentPage"
+            :filter="searchFilter"
+            :busy="isBusy"
+            @filtered="onFiltered"
+            @row-selected="onRowSelected($event, filteredLogs.length)"
+          >
+            <!-- Checkbox column -->
+            <template #head(checkbox)>
+              <b-form-checkbox
+                v-model="tableHeaderCheckboxModel"
+                data-test-id="eventLogs-checkbox-selectAll"
+                :indeterminate="tableHeaderCheckboxIndeterminate"
+                @change="onChangeHeaderCheckbox($refs.table)"
+              >
+                <span class="sr-only">{{ $t('global.table.selectAll') }}</span>
+              </b-form-checkbox>
+            </template>
+            <template #cell(checkbox)="row">
+              <b-form-checkbox
+                v-model="row.rowSelected"
+                :data-test-id="`eventLogs-checkbox-selectRow-${row.index}`"
+                @change="toggleSelectRow($refs.table, row.index)"
+              >
+                <span class="sr-only">{{ $t('global.table.selectItem') }}</span>
+              </b-form-checkbox>
+            </template>
+
+            <!-- Severity column -->
+            <template #cell(severity)="{ value }">
+              <status-color v-if="value" :status="statusIcon(value)" />
+              <span class="text-status">{{ value }}</span>
+            </template>
+            <!-- Date column -->
+            <template #cell(date)="{ value }">
+              <p class="mb-0">
+                {{ value | formatDate }} {{ value | formatTime }}
+              </p>
+              <p class="mb-0">({{ timezone }})</p>
+            </template>
+
+            <!-- Status column -->
+            <template #cell(status)="row">
+              <b-form-checkbox
+                v-model="row.item.status"
+                name="switch"
+                switch
+                @change="changelogStatus(row.item)"
+              >
+                <span v-if="row.item.status">
+                  {{ $t('pageEventLogs.resolved') }}
+                </span>
+                <span v-else> {{ $t('pageEventLogs.unresolved') }} </span>
+              </b-form-checkbox>
+            </template>
+            <template #cell(filterByStatus)="{ value }">
+              {{ value }}
+            </template>
+
+            <!-- Description column -->
+            <template #cell(description)="{ value }">
+              <p class="mb-0">{{ extractBracketContent(value) }}</p>
+              <p class="mb-0">{{ extractAfterBracket(value) }}</p>
+            </template>
+
+            <!-- Actions column -->
+            <template #cell(actions)="row">
+              <table-row-action
+                v-for="(action, index) in row.item.actions"
+                :key="index"
+                :value="action.value"
+                :title="action.title"
+                :row-data="row.item"
+                :export-name="exportFileNameByDate('export')"
+                :data-test-id="`eventLogs-button-deleteRow-${row.index}`"
+                @click-table-action="onTableRowAction($event, row.item)"
+              >
+                <template #icon>
+                  <icon-export v-if="action.value === 'export'" />
+                  <icon-trashcan v-if="action.value === 'delete'" />
+                </template>
+              </table-row-action>
+            </template>
+          </b-table>
+        </div>
         <table-toolbar
           ref="toolbar"
           :selected-items-count="selectedRows.length"
@@ -50,12 +134,18 @@
           @batch-action="onBatchAction"
         >
           <template #toolbar-buttons>
-            <b-button v-if="!hideToggle" variant="primary" @click="resolveLogs">
+            <b-button
+              v-if="!hideToggle"
+              class="btn-table"
+              variant="link"
+              @click="resolveLogs"
+            >
               {{ $t('pageEventLogs.resolve') }}
             </b-button>
             <b-button
               v-if="!hideToggle"
-              variant="primary"
+              class="btn-table"
+              variant="link"
               @click="unresolveLogs"
             >
               {{ $t('pageEventLogs.unresolve') }}
@@ -66,157 +156,48 @@
             />
           </template>
         </table-toolbar>
-        <b-table
-          id="table-event-logs"
-          ref="table"
-          responsive="md"
-          selectable
-          no-select-on-click
-          sort-icon-left
-          hover
-          no-sort-reset
-          sort-desc
-          show-empty
-          sort-by="id"
-          :fields="fields"
-          :items="filteredLogs"
-          :sort-compare="onSortCompare"
-          :empty-text="$t('global.table.emptyMessage')"
-          :empty-filtered-text="$t('global.table.emptySearchMessage')"
-          :per-page="perPage"
-          :current-page="currentPage"
-          :filter="searchFilter"
-          :busy="isBusy"
-          @filtered="onFiltered"
-          @row-selected="onRowSelected($event, filteredLogs.length)"
-        >
-          <!-- Checkbox column -->
-          <template #head(checkbox)>
-            <b-form-checkbox
-              v-model="tableHeaderCheckboxModel"
-              data-test-id="eventLogs-checkbox-selectAll"
-              :indeterminate="tableHeaderCheckboxIndeterminate"
-              @change="onChangeHeaderCheckbox($refs.table)"
-            >
-              <span class="sr-only">{{ $t('global.table.selectAll') }}</span>
-            </b-form-checkbox>
-          </template>
-          <template #cell(checkbox)="row">
-            <b-form-checkbox
-              v-model="row.rowSelected"
-              :data-test-id="`eventLogs-checkbox-selectRow-${row.index}`"
-              @change="toggleSelectRow($refs.table, row.index)"
-            >
-              <span class="sr-only">{{ $t('global.table.selectItem') }}</span>
-            </b-form-checkbox>
-          </template>
 
-          <!-- Expand chevron icon -->
-          <template #cell(expandRow)="row">
+        <b-row class="justify-content-center">
+          <div class="btn-container">
+            <table-filter
+              :filters="tableFilters"
+              @filter-change="onFilterChange"
+            />
             <b-button
               variant="link"
-              :aria-label="expandRowLabel"
-              :title="expandRowLabel"
-              class="btn-icon-only"
-              @click="toggleRowDetails(row)"
+              class="btn-table"
+              :disabled="allLogs.length === 0"
+              @click="deleteAllLogs"
             >
-              <icon-chevron />
-            </b-button>
-          </template>
-
-          <template #row-details="{ item }">
-            <b-container fluid>
-              <b-row>
-                <b-col>
-                  <dl>
-                    <!-- Name -->
-                    <dt>{{ $t('pageEventLogs.table.name') }}:</dt>
-                    <dd>{{ dataFormatter(item.name) }}</dd>
-                  </dl>
-                  <dl>
-                    <!-- Type -->
-                    <dt>{{ $t('pageEventLogs.table.type') }}:</dt>
-                    <dd>{{ dataFormatter(item.type) }}</dd>
-                  </dl>
-                </b-col>
-                <b-col>
-                  <dl>
-                    <!-- Modified date -->
-                    <dt>{{ $t('pageEventLogs.table.modifiedDate') }}:</dt>
-                    <dd v-if="item.modifiedDate">
-                      {{ item.modifiedDate | formatDate }}
-                      {{ item.modifiedDate | formatTime }}
-                    </dd>
-                    <dd v-else>--</dd>
-                  </dl>
-                </b-col>
-                <b-col class="text-nowrap">
-                  <b-button
-                    class="btn btn-secondary float-right"
-                    :href="item.additionalDataUri"
-                    target="_blank"
-                  >
-                    <icon-download />{{ $t('pageEventLogs.additionalDataUri') }}
-                  </b-button>
-                </b-col>
-              </b-row>
-            </b-container>
-          </template>
-
-          <!-- Severity column -->
-          <template #cell(severity)="{ value }">
-            <status-icon v-if="value" :status="statusIcon(value)" />
-            {{ value }}
-          </template>
-          <!-- Date column -->
-          <template #cell(date)="{ value }">
-            <p class="mb-0">{{ value | formatDate }}</p>
-            <p class="mb-0">{{ value | formatTime }}</p>
-          </template>
-
-          <!-- Status column -->
-          <template #cell(status)="row">
-            <b-form-checkbox
-              v-model="row.item.status"
-              name="switch"
-              switch
-              @change="changelogStatus(row.item)"
-            >
-              <span v-if="row.item.status">
-                {{ $t('pageEventLogs.resolved') }}
+              <span class="d-inline-block d-sm-none">
+                <icon-trashcan /> {{ $t('global.action.deleteAllMobile') }}
               </span>
-              <span v-else> {{ $t('pageEventLogs.unresolved') }} </span>
-            </b-form-checkbox>
-          </template>
-          <template #cell(filterByStatus)="{ value }">
-            {{ value }}
-          </template>
-
-          <!-- Actions column -->
-          <template #cell(actions)="row">
-            <table-row-action
-              v-for="(action, index) in row.item.actions"
-              :key="index"
-              :value="action.value"
-              :title="action.title"
-              :row-data="row.item"
-              :export-name="exportFileNameByDate('export')"
-              :data-test-id="`eventLogs-button-deleteRow-${row.index}`"
-              @click-table-action="onTableRowAction($event, row.item)"
+              <span class="d-none d-sm-inline-block">
+                <icon-trashcan /> {{ $t('global.action.deleteAll') }}
+              </span>
+            </b-button>
+            <b-button
+              variant="link"
+              :class="{ disabled: allLogs.length === 0 }"
+              class="btn-table"
+              :download="exportFileNameByDate()"
+              :href="href"
             >
-              <template #icon>
-                <icon-export v-if="action.value === 'export'" />
-                <icon-trashcan v-if="action.value === 'delete'" />
-              </template>
-            </table-row-action>
-          </template>
-        </b-table>
+              <span class="d-inline-block d-sm-none">
+                <icon-export /> {{ $t('global.action.exportAllMobile') }}
+              </span>
+              <span class="d-none d-sm-inline-block">
+                <icon-export /> {{ $t('global.action.exportAll') }}
+              </span>
+            </b-button>
+          </div>
+        </b-row>
       </b-col>
     </b-row>
 
     <!-- Table pagination -->
-    <b-row>
-      <b-col sm="6">
+    <b-row class="table-pagination-container">
+      <b-col sm="4">
         <b-form-group
           class="table-pagination-select"
           :label="$t('global.table.itemsPerPage')"
@@ -229,7 +210,12 @@
           />
         </b-form-group>
       </b-col>
-      <b-col sm="6">
+      <b-col sm="4" class="event-support">
+        <b-link class="card-link" @click.prevent="initSupportModal()"
+          >{{ $t('pageEventLogs.supportLink') }}
+        </b-link>
+      </b-col>
+      <b-col sm="4">
         <b-pagination
           v-model="currentPage"
           first-number
@@ -240,19 +226,19 @@
         />
       </b-col>
     </b-row>
+
+    <modal-support />
   </b-container>
 </template>
 
 <script>
-import IconDelete from '@carbon/icons-vue/es/trash-can/20';
-import IconTrashcan from '@carbon/icons-vue/es/trash-can/20';
-import IconExport from '@carbon/icons-vue/es/document--export/20';
-import IconChevron from '@carbon/icons-vue/es/chevron--down/20';
-import IconDownload from '@carbon/icons-vue/es/download/20';
+import IconTrashcan from '@/components/icons/IconTrashcan';
+import IconExport from '@/components/icons/IconExport';
 import { omit } from 'lodash';
 
 import PageTitle from '@/components/Global/PageTitle';
-import StatusIcon from '@/components/Global/StatusIcon';
+import StatusColor from '@/components/Global/StatusColor';
+import ModalSupport from '@/views/Logs/EventLogs/ModalSupport';
 import Search from '@/components/Global/Search';
 import TableCellCount from '@/components/Global/TableCellCount';
 import TableDateFilter from '@/components/Global/TableDateFilter';
@@ -276,29 +262,25 @@ import BVTableSelectableMixin, {
 import BVToastMixin from '@/components/Mixins/BVToastMixin';
 import DataFormatterMixin from '@/components/Mixins/DataFormatterMixin';
 import TableSortMixin from '@/components/Mixins/TableSortMixin';
-import TableRowExpandMixin, {
-  expandRowLabel,
-} from '@/components/Mixins/TableRowExpandMixin';
 import SearchFilterMixin, {
   searchFilter,
 } from '@/components/Mixins/SearchFilterMixin';
+import LocalTimezoneLabelMixin from '@/components/Mixins/LocalTimezoneLabelMixin';
 
 export default {
   components: {
-    IconDelete,
     IconExport,
     IconTrashcan,
-    IconChevron,
-    IconDownload,
     PageTitle,
     Search,
-    StatusIcon,
+    StatusColor,
     TableCellCount,
     TableFilter,
     TableRowAction,
     TableToolbar,
     TableToolbarExport,
     TableDateFilter,
+    ModalSupport,
   },
   mixins: [
     BVPaginationMixin,
@@ -308,8 +290,8 @@ export default {
     TableFilterMixin,
     DataFormatterMixin,
     TableSortMixin,
-    TableRowExpandMixin,
     SearchFilterMixin,
+    LocalTimezoneLabelMixin,
   ],
   beforeRouteLeave(to, from, next) {
     // Hide loader if the user navigates to another page
@@ -321,11 +303,6 @@ export default {
     return {
       isBusy: true,
       fields: [
-        {
-          key: 'expandRow',
-          label: '',
-          tdClass: 'table-row-expand',
-        },
         {
           key: 'checkbox',
           sortable: false,
@@ -348,6 +325,12 @@ export default {
           tdClass: 'text-nowrap',
         },
         {
+          key: 'service',
+          label: this.$t('pageEventLogs.table.service'),
+          sortable: true,
+          tdClass: 'text-nowrap',
+        },
+        {
           key: 'description',
           label: this.$t('pageEventLogs.table.description'),
           tdClass: 'text-break',
@@ -362,7 +345,7 @@ export default {
           key: 'actions',
           sortable: false,
           label: '',
-          tdClass: 'text-right text-nowrap',
+          tdClass: 'text-right text-nowrap p-0',
         },
       ],
       tableFilters:
@@ -381,12 +364,16 @@ export default {
                 values: ['OK', 'Warning', 'Critical'],
               },
               {
+                key: 'service',
+                label: this.$t('pageEventLogs.table.service'),
+                values: ['AUDITLOG', 'BMC', 'CHASSIS', 'IPMI', 'REDFISH'],
+              },
+              {
                 key: 'filterByStatus',
                 label: this.$t('pageEventLogs.table.status'),
                 values: ['Resolved', 'Unresolved'],
               },
             ],
-      expandRowLabel,
       activeFilters: [],
       batchActions:
         process.env.VUE_APP_EVENT_LOGS_DELETE_BUTTON_DISABLED === 'true'
@@ -453,14 +440,20 @@ export default {
       return this.getFilteredTableDataByDate(
         this.allLogs,
         this.filterStartDate,
-        this.filterEndDate
+        this.filterEndDate,
       );
     },
     filteredLogs() {
       return this.getFilteredTableData(
         this.filteredLogsByDate,
-        this.activeFilters
+        this.activeFilters,
       );
+    },
+    isUtcDisplay() {
+      return this.$store.getters['global/isUtcDisplay'];
+    },
+    timezone() {
+      return this.localOffset(this.isUtcDisplay);
     },
   },
   created() {
@@ -489,6 +482,8 @@ export default {
           okTitle: this.$t('global.action.delete'),
           okVariant: 'danger',
           cancelTitle: this.$t('global.action.cancel'),
+          size: 'lg',
+          centered: true,
         })
         .then((deleteConfirmed) => {
           if (deleteConfirmed) {
@@ -535,6 +530,8 @@ export default {
             title: this.$tc('pageEventLogs.modal.deleteTitle'),
             okTitle: this.$t('global.action.delete'),
             cancelTitle: this.$t('global.action.cancel'),
+            size: 'lg',
+            centered: true,
           })
           .then((deleteConfirmed) => {
             if (deleteConfirmed) this.deleteLogs([uri]);
@@ -548,16 +545,18 @@ export default {
           .msgBoxConfirm(
             this.$tc(
               'pageEventLogs.modal.deleteMessage',
-              this.selectedRows.length
+              this.selectedRows.length,
             ),
             {
               title: this.$tc(
                 'pageEventLogs.modal.deleteTitle',
-                this.selectedRows.length
+                this.selectedRows.length,
               ),
               okTitle: this.$t('global.action.delete'),
               cancelTitle: this.$t('global.action.cancel'),
-            }
+              size: 'lg',
+              centered: true,
+            },
           )
           .then((deleteConfirmed) => {
             if (deleteConfirmed) {
@@ -565,11 +564,14 @@ export default {
                 this.$store
                   .dispatch(
                     'eventLog/deleteAllEventLogs',
-                    this.selectedRows.length
+                    this.selectedRows.length,
                   )
                   .then(() => {
                     this.successToast(
-                      this.$tc('pageEventLogs.toast.successDelete', uris.length)
+                      this.$tc(
+                        'pageEventLogs.toast.successDelete',
+                        uris.length,
+                      ),
                     );
                   })
                   .catch(({ message }) => this.errorToast(message));
@@ -628,6 +630,44 @@ export default {
           });
         });
     },
+    initSupportModal() {
+      this.$bvModal.show('modal-support');
+    },
+    extractBracketContent(value) {
+      const match = value.match(/^\[(.*?)\]/);
+      if (!match) return '';
+      const inside = match[1];
+      return inside.replace(/(Username:[^\s]+)/, '$1,');
+    },
+    extractAfterBracket(value) {
+      const match = value.match(/^\[.*?\]\s*(.*)$/);
+      return match ? match[1] : value;
+    },
   },
 };
 </script>
+
+<style lang="scss" scoped>
+.event-support {
+  align-content: flex-end;
+  text-align: center;
+}
+
+svg {
+  @include media-breakpoint-down('xl') {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+.btn-secondary {
+  padding: clamp(0.625rem, -0.0159rem + 0.7949vw, 0.938rem);
+}
+
+.table-pagination-container {
+  @include media-breakpoint-down(md) {
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+}
+</style>

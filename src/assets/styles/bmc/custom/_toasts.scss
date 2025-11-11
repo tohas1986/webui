@@ -1,61 +1,84 @@
 .b-toaster {
-  top: 75px!important; // make sure toasts do not hide top header
+  bottom: 20px !important; // make sure toasts do not hide top header
 }
 
+.b-toaster.b-toaster-bottom-right {
+  @include media-breakpoint-down(xs) {
+    left: 0;
+    right: 0;
+  }
+}
+
+.b-toaster.b-toaster-bottom-right .b-toaster-slot {
+  max-width: clamp(27.063rem, 4.4122rem + 28.094vw, 38.125rem);
+
+  @include media-breakpoint-down(xs) {
+    max-width: 100%;
+  }
+}
+
+.toast-body {
+  @include media-breakpoint-down(md) {
+    padding-left: 0 !important;
+  }
+}
+
+.b-toast {
+  max-width: clamp(26.25rem, 5.7738rem + 25.3968vw, 36.25rem);
+  @include media-breakpoint-down(xs) {
+    max-width: 100%;
+    width: auto;
+    margin-left: 1rem;
+    margin-right: 1rem;
+  }
+}
 // Toast component and status icon style
 .toast {
-  padding: $spacer/2 $spacer/2 $spacer/2 $spacer+2;
-  border-width: 0 0 0 3px;
+  padding: clamp(1rem, 0.4881rem + 0.6349vw, 1.25rem)
+    clamp(1.625rem, 1.1131rem + 0.6349vw, 1.875rem) 20px
+    clamp(1rem, 0.4881rem + 0.6349vw, 1.25rem);
+  background-color: $main-color !important;
+  border-color: $main-color !important;
+  max-width: clamp(26.25rem, 5.7738rem + 25.3968vw, 36.25rem);
+  @include media-breakpoint-down(xs) {
+    max-width: 100%;
+  }
+  border-radius: 20px;
   box-shadow: $box-shadow;
+  color: $white !important;
   .close {
-    font-weight: 300;
-    opacity: 1;
+    font-weight: 400;
+    color: $white !important;
   }
 }
 
 .toast-header {
   display: flex;
   align-items: flex-start;
-  background-color: inherit!important; //override specificity
+  background-color: inherit !important; //override specificity
   border: none;
-  color: theme-color("dark")!important; //override specificity
-  padding-bottom: 0;
+  color: $white !important;
+  padding: 0;
+  font-size: clamp(0.75rem, -0.0179rem + 0.9524vw, 1.125rem);
 }
 
 .toast-icon {
   display: flex;
   margin-right: 1rem;
-
-  svg {
-    margin-left: -2.5rem;
-  }
+  position: absolute;
 
   + .close {
-    line-height: .9;
+    line-height: 0.9;
+  }
+
+  .status-icon {
+    margin-right: 1rem;
   }
 }
 
 .toast-body {
-  color: theme-color("dark");
-  padding-top: 0;
-}
-
-.b-toast-success .toast {
-  border-left-color: theme-color("success")!important;
-  background-color: theme-color-light("success")!important;
-}
-
-.b-toast-info .toast {
-  border-left-color: theme-color("info")!important;
-  background-color: theme-color-light("info")!important;
-}
-
-.b-toast-danger .toast {
-  border-left-color: theme-color("danger")!important;
-  background-color: theme-color-light("danger")!important;
-}
-
-.b-toast-warning .toast {
-  border-left-color: theme-color("warning")!important;
-  background-color: theme-color-light("warning")!important;
+  color: $white !important;
+  padding: 0;
+  padding-left: clamp(3.563rem, 1.0035rem + 3.1746vw, 4.813rem);
+  font-size: clamp(0.75rem, -0.0179rem + 0.9524vw, 1.125rem);
 }

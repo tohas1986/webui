@@ -6,6 +6,7 @@ const FirmwareStore = {
   state: {
     bmcFirmware: [],
     hostFirmware: [],
+    allFirmware: [],
     bmcActiveFirmwareId: null,
     hostActiveFirmwareId: null,
     applyTime: null,
@@ -17,22 +18,45 @@ const FirmwareStore = {
     isSingleFileUploadEnabled: (state) => state.hostFirmware.length === 0,
     activeBmcFirmware: (state) => {
       return state.bmcFirmware.find(
-        (firmware) => firmware.id === state.bmcActiveFirmwareId
+        (firmware) => firmware.id === state.bmcActiveFirmwareId,
       );
     },
     activeHostFirmware: (state) => {
-      return state.hostFirmware.find(
-        (firmware) => firmware.id === state.hostActiveFirmwareId
-      );
+      return state.hostActiveFirmwareId;
     },
     backupBmcFirmware: (state) => {
       return state.bmcFirmware.find(
-        (firmware) => firmware.id !== state.bmcActiveFirmwareId
+        (firmware) => firmware.id !== state.bmcActiveFirmwareId,
+      );
+    },
+    backupBiosFirmware: (state) => {
+      return state.allFirmware.find((firmware) =>
+        firmware.description.includes('BIOS'),
+      );
+    },
+    clpdFirmware: (state) => {
+      return state.allFirmware.filter((firmware) =>
+        firmware.description.includes('CPLD'),
+      );
+    },
+    psuFirmware: (state) => {
+      return state.allFirmware.filter((firmware) =>
+        firmware.description.includes('PSU'),
+      );
+    },
+    pldmFirmware: (state) => {
+      return state.allFirmware.filter((firmware) =>
+        firmware.description.includes('PLDM'),
+      );
+    },
+    meFirmware: (state) => {
+      return state.allFirmware.filter((firmware) =>
+        firmware.description.includes('ME'),
       );
     },
     backupHostFirmware: (state) => {
       return state.hostFirmware.find(
-        (firmware) => firmware.id !== state.hostActiveFirmwareId
+        (firmware) => firmware.id !== state.hostActiveFirmwareId,
       );
     },
   },
@@ -45,6 +69,7 @@ const FirmwareStore = {
     setHttpPushUri: (state, httpPushUri) => (state.httpPushUri = httpPushUri),
     setTftpUploadAvailable: (state, tftpAvailable) =>
       (state.tftpAvailable = tftpAvailable),
+    setFirmware: (state, firmware) => (state.allFirmware = firmware),
   },
   actions: {
     async getFirmwareInformation({ dispatch }) {
@@ -64,9 +89,8 @@ const FirmwareStore = {
     getActiveHostFirmware({ commit }) {
       return api
         .get('/redfish/v1/Systems/system/Bios')
-        .then(({ data: { Links } }) => {
-          const id = Links?.ActiveSoftwareImage['@odata.id'].split('/').pop();
-          commit('setActiveHostFirmwareId', id);
+        .then((response) => {
+          commit('setActiveHostFirmwareId', response.data.Version);
         })
         .catch((error) => console.log(error));
     },
@@ -74,7 +98,7 @@ const FirmwareStore = {
       const inventoryList = await api
         .get('/redfish/v1/UpdateService/FirmwareInventory')
         .then(({ data: { Members = [] } = {} }) =>
-          Members.map((item) => api.get(item['@odata.id']))
+          Members.map((item) => api.get(item['@odata.id'])),
         )
         .catch((error) => console.log(error));
       await api
@@ -82,6 +106,7 @@ const FirmwareStore = {
         .then((response) => {
           const bmcFirmware = [];
           const hostFirmware = [];
+          const firmware = [];
           response.forEach(({ data }) => {
             const firmwareType = data?.RelatedItem?.[0]?.['@odata.id']
               .split('/')
@@ -89,17 +114,22 @@ const FirmwareStore = {
             const item = {
               version: data?.Version,
               id: data?.Id,
+              description: data?.Description,
               location: data?.['@odata.id'],
               status: data?.Status?.Health,
+              activation: data?.Activation,
+              progress: data?.Progress,
             };
             if (firmwareType === 'bmc') {
               bmcFirmware.push(item);
             } else if (firmwareType === 'Bios') {
               hostFirmware.push(item);
             }
+            firmware.push(item);
           });
           commit('setBmcFirmware', bmcFirmware);
           commit('setHostFirmware', hostFirmware);
+          commit('setFirmware', firmware);
         })
         .catch((error) => {
           console.log(error);
@@ -149,7 +179,8 @@ const FirmwareStore = {
         })
         .catch((error) => {
           console.log(error);
-          throw new Error(i18n.t('pageFirmware.toast.errorUpdateFirmware'));
+          //throw new Error(i18n.t('pageFirmware.toast.errorUpdateFirmware'));
+          //throw new Error(i18n.t('pageFirmware.toast.biosUpdateMessage'))
         });
     },
     async uploadFirmwareTFTP({ state, dispatch }, fileAddress) {
@@ -165,7 +196,7 @@ const FirmwareStore = {
       return await api
         .post(
           '/redfish/v1/UpdateService/Actions/UpdateService.SimpleUpdate',
-          data
+          data,
         )
         .catch((error) => {
           console.log(error);

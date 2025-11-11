@@ -42,7 +42,7 @@ module.exports = {
       '/': {
         target: process.env.BASE_URL,
         headers: {
-          Connection: 'keep-alive',
+          Connection: 'Upgrade',
         },
         onProxyRes: (proxyRes) => {
           // This header is ignored in the browser so removing
@@ -51,9 +51,15 @@ module.exports = {
         },
       },
     },
-    port: 8000,
+    port: 8080,
   },
   productionSourceMap: false,
+  chainWebpack: (config) => {
+    config.module
+      .rule('vue')
+      .use('vue-svg-inline-loader')
+      .loader('vue-svg-inline-loader');
+  },
   configureWebpack: (config) => {
     const crypto = require('crypto');
     const crypto_orig_createHash = crypto.createHash;
@@ -79,9 +85,8 @@ module.exports = {
       }
       if (hasCustomAppNav) {
         // If env has custom AppNavigation, resolve AppNavigationMixin module in src/components/AppNavigation/AppNavigation.vue
-        config.resolve.alias[
-          './AppNavigationMixin$'
-        ] = `@/env/components/AppNavigation/${envName}.js`;
+        config.resolve.alias['./AppNavigationMixin$'] =
+          `@/env/components/AppNavigation/${envName}.js`;
       }
     }
 
@@ -89,7 +94,7 @@ module.exports = {
       config.plugins.push(
         new CompressionPlugin({
           deleteOriginalAssets: true,
-        })
+        }),
       );
     }
   },

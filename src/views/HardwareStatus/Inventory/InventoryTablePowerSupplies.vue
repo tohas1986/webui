@@ -14,108 +14,112 @@
         ></table-cell-count>
       </b-col>
     </b-row>
-    <b-table
-      sort-icon-left
-      no-sort-reset
-      hover
-      responsive="md"
-      sort-by="health"
-      show-empty
-      :items="powerSupplies"
-      :fields="fields"
-      :sort-desc="true"
-      :sort-compare="sortCompare"
-      :filter="searchFilter"
-      :empty-text="$t('global.table.emptyMessage')"
-      :empty-filtered-text="$t('global.table.emptySearchMessage')"
-      :busy="isBusy"
-      @filtered="onFiltered"
-    >
-      <!-- Expand chevron icon -->
-      <template #cell(expandRow)="row">
-        <b-button
-          variant="link"
-          data-test-id="hardwareStatus-button-expandPowerSupplies"
-          :title="expandRowLabel"
-          class="btn-icon-only"
-          @click="toggleRowDetails(row)"
-        >
-          <icon-chevron />
-          <span class="sr-only">{{ expandRowLabel }}</span>
-        </b-button>
-      </template>
+    <div class="table-container">
+      <b-table
+        no-sort-reset
+        hover
+        responsive
+        sort-by="health"
+        show-empty
+        :items="powerSupplies"
+        :fields="fields"
+        :sort-desc="true"
+        :sort-compare="sortCompare"
+        :filter="searchFilter"
+        :empty-text="$t('global.table.emptyMessage')"
+        :empty-filtered-text="$t('global.table.emptySearchMessage')"
+        :busy="isBusy"
+        @filtered="onFiltered"
+      >
+        <!-- Expand chevron icon -->
+        <template #cell(expandRow)="row">
+          <b-button
+            variant="link"
+            data-test-id="hardwareStatus-button-expandPowerSupplies"
+            :title="expandRowLabel"
+            class="btn-icon-only"
+            @click="toggleRowDetails(row)"
+          >
+            <icon-chevron />
+            <span class="sr-only">{{ expandRowLabel }}</span>
+          </b-button>
+        </template>
 
-      <!-- Health -->
-      <template #cell(health)="{ value }">
-        <status-icon :status="statusIcon(value)" />
-        {{ value }}
-      </template>
+        <!-- Health -->
+        <template #cell(health)="{ value }">
+          <status-color :status="statusIcon(value)" />
+          <span class="text-status"> {{ value }}</span>
+        </template>
 
-      <template #row-details="{ item }">
-        <b-container fluid>
-          <b-row>
-            <b-col sm="6" xl="4">
-              <dl>
-                <!-- Name -->
-                <dt>{{ $t('pageInventory.table.name') }}:</dt>
-                <dd>{{ dataFormatter(item.name) }}</dd>
-                <!-- Part number -->
-                <dt>{{ $t('pageInventory.table.partNumber') }}:</dt>
-                <dd>{{ dataFormatter(item.partNumber) }}</dd>
-                <!-- Serial number -->
-                <dt>{{ $t('pageInventory.table.serialNumber') }}:</dt>
-                <dd>{{ dataFormatter(item.serialNumber) }}</dd>
-                <!-- Spare part number -->
-                <dt>{{ $t('pageInventory.table.sparePartNumber') }}:</dt>
-                <dd>{{ dataFormatter(item.sparePartNumber) }}</dd>
-                <!-- Model -->
-                <dt>{{ $t('pageInventory.table.model') }}:</dt>
-                <dd>{{ dataFormatter(item.model) }}</dd>
-              </dl>
-            </b-col>
-            <b-col sm="6" xl="4">
-              <dl>
-                <!-- Status state -->
-                <dt>{{ $t('pageInventory.table.statusState') }}:</dt>
-                <dd>{{ dataFormatter(item.statusState) }}</dd>
-                <!-- Status Health rollup state -->
-                <dt>{{ $t('pageInventory.table.statusHealthRollup') }}:</dt>
-                <dd>{{ dataFormatter(item.statusHealth) }}</dd>
-                <!-- Efficiency percent -->
-                <dt>{{ $t('pageInventory.table.efficiencyPercent') }}:</dt>
-                <dd>
-                  {{ dataFormatter(item.efficiencyPercent) }}
-                  {{ $t('unit.Percent') }}
-                </dd>
-                <!-- Power input watts -->
-                <dt>{{ $t('pageInventory.table.powerInputWatts') }}:</dt>
-                <dd>
-                  {{ dataFormatter(item.powerInputWatts) }}
-                  {{ $t('unit.W') }}
-                </dd>
-              </dl>
-            </b-col>
-          </b-row>
-          <div class="section-divider mb-3 mt-3"></div>
-          <b-row>
-            <b-col sm="6" xl="4">
-              <dl>
-                <!-- Manufacturer -->
-                <dt>{{ $t('pageInventory.table.manufacturer') }}:</dt>
-                <dd>{{ dataFormatter(item.manufacturer) }}</dd>
-              </dl>
-            </b-col>
-            <b-col sm="6" xl="4">
-              <dl>
-                <!-- Firmware version -->
-                <dt>{{ $t('pageInventory.table.firmwareVersion') }}:</dt>
-                <dd>{{ dataFormatter(item.firmwareVersion) }}</dd>
-              </dl>
-            </b-col>
-          </b-row>
-        </b-container>
-      </template>
-    </b-table>
+        <template #row-details="{ item }">
+          <b-container fluid>
+            <b-row>
+              <b-col sm="6" xl="4">
+                <dl>
+                  <!-- Name -->
+                  <dt>{{ $t('pageInventory.table.name') }}:</dt>
+                  <dd>{{ dataFormatter(item.name) }}</dd>
+                  <!-- Part number -->
+                  <dt>{{ $t('pageInventory.table.partNumber') }}:</dt>
+                  <dd>{{ dataFormatter(item.partNumber) }}</dd>
+                  <!-- Serial number -->
+                  <dt>{{ $t('pageInventory.table.serialNumber') }}:</dt>
+                  <dd>{{ dataFormatter(item.serialNumber) }}</dd>
+                  <!-- Spare part number -->
+                  <dt>{{ $t('pageInventory.table.sparePartNumber') }}:</dt>
+                  <dd>{{ dataFormatter(item.sparePartNumber) }}</dd>
+                  <!-- Model -->
+                  <dt>{{ $t('pageInventory.table.model') }}:</dt>
+                  <dd>{{ dataFormatter(item.model) }}</dd>
+                </dl>
+              </b-col>
+              <b-col sm="6" xl="4">
+                <dl>
+                  <!-- Status state -->
+                  <dt>{{ $t('pageInventory.table.statusState') }}:</dt>
+                  <dd>{{ dataFormatter(item.statusState) }}</dd>
+                  <!-- Redundancy mode -->
+                  <dt>{{ $t('pageInventory.table.redundancyMode') }}:</dt>
+                  <dd>{{ dataFormatter(item.redundancyMode) }}</dd>
+                  <!-- Health rollup -->
+                  <dt>{{ $t('pageInventory.table.healthRollup') }}:</dt>
+                  <dd>{{ dataFormatter(item.health) }}</dd>
+                  <!-- Efficiency percent -->
+                  <dt>{{ $t('pageInventory.table.efficiencyPercent') }}:</dt>
+                  <dd>
+                    {{ dataFormatter(item.efficiencyPercent) }}
+                    {{ $t('unit.Percent') }}
+                  </dd>
+                  <!-- Power input watts -->
+                  <dt>{{ $t('pageInventory.table.powerInputWatts') }}:</dt>
+                  <dd>
+                    {{ dataFormatter(item.powerInputWatts) }}
+                    {{ $t('unit.W') }}
+                  </dd>
+                </dl>
+              </b-col>
+            </b-row>
+            <div class="section-divider mb-3 mt-3"></div>
+            <b-row>
+              <b-col sm="6" xl="4">
+                <dl>
+                  <!-- Manufacturer -->
+                  <dt>{{ $t('pageInventory.table.manufacturer') }}:</dt>
+                  <dd>{{ dataFormatter(item.manufacturer) }}</dd>
+                </dl>
+              </b-col>
+              <b-col sm="6" xl="4">
+                <dl>
+                  <!-- Firmware version -->
+                  <dt>{{ $t('pageInventory.table.firmwareVersion') }}:</dt>
+                  <dd>{{ dataFormatter(item.firmwareVersion) }}</dd>
+                </dl>
+              </b-col>
+            </b-row>
+          </b-container>
+        </template>
+      </b-table>
+    </div>
   </page-section>
 </template>
 
@@ -123,7 +127,7 @@
 import PageSection from '@/components/Global/PageSection';
 import IconChevron from '@carbon/icons-vue/es/chevron--down/20';
 
-import StatusIcon from '@/components/Global/StatusIcon';
+import StatusColor from '@/components/Global/StatusColor';
 import TableCellCount from '@/components/Global/TableCellCount';
 import DataFormatterMixin from '@/components/Mixins/DataFormatterMixin';
 import TableSortMixin from '@/components/Mixins/TableSortMixin';
@@ -136,7 +140,7 @@ import TableRowExpandMixin, {
 } from '@/components/Mixins/TableRowExpandMixin';
 
 export default {
-  components: { IconChevron, PageSection, StatusIcon, Search, TableCellCount },
+  components: { IconChevron, PageSection, StatusColor, Search, TableCellCount },
   mixins: [
     TableRowExpandMixin,
     DataFormatterMixin,
@@ -160,11 +164,30 @@ export default {
           sortable: true,
         },
         {
-          key: 'health',
-          label: this.$t('pageInventory.table.health'),
+          key: 'manufacturer',
+          label: this.$t('pageInventory.table.manufacturer'),
           formatter: this.dataFormatter,
-          sortable: true,
+        },
+        {
+          key: 'model',
+          label: this.$t('pageInventory.table.model'),
+          formatter: this.dataFormatter,
           tdClass: 'text-nowrap',
+        },
+        {
+          key: 'partNumber',
+          label: this.$t('pageInventory.table.partNumber'),
+          formatter: this.dataFormatter,
+        },
+        {
+          key: 'serialNumber',
+          label: this.$t('pageInventory.table.serialNumber'),
+          formatter: this.dataFormatter,
+        },
+        {
+          key: 'redundancyMode',
+          label: this.$t('pageInventory.table.redundancyMode'),
+          formatter: this.dataFormatter,
         },
         {
           key: 'locationNumber',
@@ -173,9 +196,11 @@ export default {
           sortable: true,
         },
         {
-          key: 'identifyLed',
-          label: this.$t('pageInventory.table.identifyLed'),
+          key: 'health',
+          label: this.$t('pageInventory.table.health'),
           formatter: this.dataFormatter,
+          sortable: true,
+          tdClass: 'text-nowrap',
         },
       ],
       searchFilter: searchFilter,

@@ -2,16 +2,18 @@
   <b-modal
     id="modal-hostname"
     ref="modal"
+    size="lg"
+    centered
     :title="$t('pageNetwork.modal.editHostnameTitle')"
     @hidden="resetForm"
   >
     <b-form id="hostname-settings" @submit.prevent="handleSubmit">
       <b-row>
-        <b-col sm="6">
-          <b-form-group
-            :label="$t('pageNetwork.hostname')"
-            label-for="hostname"
-          >
+        <b-col sm="4" class="align-content-center">
+          <label for="hostname">{{ $t('pageNetwork.hostname') }}</label>
+        </b-col>
+        <b-col sm="8">
+          <b-form-group>
             <b-form-input
               id="hostname"
               v-model="form.hostname"

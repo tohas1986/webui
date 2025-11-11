@@ -1,5 +1,5 @@
 <template>
-  <b-container fluid="xl">
+  <b-container fluid>
     <page-title class="mb-4" :description="$t('pageSerialOverLan.subTitle')" />
 
     <page-section class="mb-0">

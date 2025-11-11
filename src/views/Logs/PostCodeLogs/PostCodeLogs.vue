@@ -1,8 +1,8 @@
 <template>
-  <b-container fluid="xl">
+  <b-container fluid>
     <page-title />
     <b-row class="align-items-start">
-      <b-col sm="8" xl="6" class="d-sm-flex align-items-end mb-4">
+      <b-col class="d-sm-flex align-items-end">
         <search
           :placeholder="$t('pagePostCodeLogs.table.searchLogs')"
           @change-search="onChangeSearchInput"
@@ -15,27 +15,8 @@
           ></table-cell-count>
         </div>
       </b-col>
-      <b-col sm="8" md="7" xl="6">
+      <b-col class="form-group-wrapper">
         <table-date-filter @change="onChangeDateTimeFilter" />
-      </b-col>
-    </b-row>
-    <b-row>
-      <b-col xl="12" class="text-right">
-        <b-button
-          variant="link"
-          :disabled="allLogs.length === 0"
-          @click="deleteAllLogs"
-        >
-          <icon-delete /> {{ $t('global.action.deleteAll') }}
-        </b-button>
-        <b-button
-          variant="primary"
-          :disabled="allLogs.length === 0"
-          :download="exportFileNameByDate()"
-          :href="href"
-        >
-          <icon-export /> {{ $t('pagePostCodeLogs.button.exportAll') }}
-        </b-button>
       </b-col>
     </b-row>
     <b-row>
@@ -52,81 +33,111 @@
             />
           </template>
         </table-toolbar>
-        <b-table
-          id="table-post-code-logs"
-          ref="table"
-          responsive="md"
-          selectable
-          no-select-on-click
-          sort-icon-left
-          hover
-          no-sort-reset
-          sort-desc
-          show-empty
-          sort-by="id"
-          :fields="fields"
-          :items="filteredLogs"
-          :empty-text="$t('global.table.emptyMessage')"
-          :empty-filtered-text="$t('global.table.emptySearchMessage')"
-          :per-page="perPage"
-          :current-page="currentPage"
-          :filter="searchFilter"
-          :busy="isBusy"
-          @filtered="onFiltered"
-          @row-selected="onRowSelected($event, filteredLogs.length)"
-        >
-          <!-- Checkbox column -->
-          <template #head(checkbox)>
-            <b-form-checkbox
-              v-model="tableHeaderCheckboxModel"
-              data-test-id="postCode-checkbox-selectAll"
-              :indeterminate="tableHeaderCheckboxIndeterminate"
-              @change="onChangeHeaderCheckbox($refs.table)"
-            >
-              <span class="sr-only">{{ $t('global.table.selectAll') }}</span>
-            </b-form-checkbox>
-          </template>
-          <template #cell(checkbox)="row">
-            <b-form-checkbox
-              v-model="row.rowSelected"
-              :data-test-id="`postCode-checkbox-selectRow-${row.index}`"
-              @change="toggleSelectRow($refs.table, row.index)"
-            >
-              <span class="sr-only">{{ $t('global.table.selectItem') }}</span>
-            </b-form-checkbox>
-          </template>
-          <!-- Date column -->
-          <template #cell(date)="{ value }">
-            <p class="mb-0">{{ value | formatDate }}</p>
-            <p class="mb-0">{{ value | formatTime }}</p>
-          </template>
+        <div class="table-container">
+          <b-table
+            id="table-post-code-logs"
+            ref="table"
+            responsive="md"
+            selectable
+            no-select-on-click
+            hover
+            sticky-header
+            no-sort-reset
+            sort-desc
+            show-empty
+            sort-by="id"
+            :fields="fields"
+            :items="filteredLogs"
+            :empty-text="$t('global.table.emptyMessage')"
+            :empty-filtered-text="$t('global.table.emptySearchMessage')"
+            :per-page="perPage"
+            :current-page="currentPage"
+            :filter="searchFilter"
+            :busy="isBusy"
+            @filtered="onFiltered"
+            @row-selected="onRowSelected($event, filteredLogs.length)"
+          >
+            <!-- Checkbox column -->
+            <template #head(checkbox)>
+              <b-form-checkbox
+                v-model="tableHeaderCheckboxModel"
+                data-test-id="postCode-checkbox-selectAll"
+                :indeterminate="tableHeaderCheckboxIndeterminate"
+                @change="onChangeHeaderCheckbox($refs.table)"
+              >
+                <span class="sr-only">{{ $t('global.table.selectAll') }}</span>
+              </b-form-checkbox>
+            </template>
+            <template #cell(checkbox)="row">
+              <b-form-checkbox
+                v-model="row.rowSelected"
+                :data-test-id="`postCode-checkbox-selectRow-${row.index}`"
+                @change="toggleSelectRow($refs.table, row.index)"
+              >
+                <span class="sr-only">{{ $t('global.table.selectItem') }}</span>
+              </b-form-checkbox>
+            </template>
+            <!-- Date column -->
+            <template #cell(date)="{ value }">
+              <p class="mb-0">
+                {{ value | formatDate }} {{ value | formatTime }}
+              </p>
+              <p class="mb-0">({{ timezone }})</p>
+            </template>
 
-          <!-- Actions column -->
-          <template #cell(actions)="row">
-            <table-row-action
-              v-for="(action, index) in row.item.actions"
-              :key="index"
-              :value="action.value"
-              :title="action.title"
-              :row-data="row.item"
-              :btn-icon-only="true"
-              :export-name="exportFileNameByDate(action.value)"
-              :download-location="row.item.uri"
-              :download-in-new-tab="true"
-              :show-button="false"
+            <!-- Actions column -->
+            <template #cell(actions)="row">
+              <table-row-action
+                v-for="(action, index) in row.item.actions"
+                :key="index"
+                :value="action.value"
+                :title="action.title"
+                :row-data="row.item"
+                :btn-icon-only="true"
+                :export-name="exportFileNameByDate(action.value)"
+                :download-location="row.item.uri"
+                :download-in-new-tab="true"
+                :show-button="false"
+              >
+                <template #icon>
+                  <icon-export v-if="action.value === 'export'" />
+                  <icon-download v-if="action.value === 'download'" />
+                </template>
+              </table-row-action>
+            </template>
+          </b-table>
+        </div>
+        <b-row class="justify-content-center">
+          <div class="btn-container">
+            <b-button
+              variant="link"
+              class="btn-table"
+              :disabled="allLogs.length === 0"
+              @click="deleteAllLogs"
             >
-              <template #icon>
-                <icon-export v-if="action.value === 'export'" />
-                <icon-download v-if="action.value === 'download'" />
-              </template>
-            </table-row-action>
-          </template>
-        </b-table>
+              <span class="d-inline-block d-sm-none">
+                <icon-trashcan /> {{ $t('global.action.deleteAllMobile') }}
+              </span>
+              <span class="d-none d-sm-inline-block">
+                <icon-trashcan /> {{ $t('global.action.deleteAll') }}
+              </span>
+            </b-button>
+            <b-button
+              variant="link"
+              class="btn-table"
+              :disabled="allLogs.length === 0"
+              :download="exportFileNameByDate()"
+              :href="href"
+            >
+              <icon-export /> {{ $t('pagePostCodeLogs.button.exportAll') }}
+            </b-button>
+          </div>
+        </b-row>
       </b-col>
     </b-row>
 
     <!-- Table pagination -->
-    <b-row>
+    <b-row class="table-pagination-container">
       <b-col sm="6">
         <b-form-group
           class="table-pagination-select"
@@ -155,9 +166,9 @@
 </template>
 
 <script>
-import IconDelete from '@carbon/icons-vue/es/trash-can/20';
+import IconTrashcan from '@/components/icons/IconTrashcan';
+import IconExport from '@/components/icons/IconExport';
 import IconDownload from '@carbon/icons-vue/es/download/20';
-import IconExport from '@carbon/icons-vue/es/document--export/20';
 import { omit } from 'lodash';
 import PageTitle from '@/components/Global/PageTitle';
 import Search from '@/components/Global/Search';
@@ -186,10 +197,11 @@ import TableRowExpandMixin, {
 import SearchFilterMixin, {
   searchFilter,
 } from '@/components/Mixins/SearchFilterMixin';
+import LocalTimezoneLabelMixin from '@/components/Mixins/LocalTimezoneLabelMixin';
 
 export default {
   components: {
-    IconDelete,
+    IconTrashcan,
     IconExport,
     IconDownload,
     PageTitle,
@@ -209,6 +221,7 @@ export default {
     TableSortMixin,
     TableRowExpandMixin,
     SearchFilterMixin,
+    LocalTimezoneLabelMixin,
   ],
   beforeRouteLeave(to, from, next) {
     // Hide loader if the user navigates to another page
@@ -286,7 +299,7 @@ export default {
               },
             ],
           };
-        }
+        },
       );
     },
     batchExportData() {
@@ -296,14 +309,20 @@ export default {
       return this.getFilteredTableDataByDate(
         this.allLogs,
         this.filterStartDate,
-        this.filterEndDate
+        this.filterEndDate,
       );
     },
     filteredLogs() {
       return this.getFilteredTableData(
         this.filteredLogsByDate,
-        this.activeFilters
+        this.activeFilters,
       );
+    },
+    isUtcDisplay() {
+      return this.$store.getters['global/isUtcDisplay'];
+    },
+    timezone() {
+      return this.localOffset(this.isUtcDisplay);
     },
   },
   created() {
@@ -337,7 +356,7 @@ export default {
           (postCodes) => {
             const allLogsString = JSON.stringify(postCodes);
             return allLogsString;
-          }
+          },
         );
       }
     },
@@ -371,3 +390,16 @@ export default {
   },
 };
 </script>
+<style lang="scss" scoped>
+.form-group-wrapper {
+  @include media-breakpoint-down(md) {
+    align-self: end;
+  }
+}
+.table-pagination-container {
+  @include media-breakpoint-down(md) {
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+}
+</style>

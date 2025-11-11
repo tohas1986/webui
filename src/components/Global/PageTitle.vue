@@ -28,7 +28,7 @@ export default {
         let index = title.search('-');
         title = title.replace(
           '-' + title.charAt(index + 1),
-          title.charAt(index + 1).toUpperCase()
+          title.charAt(index + 1).toUpperCase(),
         );
         i++;
       }
@@ -41,9 +41,10 @@ export default {
 
 <style lang="scss" scoped>
 .page-title {
-  margin-bottom: $spacer * 2;
+  margin-bottom: clamp(0.813rem, -0.0818rem + 1.1098vw, 1.25rem);
 }
 p {
   max-width: 72ch;
+  font-size: clamp(0.75rem, -0.0179rem + 0.9524vw, 1.125rem);
 }
 </style>

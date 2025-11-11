@@ -4,46 +4,36 @@
     :title="$t('pageOverview.networkInformation')"
     :to="`/settings/network`"
   >
-    <b-row class="mt-3">
-      <b-col sm="6">
-        <dl>
-          <dt>{{ $t('pageOverview.hostName') }}</dt>
-          <dd>{{ dataFormatter(network.hostname) }}</dd>
-        </dl>
-      </b-col>
-      <b-col sm="6">
-        <dl>
-          <dt>{{ $t('pageOverview.linkStatus') }}</dt>
-          <dd>
-            {{ dataFormatter(network.linkStatus) }}
-          </dd>
-        </dl>
-      </b-col>
-    </b-row>
-    <b-row>
-      <b-col>
-        <dl>
-          <dt>{{ $t('pageOverview.ipv4') }}</dt>
-          <dd>
-            {{ dataFormatter(network.staticAddress) }}
-          </dd>
-        </dl>
-      </b-col>
-      <b-col>
-        <dl>
-          <dt>{{ $t('pageOverview.dhcp') }}</dt>
-          <dd>
-            {{
-              dataFormatter(
-                network.dhcpAddress.length !== 0
-                  ? network.dhcpAddress[0].Address
-                  : null
-              )
-            }}
-          </dd>
-        </dl>
-      </b-col>
-    </b-row>
+    <div class="card-info">
+      <dl>
+        <dt>{{ $t('pageOverview.hostName') }}</dt>
+        <dd>{{ dataFormatter(network.hostname) }}</dd>
+      </dl>
+      <dl>
+        <dt>{{ $t('pageOverview.linkStatus') }}</dt>
+        <dd>
+          {{ dataFormatter(network.linkStatus) }}
+        </dd>
+      </dl>
+      <dl>
+        <dt>{{ $t('pageOverview.dhcp') }}</dt>
+        <dd>
+          {{
+            dataFormatter(
+              network.dhcpAddress.length !== 0
+                ? network.dhcpAddress[0].Address
+                : null,
+            )
+          }}
+        </dd>
+      </dl>
+      <dl>
+        <dt>{{ $t('pageOverview.ipv4') }}</dt>
+        <dd>
+          {{ dataFormatter(network.staticAddress) }}
+        </dd>
+      </dl>
+    </div>
   </overview-card>
 </template>
 

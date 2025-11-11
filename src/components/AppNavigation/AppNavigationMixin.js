@@ -1,11 +1,12 @@
-import IconDashboard from '@carbon/icons-vue/es/dashboard/16';
-import IconTextLinkAnalysis from '@carbon/icons-vue/es/text-link--analysis/16';
-import IconDataCheck from '@carbon/icons-vue/es/data--check/16';
-import IconSettingsAdjust from '@carbon/icons-vue/es/settings--adjust/16';
-import IconSettings from '@carbon/icons-vue/es/settings/16';
-import IconSecurity from '@carbon/icons-vue/es/security/16';
+import IconDashboard from '../icons/IconOverview';
+import IconTextLinkAnalysis from '../icons/IconLogs';
+import IconDataCheck from '../icons/IconHardware';
+import IconSettingsAdjust from '../icons/IconOperations';
+import IconSettings from '../icons/IconSettings';
+import IconSecurity from '../icons/IconSecurity';
 import IconChevronUp from '@carbon/icons-vue/es/chevron--up/16';
-import IconDataBase from '@carbon/icons-vue/es/data--base--alt/16';
+import IconDataBase from '../icons/IconManagement';
+import IconCalendar from '../icons/IconCalendar';
 const roles = {
   administrator: 'Administrator',
   operator: 'Operator',
@@ -23,6 +24,7 @@ const AppNavigationMixin = {
     iconSecurityAndAccess: IconSecurity,
     iconExpand: IconChevronUp,
     iconResourceManagement: IconDataBase,
+    IconCalendar: IconCalendar,
   },
   data() {
     return {
@@ -47,6 +49,11 @@ const AppNavigationMixin = {
               id: 'post-code-logs',
               label: this.$t('appNavigation.postCodeLogs'),
               route: '/logs/post-code-logs',
+            },
+            {
+              id: 'dumps',
+              label: this.$t('appNavigation.dumps'),
+              route: '/logs/dumps',
             },
           ],
         },
@@ -73,24 +80,14 @@ const AppNavigationMixin = {
           icon: 'iconControl',
           children: [
             {
-              id: 'factory-reset',
-              label: this.$t('appNavigation.factoryReset'),
-              route: '/operations/factory-reset',
+              id: 'firmware',
+              label: this.$t('appNavigation.firmware'),
+              route: '/operations/firmware',
             },
             {
               id: 'kvm',
               label: this.$t('appNavigation.kvm'),
               route: '/operations/kvm',
-            },
-            {
-              id: 'key-clear',
-              label: this.$t('appNavigation.keyClear'),
-              route: '/operations/key-clear',
-            },
-            {
-              id: 'firmware',
-              label: this.$t('appNavigation.firmware'),
-              route: '/operations/firmware',
             },
             {
               id: 'reboot-bmc',
@@ -114,6 +111,48 @@ const AppNavigationMixin = {
               route: '/operations/virtual-media',
               exclusiveToRoles: [roles.administrator],
             },
+            {
+              id: 'factory-reset',
+              label: this.$t('appNavigation.configuration'),
+              route: '/operations/configuration',
+            },
+            {
+              id: 'key-clear',
+              label: this.$t('appNavigation.keyClear'),
+              route: '/operations/key-clear',
+            },
+          ],
+        },
+        {
+          id: 'resource-management',
+          label: this.$t('appNavigation.resourceManagement'),
+          icon: 'iconResourceManagement',
+          children: [
+            {
+              id: 'raid-management',
+              label: this.$t('appNavigation.raidManagement'),
+              route: '/resource-management/raid-management',
+            },
+            {
+              id: 'fan-control',
+              label: this.$t('appNavigation.fanControl'),
+              route: '/resource-management/fan-control',
+            },
+            {
+              id: 'syslog',
+              label: this.$t('appNavigation.syslog'),
+              route: '/resource-management/syslog',
+            },
+            {
+              id: 'power-restore-policy',
+              label: this.$t('appNavigation.powerRestorePolicy'),
+              route: '/resource-management/power-restore-policy',
+            },
+            {
+              id: 'power',
+              label: this.$t('appNavigation.power'),
+              route: '/resource-management/power',
+            },
           ],
         },
         {
@@ -132,9 +171,20 @@ const AppNavigationMixin = {
               route: '/settings/network',
             },
             {
-              id: 'power-restore-policy',
-              label: this.$t('appNavigation.powerRestorePolicy'),
-              route: '/settings/power-restore-policy',
+              id: 'user-management',
+              label: this.$t('appNavigation.userManagement'),
+              route: '/settings/user-management',
+              exclusiveToRoles: [roles.administrator],
+            },
+            {
+              id: 'snmp',
+              label: this.$t('appNavigation.snmp'),
+              route: '/settings/snmp',
+            },
+            {
+              id: 'smtp',
+              label: this.$t('appNavigation.smtp'),
+              route: '/settings/smtp',
             },
           ],
         },
@@ -154,11 +204,6 @@ const AppNavigationMixin = {
               route: '/security-and-access/ldap',
             },
             {
-              id: 'user-management',
-              label: this.$t('appNavigation.userManagement'),
-              route: '/security-and-access/user-management',
-            },
-            {
               id: 'policies',
               label: this.$t('appNavigation.policies'),
               route: '/security-and-access/policies',
@@ -167,18 +212,6 @@ const AppNavigationMixin = {
               id: 'certificates',
               label: this.$t('appNavigation.certificates'),
               route: '/security-and-access/certificates',
-            },
-          ],
-        },
-        {
-          id: 'resource-management',
-          label: this.$t('appNavigation.resourceManagement'),
-          icon: 'iconResourceManagement',
-          children: [
-            {
-              id: 'power',
-              label: this.$t('appNavigation.power'),
-              route: '/resource-management/power',
             },
           ],
         },

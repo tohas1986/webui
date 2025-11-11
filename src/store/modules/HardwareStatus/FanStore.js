@@ -12,27 +12,22 @@ const FanStore = {
     setFanInfo: (state, data) => {
       state.fans = data.map((fan) => {
         const {
-          IndicatorLED,
-          Location,
-          MemberId,
+          Id,
           Name,
-          Reading,
-          ReadingUnits,
-          Status = {},
           PartNumber,
           SerialNumber,
+          SpeedPercent = {},
+          Status = {},
         } = fan;
         return {
-          id: MemberId,
+          id: Id,
           health: Status.Health,
+          name: Name,
+          speed: SpeedPercent.Reading,
+          statusState: Status.State,
+          healthRollup: Status.HealthRollup,
           partNumber: PartNumber,
           serialNumber: SerialNumber,
-          healthRollup: Status.HealthRollup,
-          identifyLed: IndicatorLED,
-          locationNumber: Location,
-          name: Name,
-          speed: Reading + ' ' + ReadingUnits,
-          statusState: Status.State,
         };
       });
     },
@@ -44,9 +39,9 @@ const FanStore = {
         .then(({ data: { Members } }) =>
           api.all(
             Members.map((member) =>
-              api.get(member['@odata.id']).then((response) => response.data)
-            )
-          )
+              api.get(member['@odata.id']).then((response) => response.data),
+            ),
+          ),
         )
         .catch((error) => console.log(error));
     },
@@ -60,8 +55,20 @@ const FanStore = {
     },
     async getChassisFans(_, chassis) {
       return await api
-        .get(chassis.Thermal['@odata.id'])
-        .then(({ data: { Fans } }) => Fans || [])
+        .get(chassis.ThermalSubsystem['@odata.id'])
+        .then((response) => {
+          return api.get(`${response.data.Fans['@odata.id']}`);
+        })
+        .then(({ data: { Members } }) => {
+          const promises = Members.map((member) =>
+            api.get(member['@odata.id']),
+          );
+          return api.all(promises);
+        })
+        .then((response) => {
+          const data = response.map(({ data }) => data);
+          return data;
+        })
         .catch((error) => console.log(error));
     },
   },

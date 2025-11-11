@@ -3,22 +3,22 @@
     :title="$t('pageOverview.powerInformation')"
     :to="`/resource-management/power`"
   >
-    <b-row class="mt-3">
-      <b-col sm="6">
-        <dl>
-          <dt>{{ $t('pageOverview.powerConsumption') }}</dt>
-          <dd v-if="powerConsumptionValue == null">
-            {{ $t('global.status.notAvailable') }}
-          </dd>
-          <dd v-else>{{ powerConsumptionValue }} W</dd>
-          <dt>{{ $t('pageOverview.powerCap') }}</dt>
-          <dd v-if="powerCapValue == null">
-            {{ $t('global.status.disabled') }}
-          </dd>
-          <dd v-else>{{ powerCapValue }} W</dd>
-        </dl>
-      </b-col>
-    </b-row>
+    <div class="card-info">
+      <dl>
+        <dt>{{ $t('pageOverview.powerConsumption') }}</dt>
+        <dd v-if="powerConsumptionValue == null">
+          {{ $t('global.status.notAvailable') }}
+        </dd>
+        <dd v-else>{{ powerConsumptionValue }} W</dd>
+      </dl>
+      <dl>
+        <dt>{{ $t('pageOverview.powerCap') }}</dt>
+        <dd v-if="powerCapValue == null">
+          {{ $t('global.status.disabled') }}
+        </dd>
+        <dd v-else>{{ powerCapValue }} W</dd>
+      </dl>
+    </div>
   </overview-card>
 </template>
 

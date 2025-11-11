@@ -1,8 +1,8 @@
 <template>
-  <b-container fluid="xl">
+  <b-container fluid>
     <page-title />
     <b-row>
-      <b-col xl="11">
+      <b-col xl="12">
         <!-- Expired certificates banner -->
         <alert :show="expiredCertificateTypes.length > 0" variant="danger">
           <template v-if="expiredCertificateTypes.length > 1">
@@ -32,64 +32,66 @@
       </b-col>
     </b-row>
     <b-row>
-      <b-col xl="11" class="text-right">
+      <b-col xl="12" class="btn-secondary-container">
         <b-button
           v-b-modal.generate-csr
           data-test-id="certificates-button-generateCsr"
-          variant="link"
+          variant="secondary"
         >
-          <icon-add />
           {{ $t('pageCertificates.generateCsr') }}
+          <icon-add />
         </b-button>
         <b-button
-          variant="primary"
+          variant="secondary"
           :disabled="certificatesForUpload.length === 0"
           @click="initModalUploadCertificate(null)"
         >
-          <icon-add />
           {{ $t('pageCertificates.addNewCertificate') }}
+          <icon-add />
         </b-button>
       </b-col>
     </b-row>
     <b-row>
-      <b-col xl="11">
-        <b-table
-          responsive="md"
-          show-empty
-          hover
-          :busy="isBusy"
-          :fields="fields"
-          :items="tableItems"
-          :empty-text="$t('global.table.emptyMessage')"
-        >
-          <template #cell(validFrom)="{ value }">
-            {{ value | formatDate }}
-          </template>
+      <b-col xl="12">
+        <div class="table-container">
+          <b-table
+            responsive="md"
+            show-empty
+            hover
+            :busy="isBusy"
+            :fields="fields"
+            :items="tableItems"
+            :empty-text="$t('global.table.emptyMessage')"
+          >
+            <template #cell(validFrom)="{ value }">
+              {{ value | formatDate }}
+            </template>
 
-          <template #cell(validUntil)="{ value }">
-            <status-icon
-              v-if="getDaysUntilExpired(value) < 31"
-              :status="getIconStatus(value)"
-            />
-            {{ value | formatDate }}
-          </template>
+            <template #cell(validUntil)="{ value }">
+              <status-icon
+                v-if="getDaysUntilExpired(value) < 31"
+                :status="getIconStatus(value)"
+              />
+              {{ value | formatDate }}
+            </template>
 
-          <template #cell(actions)="{ value, item }">
-            <table-row-action
-              v-for="(action, index) in value"
-              :key="index"
-              :value="action.value"
-              :title="action.title"
-              :enabled="action.enabled"
-              @click-table-action="onTableRowAction($event, item)"
-            >
-              <template #icon>
-                <icon-replace v-if="action.value === 'replace'" />
-                <icon-trashcan v-if="action.value === 'delete'" />
-              </template>
-            </table-row-action>
-          </template>
-        </b-table>
+            <template #cell(actions)="{ value, item }">
+              <table-row-action
+                v-for="(action, index) in value"
+                :key="index"
+                :value="action.value"
+                :title="action.title"
+                :enabled="action.enabled"
+                @click-table-action="onTableRowAction($event, item)"
+              >
+                <template #icon>
+                  <icon-replace v-if="action.value === 'replace'" />
+                  <icon-trashcan v-if="action.value === 'delete'" />
+                </template>
+              </table-row-action>
+            </template>
+          </b-table>
+        </div>
       </b-col>
     </b-row>
 
@@ -100,9 +102,9 @@
 </template>
 
 <script>
-import IconAdd from '@carbon/icons-vue/es/add--alt/20';
+import IconAdd from '@/components/icons/IconAdd';
 import IconReplace from '@carbon/icons-vue/es/renew/20';
-import IconTrashcan from '@carbon/icons-vue/es/trash-can/20';
+import IconTrashcan from '@/components/icons/IconTrashcan';
 
 import ModalGenerateCsr from './ModalGenerateCsr';
 import ModalUploadCertificate from './ModalUploadCertificate';
@@ -250,7 +252,7 @@ export default {
             title: this.$t('pageCertificates.deleteCertificate'),
             okTitle: this.$t('global.action.delete'),
             cancelTitle: this.$t('global.action.cancel'),
-          }
+          },
         )
         .then((deleteConfirmed) => {
           if (deleteConfirmed) this.deleteCertificate(certificate);
@@ -267,7 +269,7 @@ export default {
             this.$t('pageCertificates.alert.incorrectCertificateFileType'),
             {
               title: this.$t('pageCertificates.toast.errorAddCertificate'),
-            }
+            },
           );
         }
       } else {
@@ -337,3 +339,47 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+.btn-secondary {
+  margin-bottom: 20px;
+  padding: clamp(0.625rem, 0.1131rem + 0.6349vw, 0.875rem)
+    clamp(1rem, -0.0238rem + 1.2698vw, 1.5rem);
+
+  @include media-breakpoint-down(sm) {
+    font-size: 0.7rem;
+    padding: 0.6rem;
+  }
+
+  svg {
+    margin-left: 1.25rem;
+    margin-right: 0;
+
+    @include media-breakpoint-down(sm) {
+      margin-left: 1rem;
+    }
+  }
+}
+.btn-secondary-container {
+  flex-wrap: wrap;
+  @include media-breakpoint-down(lg) {
+    justify-content: flex-end;
+    margin-bottom: 1rem;
+
+    .btn-secondary {
+      margin-bottom: 0 !important;
+    }
+  }
+
+  @include media-breakpoint-down(md) {
+    justify-content: flex-end;
+    gap: 0.5rem;
+    margin-bottom: 0.8rem;
+    font-size: 0.6rem;
+  }
+
+  @include media-breakpoint-down(sm) {
+    justify-content: flex-start;
+  }
+}
+</style>

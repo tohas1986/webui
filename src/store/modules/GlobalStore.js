@@ -103,6 +103,8 @@ const GlobalStore = {
             commit('setAssetTag', AssetTag);
             commit('setSerialNumber', SerialNumber);
             commit('setModelType', Model);
+            localStorage.removeItem('model');
+            localStorage.setItem('model', Model);
             if (State === 'Quiesced' || State === 'InTest') {
               // OpenBMC's host state interface is mapped to 2 Redfish
               // properties "Status""State" and "PowerState". Look first
@@ -111,7 +113,7 @@ const GlobalStore = {
             } else {
               commit('setServerStatus', PowerState);
             }
-          }
+          },
         )
         .catch((error) => console.log(error));
     },

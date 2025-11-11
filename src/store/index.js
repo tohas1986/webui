@@ -24,15 +24,22 @@ import FanStore from './modules/HardwareStatus/FanStore';
 import ChassisStore from './modules/HardwareStatus/ChassisStore';
 import BmcStore from './modules/HardwareStatus/BmcStore';
 import ProcessorStore from './modules/HardwareStatus/ProcessorStore';
-import AssemblyStore from './modules/HardwareStatus/AssemblyStore';
+import PcieStore from './modules/HardwareStatus/PcieStore';
+import StorageStore from './modules/HardwareStatus/StorageStore';
 import PostCodeLogsStore from './modules/Logs/PostCodeLogsStore';
 import PoliciesStore from './modules/SecurityAndAccess/PoliciesStore';
 import FactoryResetStore from './modules/Operations/FactoryResetStore';
+import BackupRestoreStore from './modules/Operations/BackupRestoreStore';
+import SnmpStore from './modules/Settings/SnmpStore';
+import SmtpStore from './modules/Settings/SmtpStore';
 import KeyClearStore from './modules/Operations/KeyClearStore';
-
 import WebSocketPlugin from './plugins/WebSocketPlugin';
 import DateTimeStore from './modules/Settings/DateTimeStore';
 import VirtualMediaStore from './modules/Operations/VirtualMediaStore';
+import RaidManagmentStore from './modules/Operations/RaidManagmentStore';
+import AuditLogsStore from './modules/Logs/AuditLogsStore';
+import FanControlStore from './modules/Settings/FanControlStore';
+import SyslogStore from './modules/Settings/SyslogStore';
 
 Vue.use(Vuex);
 
@@ -58,6 +65,8 @@ export default new Vuex.Store({
     dumps: DumpsStore,
     sensors: SensorsStore,
     serverLed: ServerLedStore,
+    snmp: SnmpStore,
+    smtp: SmtpStore,
     certificates: CertificatesStore,
     system: SystemStore,
     memory: MemoryStore,
@@ -65,12 +74,18 @@ export default new Vuex.Store({
     chassis: ChassisStore,
     bmc: BmcStore,
     processors: ProcessorStore,
-    assemblies: AssemblyStore,
+    pcies: PcieStore,
+    storages: StorageStore,
     postCodeLogs: PostCodeLogsStore,
+    auditLogs: AuditLogsStore,
     virtualMedia: VirtualMediaStore,
+    raid: RaidManagmentStore,
     policies: PoliciesStore,
     factoryReset: FactoryResetStore,
+    backupRestore: BackupRestoreStore,
     keyClear: KeyClearStore,
+    fanControl: FanControlStore,
+    syslog: SyslogStore,
   },
   plugins: [WebSocketPlugin],
 });

@@ -24,6 +24,13 @@ export default {
         document.title = `${this.assetTag} - ${to.meta.title}`;
       }
     },
+    '$i18n.locale': function () {
+      document.documentElement.lang =
+        this.$i18n.locale == 'en-US' ? 'en' : 'ru';
+    },
+  },
+  mounted() {
+    document.documentElement.lang = this.$i18n.locale == 'en-US' ? 'en' : 'ru';
   },
   created() {
     document.title = this.$route.meta.title || 'Page is missing title';

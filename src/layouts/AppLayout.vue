@@ -6,7 +6,7 @@
       :router-key="routerKey"
       @refresh="refresh"
     />
-    <app-navigation class="app-navigation" />
+    <app-navigation :key="$i18n.locale" class="app-navigation" />
     <page-container class="app-content">
       <router-view ref="routerView" :key="routerKey" />
       <!-- Scroll to top button -->
@@ -45,6 +45,12 @@ export default {
   },
   mounted() {
     this.$root.$on('refresh-application', () => this.refresh());
+    setInterval(() => {
+      if (!localStorage.getItem('storedUsername')) {
+        this.$eventBus.$consoleWindow.close();
+        this.refresh();
+      }
+    }, 10000);
   },
   methods: {
     refresh() {
@@ -86,6 +92,7 @@ export default {
 
 .app-content {
   grid-area: content;
-  background-color: $white;
+  background-color: $gray-light;
+  overflow: hidden;
 }
 </style>

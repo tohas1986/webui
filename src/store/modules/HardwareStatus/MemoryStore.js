@@ -31,6 +31,8 @@ const MemoryStore = {
           MemoryType,
           LocationIndicatorActive,
           Location,
+          Oem,
+          Model,
         } = data;
         return {
           id: Id,
@@ -53,6 +55,9 @@ const MemoryStore = {
           identifyLed: LocationIndicatorActive,
           uri: data['@odata.id'],
           locationNumber: Location?.PartLocation?.ServiceLabel,
+          maxSpeed: Oem?.OpenYard?.Speed,
+          extSpeed: Oem?.OpenYard?.extSpeed,
+          model: Model,
         };
       });
     },
@@ -80,7 +85,7 @@ const MemoryStore = {
           throw new Error(i18n.t('pageInventory.toast.errorEnableIdentifyLed'));
         } else {
           throw new Error(
-            i18n.t('pageInventory.toast.errorDisableIdentifyLed')
+            i18n.t('pageInventory.toast.errorDisableIdentifyLed'),
           );
         }
       });

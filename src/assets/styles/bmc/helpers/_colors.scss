@@ -1,11 +1,26 @@
 // Sass Color Variables
 $black: #000;
 $white: #fff;
+$purple: #ab20ed;
+$main-color: #272b32;
 
 $blue-500: #2d60e5;
 $green-500: #0a7d06;
 $red-500: #da1416;
 $yellow-500: #efc100;
+
+$btn-color: $main-color;
+$gray-light: #f0f0f0;
+$gray-border: #c8c9ca;
+$btn-hover: #313539;
+$input-hover: $main-color;
+$error-color: #f64a14;
+$menu-color: #191c22;
+$current-link: #d57cff;
+$btn-background: #e4e4e4;
+$success-color: #61c23e;
+$warning-color: #f6ba14;
+$secondary-color: #737579;
 
 $gray-100: #f4f4f4;
 $gray-200: #e6e6e6;
@@ -16,6 +31,8 @@ $gray-600: #999999;
 $gray-700: #666666;
 $gray-800: #3f3f3f;
 $gray-900: #161616;
+$gray-icon: #686b70;
+$gray-background: #ededed;
 
 // Sass Base Color Variables
 $blue: $blue-500;
@@ -30,9 +47,17 @@ $dark: $gray-900;
 $info: $blue;
 $light: $gray-100;
 $primary: $blue;
-$secondary: $gray-800;
+$secondary: $purple;
 $success: $green;
 $warning: $yellow;
 
 $loading-color: $primary;
-$navbar-color: $dark;
+$navbar-color: $gray-light;
+$login-background: $btn-color;
+$form-color: $gray-light;
+$login-border: $gray-border;
+$card-background: $btn-background;
+$kvm-background: $menu-color;
+$current-bg: $current-link;
+$error-bg: $error-color;
+$disabled-color: $btn-background;

@@ -1,12 +1,31 @@
 #terminal-kvm {
-  height: calc(100vh - 300px);
+  height: calc(100vh - 270px);
   display: flex;
+  background-color: $kvm-background;
+  border: 1px solid #c8c9ca;
+  border-radius: 20px;
   &.full-window {
-   height: calc(100vh - 80px); 
+    height: calc(100vh - 80px);
   }
   div:nth-child(1) {
     background: transparent !important;
-    display: block !important;
     overflow: hidden !important;
+  }
+}
+
+.kvm-toolbar {
+  width: 100% !important;
+
+  .btn-link {
+    color: $purple;
+    font-weight: 400;
+    font-size: clamp(0.875rem, 0.1071rem + 0.9524vw, 1.25rem);
+    text-wrap: nowrap;
+
+    &:hover {
+      span {
+        text-decoration: underline;
+      }
+    }
   }
 }

@@ -6,6 +6,7 @@ import store from '../store';
 
 Axios.defaults.headers.common['Accept'] = 'application/json';
 Axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+Axios.defaults.headers.common['X-Custom-Header'] = 'webui';
 
 const api = Axios.create({
   withCredentials: true,

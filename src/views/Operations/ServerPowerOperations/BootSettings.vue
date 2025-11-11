@@ -1,5 +1,5 @@
 <template>
-  <div class="form-background p-3">
+  <div>
     <b-form novalidate @submit.prevent="handleSubmit">
       <b-form-group
         :label="
@@ -19,7 +19,7 @@
       </b-form-group>
       <b-form-checkbox
         v-model="form.oneTimeBoot"
-        class="mb-4"
+        class="checkbox-wrapper"
         :disabled="form.bootOption === 'None'"
         @change="$v.form.oneTimeBoot.$touch()"
       >
@@ -28,7 +28,7 @@
       <b-form-group
         :label="$t('pageServerPowerOperations.bootSettings.tpmRequiredPolicy')"
       >
-        <b-form-text id="tpm-required-policy-help-block">
+        <b-form-text id="tpm-required-policy-help-block" class="mb-3">
           {{
             $t('pageServerPowerOperations.bootSettings.tpmRequiredPolicyHelper')
           }}
@@ -42,7 +42,7 @@
           {{ $t('global.status.enabled') }}
         </b-form-checkbox>
       </b-form-group>
-      <b-button variant="primary" type="submit" class="mb-3">
+      <b-button variant="primary" type="submit" class="btn-block">
         {{ $t('global.action.save') }}
       </b-button>
     </b-form>
@@ -98,7 +98,7 @@ export default {
     this.$store
       .dispatch('serverBootSettings/getTpmPolicy')
       .finally(() =>
-        this.$root.$emit('server-power-operations-boot-settings-complete')
+        this.$root.$emit('server-power-operations-boot-settings-complete'),
       );
   },
   methods: {
@@ -130,3 +130,21 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+.custom-select {
+  padding: clamp(0.625rem, -0.0159rem + 0.7949vw, 0.938rem)
+    clamp(1rem, -0.1528rem + 1.4298vw, 1.563rem);
+}
+
+.form-text {
+  font-size: clamp(0.75rem, -0.0179rem + 0.9524vw, 1.125rem);
+}
+
+.checkbox-wrapper {
+  margin-bottom: 3rem;
+  @include media-breakpoint-down(md) {
+    margin-bottom: 1.5rem;
+  }
+}
+</style>

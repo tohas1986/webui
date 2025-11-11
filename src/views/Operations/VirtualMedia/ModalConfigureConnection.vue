@@ -2,6 +2,8 @@
   <b-modal
     id="configure-connection"
     ref="modal"
+    size="lg"
+    centered
     @ok="onOk"
     @hidden="resetForm"
     @show="initModal"
@@ -10,55 +12,94 @@
       {{ $t('pageVirtualMedia.modal.title') }}
     </template>
     <b-form>
-      <b-form-group
-        :label="$t('pageVirtualMedia.modal.serverUri')"
-        label-for="serverUri"
-      >
-        <b-form-input
-          id="serverUri"
-          v-model="form.serverUri"
-          type="text"
-          :state="getValidationState($v.form.serverUri)"
-          data-test-id="configureConnection-input-serverUri"
-          @input="$v.form.serverUri.$touch()"
-        />
-        <b-form-invalid-feedback role="alert">
-          <template v-if="!$v.form.serverUri.required">
-            {{ $t('global.form.fieldRequired') }}
-          </template>
-        </b-form-invalid-feedback>
-      </b-form-group>
-      <b-form-group
-        :label="$t('pageVirtualMedia.modal.username')"
-        label-for="username"
-      >
-        <b-form-input
-          id="username"
-          v-model="form.username"
-          type="text"
-          data-test-id="configureConnection-input-username"
-        />
-      </b-form-group>
-      <b-form-group
-        :label="$t('pageVirtualMedia.modal.password')"
-        label-for="password"
-      >
-        <b-form-input
-          id="password"
-          v-model="form.password"
-          type="password"
-          data-test-id="configureConnection-input-password"
-        />
-      </b-form-group>
-      <b-form-group>
-        <b-form-checkbox
-          v-model="form.isRW"
-          data-test-id="configureConnection-input-isRW"
-          name="check-button"
-        >
-          RW
-        </b-form-checkbox>
-      </b-form-group>
+      <b-row class="mb-3">
+        <b-col sm="5">
+          <label for="serverUri">
+            {{ $t('pageVirtualMedia.modal.serverUri') }}
+          </label>
+        </b-col>
+        <b-col sm="7">
+          <b-form-group>
+            <b-form-input
+              id="serverUri"
+              v-model="form.serverUri"
+              type="text"
+              :state="getValidationState($v.form.serverUri)"
+              data-test-id="configureConnection-input-serverUri"
+              @input="$v.form.serverUri.$touch()"
+            />
+            <b-form-invalid-feedback role="alert">
+              <template v-if="!$v.form.serverUri.required">
+                {{ $t('global.form.fieldRequired') }}
+              </template>
+            </b-form-invalid-feedback>
+          </b-form-group>
+        </b-col>
+      </b-row>
+      <b-row class="mb-3">
+        <b-col sm="5">
+          <label for="username">
+            {{ $t('pageVirtualMedia.modal.username') }}
+          </label>
+        </b-col>
+        <b-col sm="7">
+          <b-form-group>
+            <b-form-input
+              id="username"
+              v-model="form.username"
+              type="text"
+              data-test-id="configureConnection-input-username"
+            />
+          </b-form-group>
+        </b-col>
+      </b-row>
+      <b-row class="mb-3">
+        <b-col sm="5">
+          <label for="password">
+            {{ $t('pageVirtualMedia.modal.password') }}
+          </label>
+        </b-col>
+        <b-col sm="7">
+          <b-form-group>
+            <b-form-input
+              id="password"
+              v-model="form.password"
+              type="password"
+              data-test-id="configureConnection-input-password"
+            />
+          </b-form-group>
+        </b-col>
+      </b-row>
+      <b-row class="mb-3 checkbox-container">
+        <b-col sm="5">
+          <label>
+            {{ $t('pageVirtualMedia.modal.rw') }}
+          </label>
+        </b-col>
+        <b-col sm="7">
+          <b-form-group>
+            <b-form-checkbox
+              v-model="form.isRW"
+              data-test-id="configureConnection-input-isRW"
+              name="check-button"
+            >
+            </b-form-checkbox>
+          </b-form-group>
+        </b-col>
+      </b-row>
+      <b-row class="checkbox-container">
+        <b-col sm="5">
+          <label>
+            {{ $t('pageVirtualMedia.modal.mountAsCd') }}
+          </label>
+        </b-col>
+        <b-col sm="7">
+          <b-form-group>
+            <b-form-checkbox v-model="form.isCD" name="check-button-mount">
+            </b-form-checkbox>
+          </b-form-group>
+        </b-col>
+      </b-row>
     </b-form>
     <template #modal-ok>
       {{ $t('global.action.save') }}
@@ -92,6 +133,7 @@ export default {
         username: null,
         password: null,
         isRW: false,
+        isCD: false,
       },
     };
   },
@@ -134,6 +176,7 @@ export default {
       this.form.username = null;
       this.form.password = null;
       this.form.isRW = false;
+      this.form.isCD = false;
       this.$v.$reset();
     },
     onOk(bvModalEvt) {
@@ -143,3 +186,21 @@ export default {
   },
 };
 </script>
+<style lang="scss" scoped>
+.mb-3 {
+  @include media-breakpoint-down(sm) {
+    margin-bottom: 0 !important;
+  }
+}
+.checkbox-container {
+  @include media-breakpoint-down(xs) {
+    flex-wrap: nowrap;
+  }
+
+  .col-sm-7 {
+    @include media-breakpoint-down(xs) {
+      width: max-content;
+    }
+  }
+}
+</style>
