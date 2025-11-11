@@ -30,19 +30,6 @@
               :title="$t('appHeader.titleShowNavigation')"
             />
           </b-button>
-          <b-navbar-nav class="navbar-logo">
-            <b-navbar-brand
-              class="mr-0"
-              to="/"
-              data-test-id="appHeader-container-overview"
-            >
-              <img
-                svg-inline
-                class="header-logo"
-                src="@/assets/images/logo-OY.svg"
-                :alt="altLogo"
-              />
-            </b-navbar-brand>
 
             <!-- <div v-if="isNavTagPresent" :key="routerKey" class="pl-2 nav-tags">
             <span>|</span>

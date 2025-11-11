@@ -1,11 +1,7 @@
 <template>
   <main>
     <div class="login-container">
-      <div class="login-aside">
-        <div class="login-brand">
-          <img svg-inline src="@/assets/images/logo-OY.svg" :alt="altLogo" />
-        </div>
-      </div>
+      <div class="login-aside"></div>
       <div class="login-main">
         <router-view class="login=form form-background" />
       </div>
@@ -96,14 +92,6 @@ export default {
   }
   @include media-breakpoint-up('xxl') {
     width: 45%;
-  }
-}
-
-.login-brand {
-  margin-top: 40px;
-
-  @include media-breakpoint-up('md') {
-    margin-left: 30px;
   }
 }
 
