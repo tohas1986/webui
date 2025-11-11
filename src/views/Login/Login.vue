@@ -18,16 +18,6 @@
           </div>
           <h1>{{ $t('pageLogin.signIn') }}</h1>
         </div>
-        <div class="login-image">
-          <img src="@/assets/images/qr-code-support.png" />
-          <b-link
-            class="login-image-text"
-            target="_blank"
-            href="https://lk.openyard.ru/auth/login"
-          >
-            {{ $t('pageLogin.supportLink') }}</b-link
-          >
-        </div>
       </div>
       <b-form-group label-for="language" :label="$t('pageLogin.language')">
         <b-form-select

@@ -6,9 +6,6 @@
         {{ dataFormatter(serverSerialNumber) }}
       </p>
     </div>
-    <div v-if="chassis" class="server-image-container">
-      <img :src="serverImage" :alt="altImage" />
-    </div>
     <b-link class="card-link" to="/hardware-status/inventory"
       >{{ $t('pageOverview.information') }}
       <icon-chevron />
@@ -17,8 +14,6 @@
 </template>
 
 <script>
-import server1u from '@/assets/images/server-1u.png';
-import server2u from '@/assets/images/server-2u.png';
 import DataFormatterMixin from '@/components/Mixins/DataFormatterMixin';
 import IconChevron from '@carbon/icons-vue/es/chevron--right/16';
 import { mapState } from 'vuex';
@@ -50,12 +45,6 @@ export default {
       },
       serverFru() {
         return this.selectedChassis?.fru;
-      },
-      serverImage() {
-        if (this.serverFru && this.serverFru.includes('RS101')) {
-          return server1u;
-        }
-        return server2u;
       },
     }),
   },

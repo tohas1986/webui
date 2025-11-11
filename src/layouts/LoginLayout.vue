@@ -18,7 +18,7 @@ export default {
   name: 'LoginLayout',
   data() {
     return {
-      altLogo: process.env.VUE_APP_COMPANY_NAME || 'OpenYard',
+      altLogo: process.env.VUE_APP_COMPANY_NAME || 'noname',
       customizableGuiName: process.env.VUE_APP_GUI_NAME || '',
     };
   },
