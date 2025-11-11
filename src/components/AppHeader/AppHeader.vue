@@ -37,7 +37,6 @@
             <span class="pl-3">{{ modelType }}</span>
             <span class="pl-3">{{ serialNumber }}</span>
           </div> -->
-          </b-navbar-nav>
         </div>
         <div class="d-flex nav-items-wrapper w-100">
           <b-navbar-nav class="info-menu">
