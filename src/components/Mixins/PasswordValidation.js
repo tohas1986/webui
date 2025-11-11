@@ -1,5 +1,3 @@
-import { helpers } from 'vuelidate/lib/validators';
-
 export default {
   methods: {
     minDigits() {
@@ -8,7 +6,7 @@ export default {
     minSpecialCharacters() {
       return true;
     },
-    minUpperCaseCharacters(min) {
+    minUpperCaseCharacters() {
       return true;
     },
   },
