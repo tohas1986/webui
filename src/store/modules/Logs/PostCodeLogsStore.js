@@ -1,5 +1,4 @@
 import api from '@/store/api';
-import i18n from '@/i18n';
 
 const PostCodeLogsStore = {
   namespaced: true,
@@ -32,22 +31,6 @@ const PostCodeLogsStore = {
         })
         .catch((error) => {
           console.log('POST Codes Log Data:', error);
-        });
-    },
-    async deleteAllPostCodeLogs({ dispatch }, data) {
-      return await api
-        .post(
-          '/redfish/v1/Systems/system/LogServices/PostCodes/Actions/LogService.ClearLog'
-        )
-        .then(() => dispatch('getPostCodesLogData'))
-        .then(() =>
-          i18n.tc('pagePostCodeLogs.toast.successDelete', data.length)
-        )
-        .catch((error) => {
-          console.log(error);
-          throw new Error(
-            i18n.tc('pagePostCodeLogs.toast.errorDelete', data.length)
-          );
         });
     },
   },

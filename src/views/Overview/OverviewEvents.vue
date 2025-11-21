@@ -45,20 +45,14 @@ export default {
     },
     criticalEvents() {
       return this.eventLogData
-        .filter(
-          (log) =>
-            log.severity === 'Critical' && log.filterByStatus === 'Unresolved'
-        )
+        .filter((log) => log.severity === 'Critical')
         .map((log) => {
           return log;
         });
     },
     warningEvents() {
       return this.eventLogData
-        .filter(
-          (log) =>
-            log.severity === 'Warning' && log.filterByStatus === 'Unresolved'
-        )
+        .filter((log) => log.severity === 'Warning')
         .map((log) => {
           return log;
         });

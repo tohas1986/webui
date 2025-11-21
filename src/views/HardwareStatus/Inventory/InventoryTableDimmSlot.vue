@@ -71,11 +71,6 @@
           <b-row>
             <b-col sm="6" xl="6">
               <dl>
-                <!-- Manufacturer -->
-                <dt>{{ $t('pageInventory.table.manufacturer') }}:</dt>
-                <dd>{{ dataFormatter(item.manufacturer) }}</dd>
-              </dl>
-              <dl>
                 <!-- Part Number -->
                 <dt>{{ $t('pageInventory.table.partNumber') }}:</dt>
                 <dd>{{ dataFormatter(item.partNumber) }}</dd>
@@ -98,17 +93,9 @@
             </b-col>
             <b-col sm="6" xl="6">
               <dl>
-                <!-- Capacity MiB -->
-                <dt>{{ $t('pageInventory.table.capacityMiB') }}:</dt>
-                <dd>
-                  {{ dataFormatter(item.capacityMiB) }}
-                  {{ $t('unit.MiB') }}
-                </dd>
-              </dl>
-              <dl>
-                <!-- Rank Count -->
-                <dt>{{ $t('pageInventory.table.rankCount') }}:</dt>
-                <dd>{{ dataFormatter(item.rankCount) }}</dd>
+                <!-- Memory Size in kb -->
+                <dt>{{ $t('pageInventory.table.memorySize') }}:</dt>
+                <dd>{{ dataFormatter(item.memorySize) }} KB</dd>
               </dl>
               <dl>
                 <!-- Status-->
@@ -140,36 +127,27 @@
                 <dt>{{ $t('pageInventory.table.baseModuleType') }}:</dt>
                 <dd>{{ dataFormatter(item.baseModuleType) }}</dd>
               </dl>
+              <dl>
+                <!-- Capacity MiB -->
+                <dt>{{ $t('pageInventory.table.capacityMiB') }}:</dt>
+                <dd>{{ dataFormatter(item.capacityMiB) }}</dd>
+              </dl>
             </b-col>
             <b-col sm="6" xl="6">
               <dl>
                 <!-- Bus Width Bits -->
                 <dt>{{ $t('pageInventory.table.busWidthBits') }}:</dt>
-                <dd>
-                  {{ dataFormatter(item.busWidthBits) }}
-                  {{ $t('unit.bit') }}
-                </dd>
+                <dd>{{ dataFormatter(item.busWidthBits) }}</dd>
               </dl>
               <dl>
                 <!-- Data Width Bits -->
                 <dt>{{ $t('pageInventory.table.dataWidthBits') }}:</dt>
-                <dd>
-                  {{ dataFormatter(item.dataWidthBits) }}
-                  {{ $t('unit.bit') }}
-                </dd>
+                <dd>{{ dataFormatter(item.dataWidthBits) }}</dd>
               </dl>
               <dl>
                 <!-- Operating Speed Mhz -->
                 <dt>{{ $t('pageInventory.table.operatingSpeedMhz') }}:</dt>
-                <dd>
-                  {{ dataFormatter(item.operatingSpeedMhz) }}
-                  {{ $t('unit.MHz') }}
-                </dd>
-              </dl>
-              <dl>
-                <!-- Error Correction -->
-                <dt>{{ $t('pageInventory.table.errorCorrection') }}:</dt>
-                <dd>{{ dataFormatter(item.errorCorrection) }}</dd>
+                <dd>{{ dataFormatter(item.operatingSpeedMhz) }} MHz</dd>
               </dl>
             </b-col>
           </b-row>

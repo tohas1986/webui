@@ -1,3 +1,5 @@
+import { includes } from 'lodash';
+
 const TableFilterMixin = {
   methods: {
     getFilteredTableData(tableData = [], filters = []) {
@@ -7,23 +9,18 @@ const TableFilterMixin = {
       // If no filters are active, then return all table data
       if (filterItems.length === 0) return tableData;
 
-      const selectedValues = {};
-      for (const { key, values } of filters) {
-        if (values.length > 0) {
-          selectedValues[key] = values;
-        }
-      }
-
       // Check if row property value is included in list of
       // active filters
       return tableData.filter((row) => {
-        for (const [key, values] of Object.entries(selectedValues)) {
+        let returnRow = false;
+        for (const { key, values } of filters) {
           const rowProperty = row[key];
-          if (rowProperty && !values.includes(rowProperty)) {
-            return false;
+          if (rowProperty && includes(values, rowProperty)) {
+            returnRow = true;
+            break;
           }
         }
-        return true;
+        return returnRow;
       });
     },
     getFilteredTableDataByDate(

@@ -10,7 +10,7 @@
       @cancel="resetForm"
       @hidden="$v.$reset()"
     >
-      <b-form id="generate-csr-form" novalidate>
+      <b-form id="generate-csr-form" novalidate @submit.prevent="handleSubmit">
         <b-container fluid>
           <b-row>
             <b-col lg="9">
@@ -361,11 +361,8 @@
           </template>
         </b-btn>
         <a
-          :href="
-            `data:application/json;charset=utf-8,` +
-            encodeURIComponent(`${csrString}`)
-          "
-          download="certificate.csr"
+          :href="`data:text/json;charset=utf-8,${csrString}`"
+          download="certificate.txt"
           class="btn btn-primary"
         >
           {{ $t('global.action.download') }}

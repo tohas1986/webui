@@ -29,6 +29,12 @@
             }}
           </template>
         </alert>
+        <!-- Wrong file type banner -->
+        <alert :show="fileTypeCorrect === false" variant="danger">
+          <template v-if="fileTypeCorrect === false">
+            {{ $t('pageCertificates.alert.incorrectCertificateFileType') }}
+          </template>
+        </alert>
       </b-col>
     </b-row>
     <b-row>
@@ -262,13 +268,6 @@ export default {
         this.fileTypeCorrect = this.getIsFileTypeCorrect(file);
         if (this.fileTypeCorrect) {
           this.addNewCertificate(file, type);
-        } else {
-          this.errorToast(
-            this.$t('pageCertificates.alert.incorrectCertificateFileType'),
-            {
-              title: this.$t('pageCertificates.toast.errorAddCertificate'),
-            }
-          );
         }
       } else {
         // Replace an existing certificate

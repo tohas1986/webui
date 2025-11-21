@@ -20,6 +20,14 @@ export const CERTIFICATE_TYPES = [
     // the term 'TrustStore Certificate' wasn't recognized/was unfamilar
     label: i18n.t('pageCertificates.caCertificate'),
   },
+  {
+    type: 'SMTP Certificate',
+    location: '/redfish/v1/Managers/bmc/NetworkProtocol/SMTP/Certificates/',
+    // Web UI will show 'CA Certificate' instead of
+    // 'TrustStore Certificate' after user testing revealed
+    // the term 'TrustStore Certificate' wasn't recognized/was unfamilar
+    label: i18n.t('pageCertificates.smtpCertificate'),
+  },
 ];
 
 const getCertificateProp = (type, prop) => {

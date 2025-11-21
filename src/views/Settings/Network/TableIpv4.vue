@@ -126,9 +126,6 @@ export default {
   },
   computed: {
     ...mapState('network', ['ethernetData']),
-    selectedInterface() {
-      return this.$store.getters['network/selectedInterfaceIndex'];
-    },
     dhcpEnabledState: {
       get() {
         return this.$store.getters['network/globalNetworkSettings'][

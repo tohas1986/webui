@@ -85,7 +85,8 @@ export default {
       this.$root.$on('overview-server-complete', () => resolve());
     });
 
-    const promises = [
+    Promise.all([
+      dumpsPromise,
       eventsPromise,
       firmwarePromise,
       inventoryPromise,
@@ -93,9 +94,7 @@ export default {
       powerPromise,
       quicklinksPromise,
       serverPromise,
-    ];
-    if (this.showDumps) promises.push(dumpsPromise);
-    Promise.all(promises).finally(() => this.endLoader());
+    ]).finally(() => this.endLoader());
   },
 };
 </script>

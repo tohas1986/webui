@@ -20,6 +20,7 @@ import PostCodeLogs from '@/views/Logs/PostCodeLogs';
 import PowerRestorePolicy from '@/views/Settings/PowerRestorePolicy';
 import ProfileSettings from '@/views/ProfileSettings';
 import RebootBmc from '@/views/Operations/RebootBmc';
+import SaveConfig from '@/views/Operations/SaveConfig';
 import Policies from '@/views/SecurityAndAccess/Policies';
 import KeyClear from '@/views/Operations/KeyClear';
 import Sensors from '@/views/HardwareStatus/Sensors';
@@ -30,13 +31,6 @@ import Certificates from '@/views/SecurityAndAccess/Certificates';
 import VirtualMedia from '@/views/Operations/VirtualMedia';
 import Power from '@/views/ResourceManagement/Power';
 import i18n from '@/i18n';
-
-const roles = {
-  administrator: 'Administrator',
-  operator: 'Operator',
-  readonly: 'ReadOnly',
-  noaccess: 'NoAccess',
-};
 
 const routes = [
   {
@@ -160,7 +154,7 @@ const routes = [
       },
       {
         path: '/security-and-access/user-management',
-        name: 'user-management',
+        name: 'local-users',
         component: UserManagement,
         meta: {
           title: i18n.t('appPageTitle.userManagement'),
@@ -255,12 +249,19 @@ const routes = [
         },
       },
       {
+        path: '/operations/save-config',
+        name: 'save-config',
+        component: SaveConfig,
+        meta: {
+          title: i18n.t('appPageTitle.saveConfig'),
+        },
+      },
+      {
         path: '/operations/serial-over-lan',
         name: 'serial-over-lan',
         component: SerialOverLan,
         meta: {
           title: i18n.t('appPageTitle.serialOverLan'),
-          exclusiveToRoles: [roles.administrator],
         },
       },
       {
@@ -277,7 +278,6 @@ const routes = [
         component: VirtualMedia,
         meta: {
           title: i18n.t('appPageTitle.virtualMedia'),
-          exclusiveToRoles: [roles.administrator],
         },
       },
       {

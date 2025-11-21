@@ -82,6 +82,16 @@ const ControlStore = {
           throw new Error(i18n.t('pageRebootBmc.toast.errorRebootStart'));
         });
     },
+    async saveConfig() {
+      const data = { SaveType: 'FullSave' };
+      return await api
+        .post('/redfish/v1/Managers/bmc/Actions/Manager.SaveConfig', data)
+        .then(() => i18n.t('pageSaveConfig.toast.successSaveStart'))
+        .catch((error) => {
+          console.log(error);
+          throw new Error(i18n.t('pageSaveConfig.toast.errorSaveStart'));
+        });
+    },
     async serverPowerOn({ dispatch, commit }) {
       const data = { ResetType: 'On' };
       dispatch('serverPowerChange', data);
