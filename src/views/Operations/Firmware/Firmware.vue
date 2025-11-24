@@ -75,7 +75,7 @@ export default {
   },
   computed: {
     StepNamber1() {
-      this.StepNamber = this.$store.getters['firmware/getUploadstep'];
+      //this.StepNamber = this.$store.getters['firmware/getUploadstep'];
       return this.$store.getters['global/getUploadstep'];
     },
     serverStatus() {
