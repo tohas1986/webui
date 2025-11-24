@@ -65,8 +65,8 @@ import AlertsServerPower from './FirmwareAlertServerPower';
 import BmcCards from './FirmwareCardsBmc';
 import FormUpdate from './FirmwareFormUpdate';
 //import HostCards from './FirmwareCardsHost';
-//import PageSection from '@/components/Global/PageSection';
-//import PageTitle from '@/components/Global/PageTitle';
+import PageSection from '@/components/Global/PageSection';
+import PageTitle from '@/components/Global/PageTitle';
 import FirmwareUpdateStep from './FirmwareUpdateStep.vue';
 import FirmwareIstrueInfo from './FirmwareIstrueInfo.vue';
 import FirmwareUpdated from './FirmwareUpdated.vue';
@@ -78,7 +78,6 @@ export default {
     AlertsServerPower,
     BmcCards,
     FormUpdate,
-    HostCards,
     PageSection,
     PageTitle,
     FirmwareUpdateStep,
