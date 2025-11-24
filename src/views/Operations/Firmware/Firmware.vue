@@ -41,9 +41,9 @@ import FormUpdate from './FirmwareFormUpdate';
 import HostCards from './FirmwareCardsHost';
 import PageSection from '@/components/Global/PageSection';
 import PageTitle from '@/components/Global/PageTitle';
-import FirmwareUpdateStep from "./FirmwareUpdateStep.vue";
-import FirmwareIstrueInfo from "./FirmwareIstrueInfo.vue";
-import FirmwareUpdated from "./FirmwareUpdated.vue";
+import FirmwareUpdateStep from './FirmwareUpdateStep.vue';
+import FirmwareIstrueInfo from './FirmwareIstrueInfo.vue';
+import FirmwareUpdated from './FirmwareUpdated.vue';
 import LoadingBarMixin, { loading } from '@/components/Mixins/LoadingBarMixin';
 
 export default {
@@ -75,8 +75,8 @@ export default {
   },
   computed: {
     StepNamber1() {
-      this.StepNamber = this.$store.getters["firmware/getUploadstep"];
-      return this.$store.getters["global/getUploadstep"];
+      this.StepNamber = this.$store.getters['firmware/getUploadstep'];
+      return this.$store.getters['global/getUploadstep'];
     },
     serverStatus() {
       return this.$store.getters['global/serverStatus'];

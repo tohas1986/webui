@@ -12,7 +12,7 @@
         </div>
       </div>
       <div class="StepMsg">
-        <span>{{ $t("pageFirmwareUpdate.updateFirmware.prepare") }}</span>
+        <span>{{ $t('pageFirmwareUpdate.updateFirmware.prepare') }}</span>
       </div>
     </div>
     <div :class="{ Stephr: true, ined: stepNamber >= 1 }"></div>
@@ -27,7 +27,7 @@
         </div>
       </div>
       <div class="StepMsg">
-        <span>{{ $t("pageFirmwareUpdate.updateFirmware.verify") }}</span>
+        <span>{{ $t('pageFirmwareUpdate.updateFirmware.verify') }}</span>
       </div>
     </div>
     <div :class="{ Stephr: true, ined: stepNamber >= 2 }"></div>
@@ -42,7 +42,7 @@
       </div>
       <div class="StepMsg">
         <span>{{
-          $t("pageFirmwareUpdate.updateFirmware.completeUpgrade")
+          $t('pageFirmwareUpdate.updateFirmware.completeUpgrade')
         }}</span>
       </div>
     </div>
@@ -51,11 +51,11 @@
 
 <script>
 export default {
-  props: ["stepNamber"],
+  props: ['stepNamber'],
   data() {
     return {
       // stepNamber:1,
-      status: "NotActive",
+      status: 'NotActive',
     };
   },
   computed: {},
@@ -66,4 +66,3 @@ export default {
   methods: {},
 };
 </script>
-
