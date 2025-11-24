@@ -104,9 +104,22 @@ export default {
   },
   created() {
     this.startLoader();
-    this.$store
-      .dispatch('firmware/getFirmwareInformation')
-      .finally(() => this.endLoader());
+    setTimeout(() => {
+      this.setStep = true;
+    }, 300);
+
+    Promise.all([
+      this.$store.dispatch("firmware/getFirmwareInformation"),
+      this.$store.dispatch("firmware/getpowerinfo"),
+    ])
+      .then(() => {})
+      .finally(() => {
+        this.endLoader();
+      });
+  },
+  beforeDestroy() {
+    this.$store.commit("firmware/setUploadstep", 1);
+    this.$store.commit("firmware/setprogressnum", 0);
   },
 };
 </script>
