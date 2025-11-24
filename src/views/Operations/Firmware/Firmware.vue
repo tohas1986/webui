@@ -28,7 +28,7 @@
       <div class="c-alert">
         <div class="icon Major-warn mr-2"><icon-warning /></div>
         <div class="msgIn">
-          {{ $t("pageFirmwareUpdate.updateFirmware.alertTip") }}
+          {{ $t('pageFirmwareUpdate.updateFirmware.alertTip') }}
         </div>
       </div>
 
@@ -64,9 +64,9 @@
 import AlertsServerPower from './FirmwareAlertServerPower';
 import BmcCards from './FirmwareCardsBmc';
 import FormUpdate from './FirmwareFormUpdate';
-import HostCards from './FirmwareCardsHost';
-import PageSection from '@/components/Global/PageSection';
-import PageTitle from '@/components/Global/PageTitle';
+//import HostCards from './FirmwareCardsHost';
+//import PageSection from '@/components/Global/PageSection';
+//import PageTitle from '@/components/Global/PageTitle';
 import FirmwareUpdateStep from './FirmwareUpdateStep.vue';
 import FirmwareIstrueInfo from './FirmwareIstrueInfo.vue';
 import FirmwareUpdated from './FirmwareUpdated.vue';
