@@ -41,7 +41,9 @@ import FormUpdate from './FirmwareFormUpdate';
 import HostCards from './FirmwareCardsHost';
 import PageSection from '@/components/Global/PageSection';
 import PageTitle from '@/components/Global/PageTitle';
-
+import FirmwareUpdateStep from "./FirmwareUpdateStep.vue";
+import FirmwareIstrueInfo from "./FirmwareIstrueInfo.vue";
+import FirmwareUpdated from "./FirmwareUpdated.vue";
 import LoadingBarMixin, { loading } from '@/components/Mixins/LoadingBarMixin';
 
 export default {
@@ -53,6 +55,9 @@ export default {
     HostCards,
     PageSection,
     PageTitle,
+    FirmwareUpdateStep,
+    FirmwareIstrueInfo,
+    FirmwareUpdated,
   },
   mixins: [LoadingBarMixin],
   beforeRouteLeave(to, from, next) {
@@ -64,9 +69,15 @@ export default {
       loading,
       isServerPowerOffRequired:
         process.env.VUE_APP_SERVER_OFF_REQUIRED === 'true',
+      setStep: false,
+      StepNamber: 0,
     };
   },
   computed: {
+    StepNamber1() {
+      this.StepNamber = this.$store.getters["firmware/getUploadstep"];
+      return this.$store.getters["global/getUploadstep"];
+    },
     serverStatus() {
       return this.$store.getters['global/serverStatus'];
     },
@@ -81,6 +92,14 @@ export default {
         return !this.isServerOff || this.loading || this.isOperationInProgress;
       }
       return this.loading || this.isOperationInProgress;
+    },
+  },
+  watch: {
+    StepNamber1() {
+      this.setStep = false;
+      setTimeout(() => {
+        this.setStep = true;
+      }, 500);
     },
   },
   created() {
