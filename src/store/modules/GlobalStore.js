@@ -40,7 +40,6 @@ const GlobalStore = {
       : true,
     username: localStorage.getItem('storedUsername'),
     isAuthorized: true,
-    userPrivilege: null,
   },
   getters: {
     assetTag: (state) => state.assetTag,
@@ -52,7 +51,6 @@ const GlobalStore = {
     isUtcDisplay: (state) => state.isUtcDisplay,
     username: (state) => state.username,
     isAuthorized: (state) => state.isAuthorized,
-    userPrivilege: (state) => state.userPrivilege,
   },
   mutations: {
     setAssetTag: (state, assetTag) => (state.assetTag = assetTag),
@@ -71,9 +69,6 @@ const GlobalStore = {
       window.setTimeout(() => {
         state.isAuthorized = true;
       }, 100);
-    },
-    setPrivilege: (state, privilege) => {
-      state.userPrivilege = privilege;
     },
   },
   actions: {

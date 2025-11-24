@@ -32,6 +32,7 @@ const NetworkStore = {
           HostName,
           IPv4Addresses,
           IPv4StaticAddresses,
+          IPv6Addresses,
           LinkStatus,
           MACAddress,
         } = data;
@@ -40,7 +41,6 @@ const NetworkStore = {
           dhcpAddress: IPv4Addresses.filter(
             (ipv4) => ipv4.AddressOrigin === 'DHCP'
           ),
-          dhcpEnabled: DHCPv4.DHCPEnabled,
           hostname: HostName,
           macAddress: MACAddress,
           linkStatus: LinkStatus,
@@ -48,6 +48,7 @@ const NetworkStore = {
           useDnsEnabled: DHCPv4.UseDNSServers,
           useDomainNameEnabled: DHCPv4.UseDomainName,
           useNtpEnabled: DHCPv4.UseNTPServers,
+          useIPv6Address: IPv6Addresses,
         };
       });
     },

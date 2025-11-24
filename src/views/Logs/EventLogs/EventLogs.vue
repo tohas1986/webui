@@ -50,14 +50,10 @@
           @batch-action="onBatchAction"
         >
           <template #toolbar-buttons>
-            <b-button v-if="!hideToggle" variant="primary" @click="resolveLogs">
+            <b-button variant="primary" @click="resolveLogs">
               {{ $t('pageEventLogs.resolve') }}
             </b-button>
-            <b-button
-              v-if="!hideToggle"
-              variant="primary"
-              @click="unresolveLogs"
-            >
+            <b-button variant="primary" @click="unresolveLogs">
               {{ $t('pageEventLogs.unresolve') }}
             </b-button>
             <table-toolbar-export
@@ -352,12 +348,10 @@ export default {
           label: this.$t('pageEventLogs.table.description'),
           tdClass: 'text-break',
         },
-        process.env.VUE_APP_EVENT_LOGS_TOGGLE_BUTTON_DISABLED === 'true'
-          ? {}
-          : {
-              key: 'status',
-              label: this.$t('pageEventLogs.table.status'),
-            },
+        {
+          key: 'status',
+          label: this.$t('pageEventLogs.table.status'),
+        },
         {
           key: 'actions',
           sortable: false,
@@ -365,27 +359,18 @@ export default {
           tdClass: 'text-right text-nowrap',
         },
       ],
-      tableFilters:
-        process.env.VUE_APP_EVENT_LOGS_TOGGLE_BUTTON_DISABLED === 'true'
-          ? [
-              {
-                key: 'severity',
-                label: this.$t('pageEventLogs.table.severity'),
-                values: ['OK', 'Warning', 'Critical'],
-              },
-            ]
-          : [
-              {
-                key: 'severity',
-                label: this.$t('pageEventLogs.table.severity'),
-                values: ['OK', 'Warning', 'Critical'],
-              },
-              {
-                key: 'filterByStatus',
-                label: this.$t('pageEventLogs.table.status'),
-                values: ['Resolved', 'Unresolved'],
-              },
-            ],
+      tableFilters: [
+        {
+          key: 'severity',
+          label: this.$t('pageEventLogs.table.severity'),
+          values: ['OK', 'Warning', 'Critical'],
+        },
+        {
+          key: 'filterByStatus',
+          label: this.$t('pageEventLogs.table.status'),
+          values: ['Resolved', 'Unresolved'],
+        },
+      ],
       expandRowLabel,
       activeFilters: [],
       batchActions:
@@ -407,8 +392,6 @@ export default {
       selectedRows: selectedRows,
       tableHeaderCheckboxModel: tableHeaderCheckboxModel,
       tableHeaderCheckboxIndeterminate: tableHeaderCheckboxIndeterminate,
-      hideToggle:
-        process.env.VUE_APP_EVENT_LOGS_TOGGLE_BUTTON_DISABLED === 'true',
       hideDelete:
         process.env.VUE_APP_EVENT_LOGS_DELETE_BUTTON_DISABLED === 'true',
     };

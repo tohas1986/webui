@@ -1,5 +1,5 @@
 <template>
-  <b-modal id="modal-user" ref="modal" size="lg" centered @hidden="resetForm">
+  <b-modal id="modal-user" ref="modal" @hidden="resetForm">
     <template #modal-title>
       <template v-if="newUser">
         {{ $t('pageUserManagement.addUser') }}
@@ -8,16 +8,10 @@
         {{ $t('pageUserManagement.editUser') }}
       </template>
     </template>
-    <b-form
-      id="form-user"
-      class="form-user"
-      novalidate
-      @submit.prevent="handleSubmit"
-    >
+    <b-form id="form-user" novalidate @submit.prevent="handleSubmit">
       <b-container>
-        <b-row
-          v-if="!newUser && manualUnlockPolicy && user.Locked && showFullForm"
-        >
+        <!-- Manual unlock form control -->
+        <b-row v-if="!newUser && manualUnlockPolicy && user.Locked">
           <b-col sm="9">
             <alert :show="true" variant="warning" small>
               <template v-if="!$v.form.manualUnlock.$dirty">
@@ -45,48 +39,41 @@
             </b-button>
           </b-col>
         </b-row>
-
-        <b-row class="mb-3">
-          <b-col sm="5">
-            <label class="mt-0">
-              {{ $t('pageUserManagement.modal.accountStatus') }}
-            </label>
-          </b-col>
-          <b-col sm="7">
-            <b-form-group class="mt-0">
-              <div class="d-flex justify-content-start gap">
-                <b-form-radio
-                  v-model="form.status"
-                  name="user-status"
-                  :value="true"
-                  data-test-id="userManagement-radioButton-statusEnabled"
-                  @input="$v.form.status.$touch()"
-                >
-                  {{ $t('global.status.enabled') }}
-                </b-form-radio>
-                <b-form-radio
-                  v-model="form.status"
-                  name="user-status"
-                  data-test-id="userManagement-radioButton-statusDisabled"
-                  :value="false"
-                  :disabled="isOwnAccount"
-                  @input="$v.form.status.$touch()"
-                >
-                  {{ $t('global.status.disabled') }}
-                </b-form-radio>
-              </div>
+        <b-row>
+          <b-col>
+            <b-form-group :label="$t('pageUserManagement.modal.accountStatus')">
+              <b-form-radio
+                v-model="form.status"
+                name="user-status"
+                :value="true"
+                data-test-id="userManagement-radioButton-statusEnabled"
+                @input="$v.form.status.$touch()"
+              >
+                {{ $t('global.status.enabled') }}
+              </b-form-radio>
+              <b-form-radio
+                v-model="form.status"
+                name="user-status"
+                data-test-id="userManagement-radioButton-statusDisabled"
+                :value="false"
+                @input="$v.form.status.$touch()"
+              >
+                {{ $t('global.status.disabled') }}
+              </b-form-radio>
             </b-form-group>
-          </b-col>
-        </b-row>
-
-        <b-row v-if="showFullForm" class="mb-3">
-          <b-col sm="5">
-            <label for="username">
-              {{ $t('pageUserManagement.modal.username') }}
-            </label>
-          </b-col>
-          <b-col sm="7">
-            <b-form-group>
+            <b-form-group
+              :label="$t('pageUserManagement.modal.username')"
+              label-for="username"
+            >
+              <b-form-text id="username-help-block">
+                {{ $t('pageUserManagement.modal.cannotStartWithANumber') }}
+                <br />
+                {{
+                  $t(
+                    'pageUserManagement.modal.noSpecialCharactersExceptUnderscore'
+                  )
+                }}
+              </b-form-text>
               <b-form-input
                 id="username"
                 v-model="form.username"
@@ -94,26 +81,16 @@
                 aria-describedby="username-help-block"
                 data-test-id="userManagement-input-username"
                 :state="getValidationState($v.form.username)"
-                :readonly="lockUsername"
-                :disabled="isOwnAccount || lockUsername"
+                :disabled="!newUser && originalUsername === 'root'"
                 @input="$v.form.username.$touch()"
               />
-              <b-form-text id="username-help-block">
-                {{ $t('pageUserManagement.modal.cannotStartWithANumber') }}
-                <br />
-                {{
-                  $t(
-                    'pageUserManagement.modal.noSpecialCharactersExceptUnderscore',
-                  )
-                }}
-              </b-form-text>
               <b-form-invalid-feedback role="alert">
                 <template v-if="!$v.form.username.required">
                   {{ $t('global.form.fieldRequired') }}
                 </template>
                 <template v-else-if="!$v.form.username.maxLength">
                   {{
-                    $t('global.form.lengthMustBeBetween', { min: 1, max: 32 })
+                    $t('global.form.lengthMustBeBetween', { min: 1, max: 16 })
                   }}
                 </template>
                 <template v-else-if="!$v.form.username.pattern">
@@ -121,18 +98,44 @@
                 </template>
               </b-form-invalid-feedback>
             </b-form-group>
+            <b-form-group
+              :label="$t('pageUserManagement.modal.privilege')"
+              label-for="privilege"
+            >
+              <b-form-select
+                id="privilege"
+                v-model="form.privilege"
+                :options="privilegeTypes"
+                data-test-id="userManagement-select-privilege"
+                :state="getValidationState($v.form.privilege)"
+                @input="$v.form.privilege.$touch()"
+              >
+                <template #first>
+                  <b-form-select-option :value="null" disabled>
+                    {{ $t('global.form.selectAnOption') }}
+                  </b-form-select-option>
+                </template>
+              </b-form-select>
+              <b-form-invalid-feedback role="alert">
+                <template v-if="!$v.form.privilege.required">
+                  {{ $t('global.form.fieldRequired') }}
+                </template>
+              </b-form-invalid-feedback>
+            </b-form-group>
           </b-col>
-        </b-row>
-
-        <!-- Password -->
-        <b-row v-if="showFullForm" class="mb-3">
-          <b-col sm="5">
-            <label for="password">
-              {{ $t('pageUserManagement.modal.userPassword') }}
-            </label>
-          </b-col>
-          <b-col sm="7">
-            <b-form-group>
+          <b-col>
+            <b-form-group
+              :label="$t('pageUserManagement.modal.userPassword')"
+              label-for="password"
+            >
+              <b-form-text id="password-help-block">
+                {{
+                  $t('pageUserManagement.modal.passwordMustBeBetween', {
+                    min: passwordRequirements.minLength,
+                    max: passwordRequirements.maxLength,
+                  })
+                }}
+              </b-form-text>
               <input-password-toggle>
                 <b-form-input
                   id="password"
@@ -144,14 +147,6 @@
                   class="form-control-with-button"
                   @input="$v.form.password.$touch()"
                 />
-                <b-form-text id="password-help-block">
-                  {{
-                    $t('pageUserManagement.modal.passwordMustBeBetween', {
-                      min: passwordRequirements.minLength,
-                      max: passwordRequirements.maxLength,
-                    })
-                  }}
-                </b-form-text>
                 <b-form-invalid-feedback role="alert">
                   <template v-if="!$v.form.password.required">
                     {{ $t('global.form.fieldRequired') }}
@@ -169,39 +164,12 @@
                     }}
                   </template>
                 </b-form-invalid-feedback>
-                <b-form-invalid-feedback role="alert">
-                  <template v-if="!$v.form.password.isDigitsRequired">
-                    {{ $t('pageProfileSettings.isDigitsRequired') }}
-                  </template>
-                </b-form-invalid-feedback>
-                <b-form-invalid-feedback role="alert">
-                  <template
-                    v-if="!$v.form.password.isSpecialCharactersRequired"
-                  >
-                    {{ $t('pageProfileSettings.isSpecialCharsRequired') }}
-                  </template>
-                </b-form-invalid-feedback>
-                <b-form-invalid-feedback role="alert">
-                  <template
-                    v-if="!$v.form.password.isUpperCaseCharactersRequired"
-                  >
-                    {{ $t('pageProfileSettings.isUpperCaseCharsRequired') }}
-                  </template>
-                </b-form-invalid-feedback>
               </input-password-toggle>
             </b-form-group>
-          </b-col>
-        </b-row>
-
-        <!-- Confirm Password -->
-        <b-row v-if="showFullForm" class="mb-3">
-          <b-col sm="5">
-            <label for="password-confirmation">
-              {{ $t('pageUserManagement.modal.confirmUserPassword') }}
-            </label>
-          </b-col>
-          <b-col sm="7">
-            <b-form-group>
+            <b-form-group
+              :label="$t('pageUserManagement.modal.confirmUserPassword')"
+              label-for="password-confirmation"
+            >
               <input-password-toggle>
                 <b-form-input
                   id="password-confirmation"
@@ -226,44 +194,8 @@
             </b-form-group>
           </b-col>
         </b-row>
-
-        <!-- Privilege -->
-        <b-row v-if="showFullForm">
-          <b-col sm="5">
-            <label for="privilege">
-              {{ $t('pageUserManagement.modal.privilege') }}
-            </label>
-          </b-col>
-          <b-col sm="7">
-            <b-form-group>
-              <b-form-select
-                id="privilege"
-                v-model="form.privilege"
-                :options="privilegeTypes"
-                data-test-id="userManagement-select-privilege"
-                :state="getValidationState($v.form.privilege)"
-                @input="$v.form.privilege.$touch()"
-              >
-                <template #first>
-                  <b-form-select-option :value="null" disabled>
-                    {{ $t('global.form.selectAnOption') }}
-                  </b-form-select-option>
-                </template>
-                <b-form-select-option value="NoAccess">
-                  {{ $t('pageUserManagement.modal.noAccess') }}
-                </b-form-select-option>
-              </b-form-select>
-              <b-form-invalid-feedback role="alert">
-                <template v-if="!$v.form.privilege.required">
-                  {{ $t('global.form.fieldRequired') }}
-                </template>
-              </b-form-invalid-feedback>
-            </b-form-group>
-          </b-col>
-        </b-row>
       </b-container>
     </b-form>
-
     <template #modal-footer="{ cancel }">
       <b-button
         variant="secondary"
@@ -300,13 +232,12 @@ import {
   requiredIf,
 } from 'vuelidate/lib/validators';
 import VuelidateMixin from '@/components/Mixins/VuelidateMixin.js';
-import PasswordValidation from '@/components/Mixins/PasswordValidation.js';
 import InputPasswordToggle from '@/components/Global/InputPasswordToggle';
 import Alert from '@/components/Global/Alert';
 
 export default {
   components: { Alert, InputPasswordToggle },
-  mixins: [VuelidateMixin, PasswordValidation],
+  mixins: [VuelidateMixin],
   props: {
     user: {
       type: Object,
@@ -328,7 +259,6 @@ export default {
         passwordConfirmation: '',
         manualUnlock: false,
       },
-      disabled: this.$store.getters['global/username'],
     };
   },
   computed: {
@@ -341,65 +271,39 @@ export default {
     manualUnlockPolicy() {
       return !this.accountSettings.accountLockoutDuration;
     },
-    allPrivilege() {
-      return this.$store.getters['userManagement/allAccountRoles'];
-    },
     privilegeTypes() {
-      return this.allPrivilege.map((p) => p.RoleId);
-    },
-    isOwnAccount() {
-      return (
-        !this.newUser &&
-        this.originalUsername === this.$store.getters['global/username']
-      );
-    },
-    isTargetRoot() {
-      return !this.newUser && this.originalUsername === 'root';
-    },
-    isCurrentUserRoot() {
-      return this.$store.getters['global/username'] === 'root';
-    },
-    showFullForm() {
-      return this.newUser || !this.isTargetRoot || this.isCurrentUserRoot;
-    },
-    lockUsername() {
-      return this.isTargetRoot;
+      return this.$store.getters['userManagement/accountRoles'];
     },
   },
   watch: {
-    user(value) {
+    user: function (value) {
       if (value === null) return;
       this.originalUsername = value.username;
       this.form.username = value.username;
       this.form.status = value.Enabled;
-      this.form.privilege = value.privilege ?? 'NoAccess';
+      this.form.privilege = value.privilege;
     },
   },
   validations() {
     return {
       form: {
-        status: { required },
+        status: {
+          required,
+        },
         username: {
           required,
-          maxLength: maxLength(32),
+          maxLength: maxLength(16),
           pattern: helpers.regex('pattern', /^([a-zA-Z_][a-zA-Z0-9_]*)/),
         },
-        privilege: { required },
+        privilege: {
+          required,
+        },
         password: {
           required: requiredIf(function () {
             return this.requirePassword();
           }),
           minLength: minLength(this.passwordRequirements.minLength),
           maxLength: maxLength(this.passwordRequirements.maxLength),
-          isDigitsRequired: this.minDigits(
-            this.passwordRequirements.minimumDigits,
-          ),
-          isSpecialCharactersRequired: this.minSpecialCharacters(
-            this.passwordRequirements.minimumSpecialCharacters,
-          ),
-          isUpperCaseCharactersRequired: this.minUpperCaseCharacters(
-            this.passwordRequirements.minimumUpperCaseCharacters,
-          ),
         },
         passwordConfirmation: {
           required: requiredIf(function () {
@@ -418,71 +322,30 @@ export default {
       if (this.newUser) {
         this.$v.$touch();
         if (this.$v.$invalid) return;
-
         userData.username = this.form.username;
         userData.status = this.form.status;
-        if (this.form.privilege !== 'NoAccess') {
-          userData.privilege = this.form.privilege;
-        }
+        userData.privilege = this.form.privilege;
         userData.password = this.form.password;
       } else {
         if (this.$v.$invalid) return;
         userData.originalUsername = this.originalUsername;
-
-        if (this.isTargetRoot && !this.isCurrentUserRoot) {
-          if (this.$v.form.status.$dirty) userData.status = this.form.status;
-
-          if (Object.keys(userData).length === 1) {
-            this.closeModal();
-            return;
-          }
-          this.$emit('ok', { isNewUser: false, userData });
-          this.closeModal();
-          return;
-        }
-
-        if (this.isTargetRoot && this.isCurrentUserRoot) {
-          if (this.$v.form.status.$dirty) userData.status = this.form.status;
-          if (
-            this.$v.form.privilege?.$dirty &&
-            this.form.privilege !== 'NoAccess'
-          ) {
-            userData.privilege = this.form.privilege;
-          }
-          if (this.$v.form.password.$dirty) {
-            userData.password = this.form.password;
-          }
-          if (this.$v.form.manualUnlock?.$dirty) {
-            userData.locked = false;
-          }
-          if (Object.keys(userData).length === 1) {
-            this.closeModal();
-            return;
-          }
-          this.$emit('ok', { isNewUser: false, userData });
-          this.closeModal();
-          return;
-        }
-
         if (this.$v.form.status.$dirty) {
           userData.status = this.form.status;
         }
         if (this.$v.form.username.$dirty) {
           userData.username = this.form.username;
         }
-        if (
-          this.$v.form.privilege.$dirty &&
-          this.form.privilege !== 'NoAccess'
-        ) {
+        if (this.$v.form.privilege.$dirty) {
           userData.privilege = this.form.privilege;
         }
         if (this.$v.form.password.$dirty) {
           userData.password = this.form.password;
         }
         if (this.$v.form.manualUnlock.$dirty) {
+          // If form manualUnlock control $dirty then
+          // set user Locked property to false
           userData.locked = false;
         }
-
         if (Object.entries(userData).length === 1) {
           this.closeModal();
           return;
@@ -498,7 +361,7 @@ export default {
       });
     },
     resetForm() {
-      this.originalUsername = '';
+      this.form.originalUsername = '';
       this.form.status = true;
       this.form.username = '';
       this.form.privilege = null;
@@ -514,35 +377,10 @@ export default {
       return false;
     },
     onOk(bvModalEvt) {
-      // предотвратить автозакрытие модалки
+      // prevent modal close
       bvModalEvt.preventDefault();
       this.handleSubmit();
     },
   },
 };
 </script>
-
-<style lang="scss" scoped>
-.col-sm-5,
-.col-sm-7 {
-  @include media-breakpoint-down(sm) {
-    padding: 0;
-  }
-}
-
-.mb-3 {
-  @include media-breakpoint-down(sm) {
-    margin-bottom: 0 !important;
-  }
-}
-
-.btn {
-  @include media-breakpoint-down(sm) {
-    white-space: wrap;
-  }
-}
-
-.gap {
-  gap: 1rem;
-}
-</style>

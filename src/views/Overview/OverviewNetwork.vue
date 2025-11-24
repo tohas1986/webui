@@ -44,6 +44,37 @@
         </dl>
       </b-col>
     </b-row>
+    <b-row>
+      <b-col>
+        <dl>
+          <dt>{{ $t('pageOverview.ipv6') }}</dt>
+        </dl>
+      </b-col>
+    </b-row>
+    <b-row>
+      <b-col cols="3">
+        {{ network.useIPv6Address[0].AddressOrigin }}
+      </b-col>
+      <b-col cols="9">
+        {{ network.useIPv6Address[0].Address }}
+      </b-col>
+    </b-row>
+    <b-row>
+      <b-col cols="3">
+        {{ network.useIPv6Address[1].AddressOrigin }}
+      </b-col>
+      <b-col cols="9">
+        {{ network.useIPv6Address[1].Address }}
+      </b-col>
+    </b-row>
+    <b-row>
+      <b-col cols="3">
+        {{ network.useIPv6Address[2].AddressOrigin }}
+      </b-col>
+      <b-col cols="9">
+        {{ network.useIPv6Address[2].Address }}
+      </b-col>
+    </b-row>
   </overview-card>
 </template>
 

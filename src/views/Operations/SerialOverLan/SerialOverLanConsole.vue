@@ -3,7 +3,7 @@
     <b-row class="d-flex">
       <b-col sm="4" md="6">
         <alert
-          v-if="connection ? false : true"
+          v-if="serverStatus === 'on' ? false : true"
           variant="warning"
           :small="true"
           class="mt-4"
@@ -21,12 +21,7 @@
             {{ $t('pageSerialOverLan.status') }}:
           </dt>
           <dd class="d-inline">
-            <status-icon :status="serverStatusIcon" />
-            {{
-              connection
-                ? $t('pageSerialOverLan.connected')
-                : $t('pageSerialOverLan.disconnected')
-            }}
+            <status-icon :status="serverStatusIcon" /> {{ connectionStatus }}
           </dd>
         </dl>
       </b-col>
@@ -73,15 +68,17 @@ export default {
     serverStatus() {
       return this.$store.getters['global/serverStatus'];
     },
-    connection() {
-      return this.serverStatus === 'off' ? false : true;
-    },
     serverStatusIcon() {
-      return this.connection ? 'success' : 'danger';
+      return this.serverStatus === 'on' ? 'success' : 'danger';
+    },
+    connectionStatus() {
+      return this.serverStatus === 'on'
+        ? this.$t('pageSerialOverLan.connected')
+        : this.$t('pageSerialOverLan.disconnected');
     },
   },
   created() {
-    this.$store.dispatch('global/getSystemInfo');
+    this.$store.dispatch('global/getServerStatus');
   },
   mounted() {
     this.openTerminal();
@@ -93,7 +90,8 @@ export default {
   methods: {
     openTerminal() {
       const token = this.$store.getters['authentication/token'];
-      this.ws = new WebSocket(`wss://${window.location.host}/console/default`, [
+
+      this.ws = new WebSocket(`wss://${window.location.host}/console0`, [
         token,
       ]);
 
@@ -128,11 +126,11 @@ export default {
 
       try {
         this.ws.onopen = function () {
-          console.log('websocket console/default opened');
+          console.log('websocket console0/ opened');
         };
         this.ws.onclose = function (event) {
           console.log(
-            'websocket console/default closed. code: ' +
+            'websocket console0/ closed. code: ' +
               event.code +
               ' reason: ' +
               event.reason

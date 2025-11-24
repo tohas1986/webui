@@ -5,13 +5,11 @@ import router from '@/router';
 const AuthenticationStore = {
   namespaced: true,
   state: {
-    consoleWindow: null,
     authError: false,
     xsrfCookie: Cookies.get('XSRF-TOKEN'),
     isAuthenticatedCookie: Cookies.get('IsAuthenticated'),
   },
   getters: {
-    consoleWindow: (state) => state.consoleWindow,
     authError: (state) => state.authError,
     isLoggedIn: (state) => {
       return (
@@ -35,7 +33,6 @@ const AuthenticationStore = {
       state.xsrfCookie = undefined;
       state.isAuthenticatedCookie = undefined;
     },
-    setConsoleWindow: (state, window) => (state.consoleWindow = window),
   },
   actions: {
     login({ commit }, { username, password }) {
@@ -51,17 +48,14 @@ const AuthenticationStore = {
     logout({ commit }) {
       api
         .post('/logout', { data: [] })
-        .then(() => {
-          commit('setConsoleWindow', false);
-          commit('logout');
-        })
-        .then(() => router.push('/login'))
+        .then(() => commit('logout'))
+        .then(() => router.go('/login'))
         .catch((error) => console.log(error));
     },
-    getUserInfo(_, username) {
-      return api
+    checkPasswordChangeRequired(_, username) {
+      api
         .get(`/redfish/v1/AccountService/Accounts/${username}`)
-        .then(({ data }) => data)
+        .then(({ data: { PasswordChangeRequired } }) => PasswordChangeRequired)
         .catch((error) => console.log(error));
     },
     resetStoreState({ state }) {

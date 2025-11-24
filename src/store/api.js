@@ -4,9 +4,6 @@ import Axios from 'axios';
 //dotenv customizations.
 import store from '../store';
 
-Axios.defaults.headers.common['Accept'] = 'application/json';
-Axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
-
 const api = Axios.create({
   withCredentials: true,
 });
@@ -34,20 +31,20 @@ api.interceptors.response.use(undefined, (error) => {
 });
 
 export default {
-  get(path, config) {
-    return api.get(path, config);
+  get(path) {
+    return api.get(path);
   },
-  delete(path, config) {
-    return api.delete(path, config);
+  delete(path, payload) {
+    return api.delete(path, payload);
   },
   post(path, payload, config) {
     return api.post(path, payload, config);
   },
-  patch(path, payload, config) {
-    return api.patch(path, payload, config);
+  patch(path, payload) {
+    return api.patch(path, payload);
   },
-  put(path, payload, config) {
-    return api.put(path, payload, config);
+  put(path, payload) {
+    return api.put(path, payload);
   },
   all(promises) {
     return Axios.all(promises);

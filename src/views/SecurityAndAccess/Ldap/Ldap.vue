@@ -78,7 +78,7 @@
                         :value="false"
                         @change="onChangeServiceType"
                       >
-                        {{ $t('pageLdap.form.openLDAP') }}
+                        OpenLDAP
                       </b-form-radio>
                       <b-form-radio
                         v-model="form.activeDirectoryEnabled"
@@ -86,7 +86,7 @@
                         :value="true"
                         @change="onChangeServiceType"
                       >
-                        {{ $t('pageLdap.form.activeDirectory') }}
+                        Active Directory
                       </b-form-radio>
                     </b-form-group>
                   </b-col>

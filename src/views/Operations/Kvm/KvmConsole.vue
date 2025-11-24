@@ -89,9 +89,6 @@ export default {
       return this.$t('pageKvm.connecting');
     },
   },
-  created() {
-    this.$store.dispatch('global/getSystemInfo');
-  },
   mounted() {
     this.openTerminal();
   },
@@ -146,26 +143,9 @@ export default {
       }
     },
     openConsoleWindow() {
-      // If consoleWindow is not null
-      // Check the newly opened window is closed or not
-      if (this.$eventBus.$consoleWindow) {
-        // If window is not closed set focus to new window
-        // If window is closed, do open new window
-        if (!this.$eventBus.$consoleWindow.closed) {
-          this.$eventBus.$consoleWindow.focus();
-          return;
-        } else {
-          this.openNewWindow();
-        }
-      } else {
-        // If consoleWindow is null, open new window
-        this.openNewWindow();
-      }
-    },
-    openNewWindow() {
-      this.$eventBus.$consoleWindow = window.open(
+      window.open(
         '#/console/kvm',
-        'kvmConsoleWindow',
+        '_blank',
         'directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=no,resizable=yes,width=700,height=550'
       );
     },
