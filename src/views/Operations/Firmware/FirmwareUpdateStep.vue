@@ -51,7 +51,7 @@
 
 <script>
 export default {
-  props: ["stepNamber"],
+  props: ['stepNamber'],
   data() {
     return {
       // stepNamber:1,
