@@ -28,7 +28,7 @@
       <div class="c-alert">
         <div class="icon Major-warn mr-2"><icon-warning /></div>
         <div class="msgIn">
-          {{ $t("pageFirmwareUpdate.updateFirmware.alertTip") }}
+          {{ $t('pageFirmwareUpdate.updateFirmware.alertTip') }}
         </div>
       </div>
 
@@ -61,28 +61,28 @@
 </template>
 
 <script>
-import AlertsServerPower from "./FirmwareAlertServerPower";
-import BmcCards from "./FirmwareCardsBmc";
-import FormUpdate from "./FirmwareFormUpdate";
-import FirmwareUpdateStep from "./FirmwareUpdateStep.vue";
-import PageSection from "@/components/Global/PageSection";
-import PageTitle from "@/components/Global/PageTitle";
-import IconWarning from "@carbon/icons-vue/es/warning--filled/20";
+import AlertsServerPower from './FirmwareAlertServerPower';
+import BmcCards from './FirmwareCardsBmc';
+import FormUpdate from './FirmwareFormUpdate';
+import FirmwareUpdateStep from './FirmwareUpdateStep.vue';
+//import PageSection from '@/components/Global/PageSection';
+//import PageTitle from '@/components/Global/PageTitle';
+import IconWarning from '@carbon/icons-vue/es/warning--filled/20';
 
-import FirmwareIstrueInfo from "./FirmwareIstrueInfo.vue";
-import FirmwareUpdated from "./FirmwareUpdated.vue";
+import FirmwareIstrueInfo from './FirmwareIstrueInfo.vue';
+import FirmwareUpdated from './FirmwareUpdated.vue';
 
-import LoadingBarMixin, { loading } from "@/components/Mixins/LoadingBarMixin";
+import LoadingBarMixin, { loading } from '@/components/Mixins/LoadingBarMixin';
 
 export default {
-  name: "FirmwareSingleImage",
+  name: 'FirmwareSingleImage',
   components: {
     AlertsServerPower,
     BmcCards,
     FormUpdate,
     FirmwareUpdateStep,
-    PageSection,
-    PageTitle,
+    //PageSection,
+    //PageTitle,
     IconWarning,
     FirmwareIstrueInfo,
     FirmwareUpdated,
@@ -96,24 +96,27 @@ export default {
     return {
       loading,
       isServerPowerOffRequired:
-        process.env.VUE_APP_SERVER_OFF_REQUIRED === "true",
+        process.env.VUE_APP_SERVER_OFF_REQUIRED === 'true',
       setStep: false,
       StepNamber: 0,
     };
   },
   computed: {
     StepNamber1() {
-      this.StepNamber = this.$store.getters["firmware/getUploadstep"];
-      return this.$store.getters["global/getUploadstep"];
+      //this.StepNamber = this.$store.getters['firmware/getUploadstep'];
+      return this.$store.getters['global/getUploadstep'];
+    },
+    StepNamber() {
+      return this.$store.getters['firmware/getUploadstep'];
     },
     serverStatus() {
-      return this.$store.getters["firmware/serverStatus"];
+      return this.$store.getters['firmware/serverStatus'];
     },
     isServerOff() {
-      return this.serverStatus === "off" ? true : false;
+      return this.serverStatus === 'off' ? true : false;
     },
     isSingleFileUploadEnabled() {
-      return this.$store.getters["firmware/isSingleFileUploadEnabled"];
+      return this.$store.getters['firmware/isSingleFileUploadEnabled'];
     },
     isPageDisabled() {
       if (this.isServerPowerOffRequired) {
@@ -137,8 +140,8 @@ export default {
     }, 300);
 
     Promise.all([
-      this.$store.dispatch("firmware/getFirmwareInformation"),
-      this.$store.dispatch("firmware/getpowerinfo"),
+      this.$store.dispatch('firmware/getFirmwareInformation'),
+      this.$store.dispatch('firmware/getpowerinfo'),
     ])
       .then(() => {})
       .finally(() => {
@@ -146,8 +149,8 @@ export default {
       });
   },
   beforeDestroy() {
-    this.$store.commit("firmware/setUploadstep", 1);
-    this.$store.commit("firmware/setprogressnum", 0);
+    this.$store.commit('firmware/setUploadstep', 1);
+    this.$store.commit('firmware/setprogressnum', 0);
   },
 };
 </script>
