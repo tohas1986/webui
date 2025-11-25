@@ -4,25 +4,39 @@
       <!-- Operation in progress alert -->
       <alert v-if="isOperationInProgress" variant="info" class="mb-5">
         <p>
-          {{ $t('pageFirmware.alert.operationInProgress') }}
+          {{
+            $t('pageFirmwareUpdate.updateFirmware.alert.operationInProgress')
+          }}
         </p>
       </alert>
       <!-- Power off server warning alert -->
       <alert v-else-if="!isServerOff" variant="warning" class="mb-5">
         <p class="mb-0">
-          {{ $t('pageFirmware.alert.serverMustBePoweredOffTo') }}
+          {{
+            $t(
+              'pageFirmwareUpdate.updateFirmware.alert.serverMustBePoweredOffTo'
+            )
+          }}
         </p>
         <ul class="m-0">
           <li>
-            {{ $t('pageFirmware.alert.switchRunningAndBackupImages') }}
+            {{
+              $t(
+                'pageFirmwareUpdate.updateFirmware.alert.switchRunningAndBackupImages'
+              )
+            }}
           </li>
           <li>
-            {{ $t('pageFirmware.alert.updateFirmware') }}
+            {{ $t('pageFirmwareUpdate.updateFirmware.alert.updateFirmware') }}
           </li>
         </ul>
         <template #action>
-          <b-link to="/operations/server-power-operations">
-            {{ $t('pageFirmware.alert.viewServerPowerOperations') }}
+          <b-link to="/settings/power-supply">
+            {{
+              $t(
+                'pageFirmwareUpdate.updateFirmware.alert.viewServerPowerOperations'
+              )
+            }}
           </b-link>
         </template>
       </alert>

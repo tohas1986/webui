@@ -1,21 +1,21 @@
 <template>
   <b-modal
     id="modal-switch-to-running"
-    :ok-title="$t('pageFirmware.modal.switchImages')"
+    :ok-title="$t('pageFirmwareUpdate.updateFirmware.modal.switchImages')"
     :cancel-title="$t('global.action.cancel')"
-    :title="$t('pageFirmware.modal.switchRunningImage')"
+    :title="$t('pageFirmwareUpdate.updateFirmware.modal.switchRunningImage')"
     @ok="$emit('ok')"
   >
     <p>
-      {{ $t('pageFirmware.modal.switchRunningImageInfo') }}
+      {{ $t('pageFirmwareUpdate.updateFirmware.modal.switchRunningImageInfo') }}
     </p>
-    <p class="m-0">
+    <!-- <p class="m-0">
       {{
-        $t('pageFirmware.modal.switchRunningImageInfo2', {
+        $t('pageFirmwareUpdate.updateFirmware.modal.switchRunningImageInfo2', {
           backup,
         })
       }}
-    </p>
+    </p> -->
   </b-modal>
 </template>
 

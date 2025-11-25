@@ -1,15 +1,19 @@
 <template>
-  <page-section :section-title="$t('pageFirmware.sectionTitleHostCards')">
+  <page-section
+    :section-title="
+      $t('pageFirmwareUpdate.updateFirmware.sectionTitleHostCards')
+    "
+  >
     <b-card-group deck>
       <!-- Running image -->
       <b-card>
         <template #header>
           <p class="font-weight-bold m-0">
-            {{ $t('pageFirmware.cardTitleRunning') }}
+            {{ $t('pageFirmwareUpdate.updateFirmware.cardTitleRunning') }}
           </p>
         </template>
         <dl class="mb-0">
-          <dt>{{ $t('pageFirmware.cardBodyVersion') }}</dt>
+          <dt>{{ $t('pageFirmwareUpdate.updateFirmware.cardBodyVersion') }}</dt>
           <dd class="mb-0">{{ runningVersion }}</dd>
         </dl>
       </b-card>
@@ -18,11 +22,11 @@
       <b-card>
         <template #header>
           <p class="font-weight-bold m-0">
-            {{ $t('pageFirmware.cardTitleBackup') }}
+            {{ $t('pageFirmwareUpdate.updateFirmware.cardTitleBackup') }}
           </p>
         </template>
         <dl class="mb-0">
-          <dt>{{ $t('pageFirmware.cardBodyVersion') }}</dt>
+          <dt>{{ $t('pageFirmwareUpdate.updateFirmware.cardBodyVersion') }}</dt>
           <dd class="mb-0">
             <status-icon v-if="showBackupImageStatus" status="danger" />
             <span v-if="showBackupImageStatus" class="sr-only">
