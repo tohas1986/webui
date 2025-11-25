@@ -246,7 +246,7 @@ const FirmwareStore = {
           console.log(error);
           throw new Error(
             i18n.t(
-              'pageFirmwareUpdate.updateFirmware.toast.errorUpdateFirmware'
+              'pageFirmwareUpdate.updateFirmware.toast1'
             )
           );
         });
@@ -283,7 +283,7 @@ const FirmwareStore = {
         .catch(() => {
           throw new Error(
             i18n.t(
-              'pageFirmwareUpdate.updateFirmware.toast.errorUpdateFirmware'
+              'pageFirmwareUpdate.updateFirmware.toast2'
             )
           );
         });
@@ -312,7 +312,7 @@ const FirmwareStore = {
         .catch(() => {
           throw new Error(
             i18n.t(
-              'pageFirmwareUpdate.updateFirmware.toast.errorUpdateFirmware'
+              'pageFirmwareUpdate.updateFirmware.toast3'
             )
           );
         });
@@ -354,7 +354,7 @@ const FirmwareStore = {
             throw new Error(4000);
           } else {
             throw new Error(
-              i18n.t('pageFirmwareUpdate.updateFirmware.toast.erroroccurred')
+              i18n.t('pageFirmwareUpdate.updateFirmware.toast4')
             );
           }
         });
@@ -385,7 +385,7 @@ const FirmwareStore = {
             throw new Error(4000);
           } else {
             throw new Error(
-              i18n.t('pageFirmwareUpdate.updateFirmware.toast.erroroccurred')
+              i18n.t('pageFirmwareUpdate.updateFirmware.toast5')
             );
           }
         });
@@ -401,7 +401,7 @@ const FirmwareStore = {
 
       // 创建默认错误提示字符串
       let errtext = i18n.t(
-        'pageFirmwareUpdate.updateFirmware.toast.errorUpdateFirmware'
+        'pageFirmwareUpdate.updateFirmware.toast6'
       );
       commit('setUpgradeData', data.seconddata);
       // 固件升级接口调取
@@ -448,7 +448,7 @@ const FirmwareStore = {
           .catch((error) => {
             if (error.message == 4000) {
               errtext = i18n.t(
-                'pageFirmwareUpdate.updateFirmware.toast.errorcpldUpdateFirmware'
+                'pageFirmwareUpdate.updateFirmware.toast7'
               );
             }
             throw new Error(errtext);
@@ -474,7 +474,7 @@ const FirmwareStore = {
         .then((res) => {
           if (res.data.status == 'Fail' || res.data.status == 'fail') {
             throw new Error(
-              i18n.t('pageFirmwareUpdate.updateFirmware.toast.erroroccurred')
+              i18n.t('roccurred')
             );
           }
         })
@@ -489,7 +489,7 @@ const FirmwareStore = {
             throw new Error(4000);
           } else {
             throw new Error(
-              i18n.t('pageFirmwareUpdate.updateFirmware.toast.erroroccurred')
+              i18n.t('pageFirmwareUpdate.updateFirmware.toast8')
             );
           }
         });
@@ -529,7 +529,7 @@ const FirmwareStore = {
           console.log(error);
           throw new Error(
             i18n.t(
-              'pageFirmwareUpdate.updateFirmware.toast.errorUpdateFirmware'
+              'pageFirmwareUpdate.updateFirmware.toast9'
             )
           );
         });
@@ -556,7 +556,7 @@ const FirmwareStore = {
         .catch((error) => {
           console.log(error);
           throw new Error(
-            i18n.t('pageFirmwareUpdate.updateFirmware.toast.errorSwitchImages')
+            i18n.t('pageFirmwareUpdate.updateFirmware.toast10')
           );
         });
     },
@@ -573,7 +573,7 @@ const FirmwareStore = {
           commit('setProgressError', true);
           throw new Error(
             i18n.t(
-              'pageFirmwareUpdate.updateFirmware.toast.errorUpdateFirmware'
+              'pageFirmwareUpdate.updateFirmware.toast11'
             )
           );
         });
