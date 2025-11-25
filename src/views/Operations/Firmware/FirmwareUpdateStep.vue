@@ -75,10 +75,10 @@ export default {
   .Stephr {
     width: 150px;
     height: 2px;
-    background-color: $gray-400;
+    background-color: gray('400');
     margin: 13px 20px;
     &.ined {
-      background-color: $blue-600;
+      background-color: gray('400');
     }
   }
 }
