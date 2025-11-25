@@ -556,7 +556,9 @@ const FirmwareStore = {
         .catch((error) => {
           console.log(error);
           throw new Error(
-            i18n.t('pageFirmwareUpdate.updateFirmware11.toast.errorSwitchImages')
+            i18n.t(
+              'pageFirmwareUpdate.updateFirmware11.toast.errorSwitchImages'
+            )
           );
         });
     },
