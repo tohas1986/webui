@@ -99,21 +99,21 @@ export default {
   }
   &.active {
     .Step-tipBorder {
-      border: $blue-600 2px solid;
+      border: gray('400') 2px solid;
       background-color: gray('400');
       color: $white;
     }
     .StepMsg {
-      color: $blue-600;
+      color: gray('400');
     }
   }
   &.actived {
     .Step-tipBorder {
-      border: $blue-600 2px solid;
-      color: $blue-600;
+      border: gray('400') 2px solid;
+      color: gray('400');
     }
     .StepMsg {
-      color: $gray-900;
+      color: gray('400');
     }
   }
 }
