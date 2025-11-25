@@ -100,7 +100,7 @@ export default {
   &.active {
     .Step-tipBorder {
       border: $blue-600 2px solid;
-      background-color: $blue-600;
+      background-color: gray('400');
       color: $white;
     }
     .StepMsg {
