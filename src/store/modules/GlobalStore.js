@@ -200,7 +200,7 @@ const GlobalStore = {
     },
     getSystemInfo({ commit }) {
       api
-        .get('/redfish/v1/Systems/1')
+        .get('/redfish/v1/Systems/system')
         .then(
           ({
             data: {
