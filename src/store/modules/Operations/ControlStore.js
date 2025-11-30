@@ -51,7 +51,7 @@ const ControlStore = {
   actions: {
     async getLastPowerOperationTime({ commit }) {
       return await api
-        .get('/redfish/v1/Systems/system')
+        .get('/redfish/v1/Systems/1')
         .then((response) => {
           const lastReset = response.data.LastResetTime;
           if (lastReset) {
@@ -63,7 +63,7 @@ const ControlStore = {
     },
     getLastBmcRebootTime({ commit }) {
       return api
-        .get('/redfish/v1/Managers/bmc')
+        .get('/redfish/v1/Managers/1')
         .then((response) => {
           const lastBmcReset = response.data.LastResetTime;
           const lastBmcRebootTime = new Date(lastBmcReset);
@@ -130,7 +130,7 @@ const ControlStore = {
     serverPowerChange({ commit }, data) {
       commit('setOperationInProgress', true);
       api
-        .post('/redfish/v1/Systems/system/Actions/ComputerSystem.Reset', data)
+        .post('/redfish/v1/Systems/1/Actions/ComputerSystem.Reset', data)
         .catch((error) => {
           console.log(error);
           commit('setOperationInProgress', false);
