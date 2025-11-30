@@ -167,7 +167,7 @@ const GlobalStore = {
     },
     async getBmcTime({ commit, dispatch }) {
       return await api
-        .get('/redfish/v1/Managers/1')
+        .get('/redfish/v1/Managers/bmc')
         .then((response) => {
           let { DateTime, TimeZone, TimeZoneDst, IsDst } = response.data;
           const date = new Date(DateTime).getTime();
@@ -186,7 +186,7 @@ const GlobalStore = {
     },
     async getLoginTime({ commit }) {
       return await api
-        .get('/redfish/v1/Managers/1')
+        .get('/redfish/v1/Managers/bmc')
         .then((response) => {
           let { DateTime } = response.data;
           commit('setLoginTime', DateTime);

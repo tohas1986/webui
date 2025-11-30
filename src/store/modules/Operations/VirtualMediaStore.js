@@ -52,7 +52,7 @@ const VirtualMediaStore = {
       }
 
       return await api
-        .get('/redfish/v1/Managers/1/VirtualMedia')
+        .get('/redfish/v1/Managers/bmc/VirtualMedia')
         .then((response) =>
           response.data.Members.map((virtualMedia) => virtualMedia['@odata.id'])
         )
@@ -103,7 +103,7 @@ const VirtualMediaStore = {
     async mountImage(_, { id, data }) {
       return await api
         .post(
-          `/redfish/v1/Managers/1/VirtualMedia/${id}/Actions/VirtualMedia.InsertMedia`,
+          `/redfish/v1/Managers/bmc/VirtualMedia/${id}/Actions/VirtualMedia.InsertMedia`,
           data
         )
         .catch((error) => {
@@ -114,7 +114,7 @@ const VirtualMediaStore = {
     async unmountImage(_, id) {
       return await api
         .post(
-          `/redfish/v1/Managers/1/VirtualMedia/${id}/Actions/VirtualMedia.EjectMedia`
+          `/redfish/v1/Managers/bmc/VirtualMedia/${id}/Actions/VirtualMedia.EjectMedia`
         )
         .catch((error) => {
           console.log('Unmount image:', error);
@@ -123,7 +123,7 @@ const VirtualMediaStore = {
     },
     async uploadFilename(_, { id, filename }) {
       try {
-        const { data } = await api.get('/redfish/v1/Managers/1/VirtualMedia');
+        const { data } = await api.get('/redfish/v1/Managers/bmc/VirtualMedia');
         const slotArr = data.Members.map((vm) => vm['@odata.id']);
         const apiUrl = slotArr.filter((slot) => slot.includes(id))[0];
         const result = await api.post(apiUrl, { FilePath: filename });
@@ -137,7 +137,7 @@ const VirtualMediaStore = {
       try {
         const id = slotId.slice(-1);
         const { data } = await api.post(
-          `/redfish/v1/Managers/1/VirtualMedia/close/${id}`
+          `/redfish/v1/Managers/bmc/VirtualMedia/close/${id}`
         );
         if (data?.status === 'success') {
           await dispatch('uploadFilename', {
@@ -152,7 +152,7 @@ const VirtualMediaStore = {
     },
     async getLocalImageStatus(_, id) {
       try {
-        const { data } = await api.get('/redfish/v1/Managers/1/VirtualMedia');
+        const { data } = await api.get('/redfish/v1/Managers/bmc/VirtualMedia');
         const slotArr = data.Members.map((vm) => vm['@odata.id']);
         const apiUrl = slotArr.filter((slot) => slot.includes(id))[0];
         const result = await api.get(apiUrl);

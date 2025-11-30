@@ -63,7 +63,7 @@ const ControlStore = {
     },
     getLastBmcRebootTime({ commit }) {
       return api
-        .get('/redfish/v1/Managers/1')
+        .get('/redfish/v1/Managers/bmc')
         .then((response) => {
           const lastBmcReset = response.data.LastResetTime;
           const lastBmcRebootTime = new Date(lastBmcReset);
