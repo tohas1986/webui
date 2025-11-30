@@ -285,7 +285,7 @@ const GlobalStore = {
     },
     getKvmClientsCount({ commit }) {
       api
-        .get('/redfish/v1/Managers/1/KvmService')
+        .get('/redfish/v1/Managers/bmc/KvmService')
         .then((res) => commit('setKvmClientsCount', res.data.KvmClientsCount));
     },
   },
