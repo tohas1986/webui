@@ -50,7 +50,8 @@ const VirtualMediaStore = {
 
       return await api
         .get('/redfish/v1/Managers/bmc/VirtualMedia')
-        .then((response) => response.data.Members.map((virtualMedia) => virtualMedia['@odata.id']))
+        .then((response) => 
+          response.data.Members.map((virtualMedia) => virtualMedia['@odata.id']))
         .then((devices) => api.all(devices.map((device) => api.get(device))))
         .then((devices) => {
           const deviceData = devices.map((device) => {
