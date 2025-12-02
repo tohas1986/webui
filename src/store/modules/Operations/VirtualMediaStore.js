@@ -50,9 +50,7 @@ const VirtualMediaStore = {
 
       return await api
         .get('/redfish/v1/Managers/bmc/VirtualMedia')
-        .then((response) =>
-          response.data.Members.map(
-            (virtualMedia) => virtualMedia['@odata.id'],
+        .then((response) => response.data.Members.map((virtualMedia) => virtualMedia['@odata.id'],
           ),
         )
         .then((devices) => api.all(devices.map((device) => api.get(device))))
@@ -98,7 +96,7 @@ const VirtualMediaStore = {
       return await api
         .post(
           `/redfish/v1/Managers/bmc/VirtualMedia/${id}/Actions/VirtualMedia.InsertMedia`,
-          data,
+          data
         )
         .catch((error) => {
           console.log('Mount image:', error);
@@ -108,7 +106,7 @@ const VirtualMediaStore = {
     async unmountImage(_, id) {
       return await api
         .post(
-          `/redfish/v1/Managers/bmc/VirtualMedia/${id}/Actions/VirtualMedia.EjectMedia`,
+          `/redfish/v1/Managers/bmc/VirtualMedia/${id}/Actions/VirtualMedia.EjectMedia`
         )
         .catch((error) => {
           console.log('Unmount image:', error);
@@ -119,4 +117,3 @@ const VirtualMediaStore = {
 };
 
 export default VirtualMediaStore;
-
