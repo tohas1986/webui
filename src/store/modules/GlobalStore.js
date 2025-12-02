@@ -206,6 +206,7 @@ const GlobalStore = {
             data: {
               AssetTag,
               Model,
+              PowerState,
               SerialNumber,
               PowerSummary,
               Status: { State } = {},
@@ -223,7 +224,7 @@ const GlobalStore = {
               // at State for certain cases.
               commit('setServerStatus', State);
             } else {
-              commit('setServerStatus', PowerSummary?.PowerState);
+              commit('setServerStatus', PowerState);
             }
             commit('setpowerStatus', PowerSummary);
             commit('setSystemHealth', Oem.SystemHealth);

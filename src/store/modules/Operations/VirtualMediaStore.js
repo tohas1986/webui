@@ -50,8 +50,9 @@ const VirtualMediaStore = {
 
       return await api
         .get('/redfish/v1/Managers/bmc/VirtualMedia')
-        .then((response) => 
-          response.data.Members.map((virtualMedia) => virtualMedia['@odata.id']))
+        .then((response) =>
+          response.data.Members.map((virtualMedia) => virtualMedia['@odata.id'])
+        )
         .then((devices) => api.all(devices.map((device) => api.get(device))))
         .then((devices) => {
           const deviceData = devices.map((device) => {
@@ -59,8 +60,7 @@ const VirtualMediaStore = {
             return {
               id: device.data?.Id,
               transferProtocolType: device.data?.TransferProtocolType,
-              websocket: device.data?.Oem?.OpenYard?.WebSocketEndpoint,
-              imageName: device.data?.ImageName,
+              websocket: device.data?.Oem?.OpenBMC?.WebSocketEndpoint,
               isActive: isActive,
             };
           });
@@ -80,7 +80,6 @@ const VirtualMediaStore = {
                 serverUri: '',
                 username: '',
                 password: '',
-                isCD: false,
                 isRW: false,
               };
             });
