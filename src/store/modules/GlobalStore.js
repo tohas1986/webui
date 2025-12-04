@@ -114,7 +114,8 @@ const GlobalStore = {
     setServerStatus: (state, serverState) =>
       (state.serverStatus = serverStateMapper(serverState)),
     setpowerStatus: (state, val = {}) => {
-      state.powerStatus = val.PowerState;
+      //state.powerStatus = val.PowerState;
+      state.powerStatus = serverStateMapper(PowerState);
       state.powerlastTime = new Date(val.LastResetTime);
       state.powerInput = val.TotolPowerInput;
     },
