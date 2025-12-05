@@ -87,11 +87,7 @@ const GlobalStore = {
         .get('/redfish/v1/Systems/system')
         .then(
           ({
-            data: { 
-              AssetTag, 
-              Model, 
-              SerialNumber, 
-              Status: { State } = {}
+            data: { AssetTag, Model, SerialNumber, Status: { State } = {}
             },
           } = {}) => {
             commit('setAssetTag', AssetTag);
