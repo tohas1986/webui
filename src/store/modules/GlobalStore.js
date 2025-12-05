@@ -90,7 +90,6 @@ const GlobalStore = {
             data: {
               AssetTag,
               Model,
-              PowerState,
               SerialNumber,
               Status: { State } = {},
             },
