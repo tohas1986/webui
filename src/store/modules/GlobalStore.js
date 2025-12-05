@@ -87,11 +87,11 @@ const GlobalStore = {
         .get('/redfish/v1/Systems/system')
         .then(
           ({
-            data: { 
-              AssetTag, 
-              Model, 
-              PowerState, 
-              SerialNumber, 
+            data: {
+              AssetTag,
+              Model,
+              PowerState,
+              SerialNumber,
               Status: { State } = {},
             },
           } = {}) => {
