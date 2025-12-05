@@ -104,7 +104,7 @@ const GlobalStore = {
               // at State for certain cases.
               commit('setServerStatus', State);
             } else {
-              commit('setServerStatus', PowerState);
+              commit('setServerStatus', State);
             }
           }
         )
