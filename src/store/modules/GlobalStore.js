@@ -91,7 +91,7 @@ const GlobalStore = {
               AssetTag,
               Model,
               SerialNumber,
-              Status: { State } = {},
+              Status: { State } = {}
             },
           } = {}) => {
             commit('setAssetTag', AssetTag);
