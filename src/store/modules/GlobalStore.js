@@ -87,7 +87,7 @@ const GlobalStore = {
         .get('/redfish/v1/Systems/system')
         .then(
           ({
-            data: { AssetTag, Model, SerialNumber, Status: { State } = {} },
+            data: { AssetTag, Model, PowerState, SerialNumber, Status: { State } = {} },
           } = {}) => {
             commit('setAssetTag', AssetTag);
             commit('setSerialNumber', SerialNumber);
@@ -98,7 +98,7 @@ const GlobalStore = {
               // at State for certain cases.
               commit('setServerStatus', State);
             } else {
-              commit('setServerStatus', State);
+              commit('setServerStatus', PowerState);
             }
           }
         )
