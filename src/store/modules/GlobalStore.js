@@ -58,6 +58,7 @@ const GlobalStore = {
     setSerialNumber: (state, serialNumber) =>
       (state.serialNumber = serialNumber),
     setBmcTime: (state, bmcTime) => (state.bmcTime = bmcTime),
+    setMfg: (state, val) => (state.mfg = val),
     setServerStatus: (state, serverState) =>
       (state.serverStatus = serverStateMapper(serverState)),
     setLanguagePreference: (state, language) =>
@@ -105,6 +106,29 @@ const GlobalStore = {
               commit('setServerStatus', State);
             } else {
               commit('setServerStatus', PowerState);
+            }
+          }
+        )
+        .catch((error) => console.log(error));
+    },
+    getServerInfo({ commit }) {
+      api
+        .get('/redfish/v1/Chassis/BMC_FRU')
+        .then(
+          ({
+            data: {
+              Model,
+              Manufacturer,
+              SerialNumber,
+            },
+          } = {}) => {
+            commit('setAssetTag', SerialNumber);
+            commit('setSerialNumber', SerialNumber);
+            commit('setModelType', Model);
+            if (Manufacturer === ' ') {
+              commit('setMfg', 'RAMEC');
+            } else {
+              commit('setMfg', Manufacturer);
             }
           }
         )

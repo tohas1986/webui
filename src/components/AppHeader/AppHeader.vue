@@ -205,6 +205,7 @@ export default {
     this.$store.dispatch('authentication/resetStoreState');
     this.getSystemInfo();
     this.getEvents();
+    this.getServerInfo();
   },
   mounted() {
     this.$root.$on(
@@ -215,6 +216,9 @@ export default {
   methods: {
     getSystemInfo() {
       this.$store.dispatch('global/getSystemInfo');
+    },
+    getServerInfo() {
+      this.$store.dispatch('global/getServerInfo');
     },
     getEvents() {
       this.$store.dispatch('eventLog/getEventLogData');

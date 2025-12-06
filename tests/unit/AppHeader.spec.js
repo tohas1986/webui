@@ -14,6 +14,7 @@ describe('AppHeader.vue', () => {
     'eventLog/getEventLogData': jest.fn(),
     'authentication/resetStoreState': jest.fn(),
     'global/getSystemInfo': jest.fn(),
+    'global/getServerInfo': jest.fn(),
   };
 
   const store = new Vuex.Store({ actions });
@@ -73,6 +74,11 @@ describe('AppHeader.vue', () => {
 
     it('getEvents should dispatch eventLog/getEventLogData', () => {
       wrapper.vm.getEvents();
+      expect(store.dispatch).toHaveBeenCalledTimes(1);
+    });
+
+    it('getServerInfo should dispatch global/getServerInfo', () => {
+      wrapper.vm.getServerInfo();
       expect(store.dispatch).toHaveBeenCalledTimes(1);
     });
   });
