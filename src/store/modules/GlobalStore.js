@@ -120,9 +120,9 @@ const GlobalStore = {
             commit('setAssetTag', SerialNumber);
             commit('setSerialNumber', SerialNumber);
             commit('setModelType', Model);
-            if (Manufacturer === ' ') {
+            if (Manufacturer === ' ') { 
               commit('setMfg', 'RAMEC');
-            } else {
+            } else { 
               commit('setMfg', Manufacturer);
             }
           }
