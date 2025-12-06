@@ -117,16 +117,16 @@ const GlobalStore = {
         .then(
           ({ data: { Model, Manufacturer, SerialNumber }
           } = {}) => {
-            commit('setAssetTag', SerialNumber);
-            commit('setSerialNumber', SerialNumber);
-            commit('setModelType', Model);
-            if (Manufacturer === ' ') { 
-              commit('setMfg', 'RAMEC');
-            } else { 
-              commit('setMfg', Manufacturer);
-            }
+          commit('setAssetTag', SerialNumber);
+          commit('setSerialNumber', SerialNumber);
+          commit('setModelType', Model);
+          if (Manufacturer === ' ') { 
+            commit('setMfg', 'RAMEC');
+          } else { 
+            commit('setMfg', Manufacturer);
           }
-        )
+        }
+      )
         .catch((error) => console.log(error));
     },
   },
