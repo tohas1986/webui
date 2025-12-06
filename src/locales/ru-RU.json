@@ -372,13 +372,13 @@
   },
   "pageInventory": {
     "dimmSlot": "Слоты DIMM",
-    "fans": "Вентиляторы",
+    "fans": "PCIe устройства",
     "powerSupplies": "Источники питания",
     "bmcManager": "BMC",
     "chassis": "Шасси",
     "processors": "Процессоры",
     "quicklinkTitle": "Быстрые ссылки к компонентам оборудования",
-    "assemblies": "Сборки",
+    "assemblies": "Диски",
     "system": "Система",
     "systemIndicator": {
       "powerStatus": "Состояние питания",
