@@ -43,7 +43,7 @@ export default {
         return this.$store.getters['global/serialNumber'];
       },
       serverManufacturer() {
-        return "RAMEC";
+        return 'RAMEC';
       },
     }),
   },
