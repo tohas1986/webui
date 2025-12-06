@@ -37,13 +37,13 @@ export default {
     ...mapState({
       server: (state) => state.system.systems[0],
       serverModel() {
-        return this.server?.model;
+        return this.$store.getters['global/modelType'];
       },
       serverSerialNumber() {
-        return this.server?.serialNumber;
+        return this.$store.getters['global/serialNumber'];
       },
       serverManufacturer() {
-        return this.server?.manufacturer;
+        return "RAMEC";
       },
     }),
   },
