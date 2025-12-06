@@ -114,7 +114,7 @@ const GlobalStore = {
     getServerInfo({ commit }) {
       api
         .get('/redfish/v1/Chassis/BMC_FRU')
-        .then(({ data: { Model, Manufacturer, SerialNumber }} = {} ) => {
+        .then(({ data: { Model, Manufacturer, SerialNumber } } = {} ) => {
           commit('setAssetTag', SerialNumber);
           commit('setSerialNumber', SerialNumber);
           commit('setModelType', Model);
