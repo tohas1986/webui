@@ -90,7 +90,7 @@ const VirtualMediaStore = {
           console.log('Virtual Media:', error);
         });
     },
-    async mountImage(_, { id, data }) {
+    async mountImage({ data }) {
       return await api
         .post(
           `/redfish/v1/Managers/bmc/VirtualMedia/USB0/Actions/VirtualMedia.InsertMedia`,
@@ -101,7 +101,7 @@ const VirtualMediaStore = {
           throw new Error();
         });
     },
-    async unmountImage(_, id) {
+    async unmountImage() {
       return await api
         .post(
           `/redfish/v1/Managers/bmc/VirtualMedia/USB0/Actions/VirtualMedia.EjectMedia`
