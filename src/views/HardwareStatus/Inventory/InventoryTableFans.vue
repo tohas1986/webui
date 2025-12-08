@@ -72,16 +72,11 @@
               </dl>
               <dl>
                 <!-- Fan speed -->
-                <dt>{{ $t('pageInventory.table.fanSpeed') }}:</dt>
-                <dd>{{ dataFormatter(item.speed) }}</dd>
+                <dt>{{ $t('pageInventory.table.manufacturer') }}:</dt>
+                <dd>{{ dataFormatter(item.manufacturer) }}</dd>
               </dl>
             </b-col>
             <b-col sm="6" xl="4">
-              <dl>
-                <!-- Status state -->
-                <dt>{{ $t('pageInventory.table.statusState') }}:</dt>
-                <dd>{{ dataFormatter(item.statusState) }}</dd>
-              </dl>
               <dl>
                 <!-- Health Rollup state -->
                 <dt>{{ $t('pageInventory.table.statusHealthRollup') }}:</dt>

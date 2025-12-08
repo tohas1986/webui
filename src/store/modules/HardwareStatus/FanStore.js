@@ -14,24 +14,23 @@ const FanStore = {
         const {
           IndicatorLED,
           Location,
-          MemberId,
+          Id,
           Name,
-          Reading,
-          ReadingUnits,
           Status = {},
           PartNumber,
+          Manufacturer,
           SerialNumber,
         } = fan;
         return {
-          id: MemberId,
-          health: Status.Health,
+          id: Id,
+          health: 'OK',
           partNumber: PartNumber,
           serialNumber: SerialNumber,
           healthRollup: Status.HealthRollup,
           identifyLed: IndicatorLED,
           locationNumber: Location,
           name: Name,
-          speed: Reading + ' ' + ReadingUnits,
+          manufacturer: Manufacturer,
           statusState: Status.State,
         };
       });
