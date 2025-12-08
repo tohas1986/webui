@@ -93,7 +93,7 @@ const VirtualMediaStore = {
     async mountImage(_, { id, data }) {
       return await api
         .post(
-          `/redfish/v1/Managers/bmc/VirtualMedia/${id}/Actions/VirtualMedia.InsertMedia`,
+          `/redfish/v1/Managers/bmc/VirtualMedia/USB0/Actions/VirtualMedia.InsertMedia`,
           data
         )
         .catch((error) => {
@@ -104,7 +104,7 @@ const VirtualMediaStore = {
     async unmountImage(_, id) {
       return await api
         .post(
-          `/redfish/v1/Managers/bmc/VirtualMedia/${id}/Actions/VirtualMedia.EjectMedia`
+          `/redfish/v1/Managers/bmc/VirtualMedia/USB0/Actions/VirtualMedia.EjectMedia`
         )
         .catch((error) => {
           console.log('Unmount image:', error);
