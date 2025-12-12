@@ -39,11 +39,10 @@ const FanStore = {
   actions: {
     async getFanInfo({ commit }) {
       return await api
-        .get('/redfish/v1/Systems/system/PCIeDevices')
-        .then(({ data: { Members } }) => {
-          const promises = Members.map((item) => api.get(item['@odata.id']));
-          return api.all(promises);
-        })
+        .get('/redfish/v1/Systems/system')
+        .then(({ data: { PCIeDevices = [] } }) =>
+          PCIeDevices.map((member) => api.get(member['@odata.id']))
+        )
         .then((response) => commit('setFanInfo', response))
         .catch((error) => console.log(error));
     },
