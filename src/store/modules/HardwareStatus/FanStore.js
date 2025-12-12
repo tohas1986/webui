@@ -39,7 +39,7 @@ const FanStore = {
   actions: {
     async getFanInfo({ commit }) {
       return await api
-        .get('redfish/v1/Systems/system')
+        .get('redfish/v1/Chassis/2SFF_BP1_FRU')
         .then(({ data: { PCIeDevices = [] } }) =>
           PCIeDevices.map((member) => api.get(member['@odata.id']))
         )
