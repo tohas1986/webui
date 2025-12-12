@@ -1,5 +1,4 @@
 import api from '@/store/api';
-import i18n from '@/i18n';
 
 const FanStore = {
   namespaced: true,
