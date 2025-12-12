@@ -1,4 +1,5 @@
 import api from '@/store/api';
+import i18n from '@/i18n';
 
 const FanStore = {
   namespaced: true,
@@ -39,15 +40,12 @@ const FanStore = {
   actions: {
     async getFanInfo({ commit }) {
       return await api
-        .get('redfish/v1/Chassis/2SFF_BP1_FRU')
-        .then(({ data: { PCIeDevices = [] } }) =>
-          PCIeDevices.map((member) => api.get(member['@odata.id']))
-        )
-        .then((promises) => api.all(promises))
-        .then((response) => {
-          const data = response.map(({ data }) => data);
-          commit('setFanInfo', data);
+        .get('/redfish/v1/Systems/system/PCIeDevices')
+        .then(({ data: { Members } }) => {
+          const promises = Members.map((item) => api.get(item['@odata.id']));
+          return api.all(promises);
         })
+        .then((response) => commit('setFanInfo', response))
         .catch((error) => console.log(error));
     },
   },
