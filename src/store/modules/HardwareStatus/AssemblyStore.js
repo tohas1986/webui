@@ -25,7 +25,6 @@ const AssemblyStore = {
           id: Type,
           partNumber: PartNumber,
           serialNumber: Serial,
-          sparePartNumber: SparePartNumber,
           model: Model,
           name: Name,
           locationNumber: Location?.PartLocation?.ServiceLabel,
@@ -39,7 +38,7 @@ const AssemblyStore = {
     async getAssemblyInfo({ commit }) {
       return await api
       .get('/redfish/v1/Systems/system/Storage/1')
-        .then(({ data: { Drives = [] } }) =>
+          .then(({ data: { Drives = [] } }) =>
           Drives.map((member) => api.get(member['@odata.id']))
         )
         .then((promises) => api.all(promises))
