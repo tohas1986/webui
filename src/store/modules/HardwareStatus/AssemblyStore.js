@@ -37,7 +37,7 @@ const AssemblyStore = {
   actions: {
     async getAssemblyInfo({ commit }) {
       return await api
-       .get('/redfish/v1/Systems/system/Storage/1')
+        .get('/redfish/v1/Systems/system/Storage/1')
         .then(({ data: { Drives = [] } }) =>
           Drives.map((member) => api.get(member['@odata.id']))
         )
