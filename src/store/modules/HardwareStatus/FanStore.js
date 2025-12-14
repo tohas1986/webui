@@ -40,14 +40,15 @@ const FanStore = {
     async getFanInfo({ commit }) {
       return await api
         .get('/redfish/v1/Systems/system')
-        .then(({ data: { PCIeDevices = [] } }) => {
-          const promises = PCIeDevices.map((member) =>
-            api.get(member['@odata.id'])
-          );
-          return api.all(promises);
-        })
-        .then((response) => commit('setFanInfo', response))
-        .catch((error) => console.log(error));
+        .then(({ data: { PCIeDevices = [] } }) => 
+          PCIeDevices.map((member) => api.get(member['@odata.id'])),
+            )
+            .then((promises) => api.all(promises))
+            .then((response) => {
+              const data = response.map(({ data }) => data);
+              commit('setFanInfo', data);
+            })
+            .catch((error) => console.log(error));
     },
   },
 };
