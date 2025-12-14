@@ -13,19 +13,18 @@ const AssemblyStore = {
     setAssemblyInfo: (state, data) => {
       state.assemblies = data.map((assembly) => {
         const {
-          MemberId,
+          Type,
           PartNumber,
-          SerialNumber,
-          SparePartNumber,
+          Serial,
           Model,
           Name,
           Location,
           LocationIndicatorActive,
         } = assembly;
         return {
-          id: MemberId,
+          id: Type,
           partNumber: PartNumber,
-          serialNumber: SerialNumber,
+          serialNumber: Serial,
           sparePartNumber: SparePartNumber,
           model: Model,
           name: Name,
@@ -39,8 +38,15 @@ const AssemblyStore = {
   actions: {
     async getAssemblyInfo({ commit }) {
       return await api
-        .get('/redfish/v1/Systems/system/Storage')
-        .then(({ data }) => commit('setAssemblyInfo', data?.Assemblies))
+      .get('/redfish/v1/Systems/system/Storage/1')
+        .then(({ data: { Drives = [] } }) =>
+          Drives.map((member) => api.get(member['@odata.id']))
+        )
+        .then((promises) => api.all(promises))
+        .then((response) => {
+          const data = response.map(({ data }) => data);
+          commit('setAssemblyInfo', data);
+        })
         .catch((error) => console.log(error));
     },
     async updateIdentifyLedValue({ dispatch }, led) {
