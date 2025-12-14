@@ -15,7 +15,7 @@ const FanStore = {
           IndicatorLED,
           Location,
           Id,
-          Name,
+          Model,
           Status = {},
           PartNumber,
           Manufacturer,
@@ -29,7 +29,7 @@ const FanStore = {
           healthRollup: Status.HealthRollup,
           identifyLed: IndicatorLED,
           locationNumber: Location,
-          name: Name,
+          name: Model,
           manufacturer: Manufacturer,
           statusState: Status.State,
         };
@@ -40,9 +40,10 @@ const FanStore = {
     async getFanInfo({ commit }) {
       return await api
         .get('/redfish/v1/Systems/system')
-        .then(({ data: { PCIeDevices = [] } }) =>
-          PCIeDevices.map((member) => api.get(member['@odata.id']))
-        )
+        .then(({ data: { PCIeDevices = [] } }) => {
+          const promises = PCIeDevices.map((member) => api.get(member['@odata.id']))
+          return api.all(promises);
+        })
         .then((response) => commit('setFanInfo', response))
         .catch((error) => console.log(error));
     },
