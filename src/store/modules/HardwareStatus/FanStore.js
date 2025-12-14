@@ -42,13 +42,13 @@ const FanStore = {
         .get('/redfish/v1/Systems/system')
         .then(({ data: { PCIeDevices = [] } }) =>
           PCIeDevices.map((member) => api.get(member['@odata.id']))
-      )
-      .then((promises) => api.all(promises))
-      .then((response) => {
-        const data = response.map(({ data }) => data);
-        commit('setFanInfo', data);
-      })
-      .catch((error) => console.log(error));
+        )
+        .then((promises) => api.all(promises))
+        .then((response) => {
+          const data = response.map(({ data }) => data);
+          commit('setFanInfo', data);
+        })
+        .catch((error) => console.log(error));
     },
   },
 };
