@@ -95,7 +95,7 @@
               <dl>
                 <!-- Memory Size in kb -->
                 <dt>{{ $t('pageInventory.table.memorySize') }}:</dt>
-                <dd>{{ dataFormatter(item.memorySize) }} KB</dd>
+                <dd>{{ dataFormatter(item.memorySize) }} GB</dd>
               </dl>
               <dl>
                 <!-- Status-->
