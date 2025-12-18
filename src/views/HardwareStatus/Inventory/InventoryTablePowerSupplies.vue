@@ -59,15 +59,9 @@
                 <!-- Name -->
                 <dt>{{ $t('pageInventory.table.name') }}:</dt>
                 <dd>{{ dataFormatter(item.name) }}</dd>
-                <!-- Part number -->
-                <dt>{{ $t('pageInventory.table.partNumber') }}:</dt>
-                <dd>{{ dataFormatter(item.partNumber) }}</dd>
                 <!-- Serial number -->
                 <dt>{{ $t('pageInventory.table.serialNumber') }}:</dt>
                 <dd>{{ dataFormatter(item.serialNumber) }}</dd>
-                <!-- Spare part number -->
-                <dt>{{ $t('pageInventory.table.sparePartNumber') }}:</dt>
-                <dd>{{ dataFormatter(item.sparePartNumber) }}</dd>
                 <!-- Model -->
                 <dt>{{ $t('pageInventory.table.model') }}:</dt>
                 <dd>{{ dataFormatter(item.model) }}</dd>
@@ -81,12 +75,6 @@
                 <!-- Status Health rollup state -->
                 <dt>{{ $t('pageInventory.table.statusHealthRollup') }}:</dt>
                 <dd>{{ dataFormatter(item.statusHealth) }}</dd>
-                <!-- Efficiency percent -->
-                <dt>{{ $t('pageInventory.table.efficiencyPercent') }}:</dt>
-                <dd>{{ dataFormatter(item.efficiencyPercent) }}</dd>
-                <!-- Power input watts -->
-                <dt>{{ $t('pageInventory.table.powerInputWatts') }}:</dt>
-                <dd>{{ dataFormatter(item.powerInputWatts) }}</dd>
               </dl>
             </b-col>
           </b-row>
