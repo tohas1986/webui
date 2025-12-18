@@ -69,9 +69,6 @@
             </b-col>
             <b-col sm="6" xl="4">
               <dl>
-                <!-- Status state -->
-                <dt>{{ $t('pageInventory.table.statusState') }}:</dt>
-                <dd>{{ dataFormatter(item.statusState) }}</dd>
                 <!-- Status Health rollup state -->
                 <dt>{{ $t('pageInventory.table.statusHealthRollup') }}:</dt>
                 <dd>{{ dataFormatter(item.statusHealth) }}</dd>

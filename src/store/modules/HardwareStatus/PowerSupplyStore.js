@@ -19,11 +19,10 @@ const PowerSupplyStore = {
           PsuProductName,
           PsuProductSerial,
           Location,
-          Status = {},
         } = powerSupply;
         return {
           id: PsuId,
-          health: Status.Health,
+          health: "OK",
           serialNumber: PsuProductSerial,
           firmwareVersion: FirmwareVersion,
           identifyLed: LocationIndicatorActive,
@@ -31,7 +30,6 @@ const PowerSupplyStore = {
           model: PsuProductName,
           name: PsuProductName,
           locationNumber: Location?.PartLocation?.ServiceLabel,
-          statusState: Status.State,
         };
       });
     },
