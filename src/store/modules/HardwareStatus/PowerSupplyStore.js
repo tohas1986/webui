@@ -22,7 +22,7 @@ const PowerSupplyStore = {
         } = powerSupply;
         return {
           id: PsuId,
-          health: "OK",
+          health: 'OK',
           serialNumber: PsuProductSerial,
           firmwareVersion: FirmwareVersion,
           identifyLed: LocationIndicatorActive,
