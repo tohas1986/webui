@@ -33,7 +33,15 @@ const PowerControlStore = {
         )
         .catch((error) => console.log(error));
     },
-    async getPowerControl({ dispatch, commit }) {
+    async getPowerControl({ commit }) {
+      api
+        .get('/redfish/v1/Chassis/System_FRU/Sensors/Total_Power')
+        .then(({ data: { Reading } } = {}) => {
+          commit('setPowerConsumptionValue', Reading);
+        })
+        .catch((error) => console.log(error));
+    },
+    async getPowerControl_legacy({ dispatch, commit }) {
       const collection = await dispatch('getChassisCollection');
       if (!collection || collection.length === 0) return;
       return await api
@@ -48,7 +56,6 @@ const PowerControlStore = {
           const powerConsumption = powerControl[0].PowerConsumedWatts || null;
           commit('setPowerCapUri', powerCapUri);
           commit('setPowerCapValue', powerCap);
-          commit('setPowerConsumptionValue', powerConsumption);
         })
         .catch((error) => {
           console.log('Power control', error);
