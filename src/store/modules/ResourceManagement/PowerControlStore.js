@@ -53,7 +53,7 @@ const PowerControlStore = {
           const powerCapUri = powerControl[0]['@odata.id'];
           const powerCap = powerControl[0].PowerLimit.LimitInWatts;
           // If system is powered off, power consumption does not exist in the PowerControl
-          const powerConsumption = powerControl[0].PowerConsumedWatts || null;
+          //const powerConsumption = powerControl[0].PowerConsumedWatts || null;
           commit('setPowerCapUri', powerCapUri);
           commit('setPowerCapValue', powerCap);
         })
