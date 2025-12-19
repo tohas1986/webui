@@ -229,7 +229,7 @@ export default {
               : this.$t('global.action.disable'),
             okVariant: 'danger',
             cancelTitle: this.$t('global.action.cancel'),
-          },
+          }
         )
         .then((dhcpEnableConfirmed) => {
           if (dhcpEnableConfirmed) {
