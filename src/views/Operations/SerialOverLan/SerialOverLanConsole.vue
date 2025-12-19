@@ -74,7 +74,7 @@ export default {
     connectionStatus() {
       return this.serverStatus === 'on'
         ? this.$t('pageSerialOverLan.connected')
-        : this.$t('pageSerialOverLan.disconnected');
+        : this.$t('pageSerialOverLan.connected');
     },
   },
   created() {
