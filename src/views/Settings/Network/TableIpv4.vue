@@ -69,9 +69,9 @@
 
 <script>
 import BVToastMixin from '@/components/Mixins/BVToastMixin';
-import IconAdd from '@/components/icons/IconAdd';
+import IconAdd from '@carbon/icons-vue/es/add--alt/20';
 import IconEdit from '@carbon/icons-vue/es/edit/20';
-import IconTrashcan from '@/components/icons/IconTrashcan';
+import IconTrashcan from '@carbon/icons-vue/es/trash-can/20';
 import LoadingBarMixin from '@/components/Mixins/LoadingBarMixin';
 import PageSection from '@/components/Global/PageSection';
 import TableRowAction from '@/components/Global/TableRowAction';
