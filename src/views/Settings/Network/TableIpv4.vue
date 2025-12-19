@@ -1,72 +1,77 @@
 <template>
-  <page-section :section-title="$t('pageNetwork.ipv4')">
-    <b-row class="mb-4">
-      <b-col lg="2" md="6">
-        <dl>
-          <dt>{{ $t('pageNetwork.dhcp') }}</dt>
-          <dd>
-            <b-form-checkbox
-              id="dhcpSwitch"
-              v-model="dhcpEnabledState"
-              data-test-id="networkSettings-switch-dhcpEnabled"
-              switch
-              @change="changeDhcpEnabledState"
-            >
-              <span v-if="dhcpEnabledState">
-                {{ $t('global.status.enabled') }}
-              </span>
-              <span v-else>{{ $t('global.status.disabled') }}</span>
-            </b-form-checkbox>
-          </dd>
-        </dl>
-      </b-col>
-    </b-row>
-    <b-row>
-      <b-col>
-        <h3 class="h5">
-          {{ $t('pageNetwork.ipv4Addresses') }}
-        </h3>
-      </b-col>
-      <b-col class="text-right">
-        <b-button variant="primary" @click="initAddIpv4Address()">
-          <icon-add />
-          {{ $t('pageNetwork.table.addIpv4Address') }}
-        </b-button>
-      </b-col>
-    </b-row>
-    <b-table
-      responsive="md"
-      hover
-      :fields="ipv4TableFields"
-      :items="form.ipv4TableItems"
-      :empty-text="$t('global.table.emptyMessage')"
-      class="mb-0"
-      show-empty
-    >
-      <template #cell(actions)="{ item, index }">
-        <table-row-action
-          v-for="(action, actionIndex) in item.actions"
-          :key="actionIndex"
-          :value="action.value"
-          :title="action.title"
-          :enabled="action.enabled"
-          @click-table-action="onIpv4TableAction(action, $event, index)"
+  <div class="section-container">
+    <page-section>
+      <h3>{{ $t('pageNetwork.ipv4') }}</h3>
+      <b-row class="mb-4">
+        <b-col lg="2" md="6">
+          <dl>
+            <dt>{{ $t('pageNetwork.dhcp') }}</dt>
+            <dd>
+              <b-form-checkbox
+                id="dhcpSwitch"
+                v-model="dhcpEnabledState"
+                data-test-id="networkSettings-switch-dhcpEnabled"
+                switch
+                @change="changeDhcpEnabledState"
+              >
+                <span v-if="dhcpEnabledState">
+                  {{ $t('global.status.enabled') }}
+                </span>
+                <span v-else>{{ $t('global.status.disabled') }}</span>
+              </b-form-checkbox>
+            </dd>
+          </dl>
+        </b-col>
+      </b-row>
+      <b-row class="btn-wrapper">
+        <b-col>
+          <h3>
+            {{ $t('pageNetwork.ipv4Addresses') }}
+          </h3>
+        </b-col>
+        <b-col class="btn-block">
+          <b-button @click="initAddIpv4Address()">
+            {{ $t('pageNetwork.table.addIpv4Address') }}
+            <icon-add />
+          </b-button>
+        </b-col>
+      </b-row>
+      <div class="table-container">
+        <b-table
+          responsive="md"
+          hover
+          :fields="ipv4TableFields"
+          :items="form.ipv4TableItems"
+          :empty-text="$t('global.table.emptyMessage')"
+          class="mb-0"
+          show-empty
         >
-          <template #icon>
-            <icon-edit v-if="action.value === 'edit'" />
-            <icon-trashcan v-if="action.value === 'delete'" />
+          <template #cell(actions)="{ item, index }">
+            <table-row-action
+              v-for="(action, actionIndex) in filteredActions(item)"
+              :key="actionIndex"
+              :value="action.value"
+              :title="action.title"
+              :enabled="action.enabled"
+              @click-table-action="onIpv4TableAction(action, $event, index)"
+            >
+              <template #icon>
+                <icon-edit v-if="action.value === 'edit'" />
+                <icon-trashcan v-if="action.value === 'delete'" />
+              </template>
+            </table-row-action>
           </template>
-        </table-row-action>
-      </template>
-    </b-table>
-  </page-section>
+        </b-table>
+      </div>
+    </page-section>
+  </div>
 </template>
 
 <script>
 import BVToastMixin from '@/components/Mixins/BVToastMixin';
-import IconAdd from '@carbon/icons-vue/es/add--alt/20';
+import IconAdd from '@/components/icons/IconAdd';
 import IconEdit from '@carbon/icons-vue/es/edit/20';
-import IconTrashcan from '@carbon/icons-vue/es/trash-can/20';
+import IconTrashcan from '@/components/icons/IconTrashcan';
 import LoadingBarMixin from '@/components/Mixins/LoadingBarMixin';
 import PageSection from '@/components/Global/PageSection';
 import TableRowAction from '@/components/Global/TableRowAction';
@@ -126,6 +131,9 @@ export default {
   },
   computed: {
     ...mapState('network', ['ethernetData']),
+    selectedInterface() {
+      return this.$store.getters['network/selectedInterfaceIndex'];
+    },
     dhcpEnabledState: {
       get() {
         return this.$store.getters['network/globalNetworkSettings'][
@@ -135,6 +143,15 @@ export default {
       set(newValue) {
         return newValue;
       },
+    },
+    filteredActions() {
+      return (item) => {
+        if (item.AddressOrigin === 'DHCP') {
+          return item.actions.filter((action) => action.value !== 'delete');
+        } else {
+          return item.actions;
+        }
+      };
     },
   },
   watch: {
@@ -212,7 +229,7 @@ export default {
               : this.$t('global.action.disable'),
             okVariant: 'danger',
             cancelTitle: this.$t('global.action.cancel'),
-          }
+          },
         )
         .then((dhcpEnableConfirmed) => {
           if (dhcpEnableConfirmed) {

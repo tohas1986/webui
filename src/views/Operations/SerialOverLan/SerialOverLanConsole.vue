@@ -69,7 +69,7 @@ export default {
       return this.$store.getters['global/serverStatus'];
     },
     serverStatusIcon() {
-      return this.serverStatus === 'on' ? 'success' : 'danger';
+      return this.serverStatus === 'on' ? 'success' : 'success';
     },
     connectionStatus() {
       return this.serverStatus === 'on'
