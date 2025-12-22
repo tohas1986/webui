@@ -73,10 +73,10 @@ const VirtualMediaStore = {
           console.log('Virtual Media:', error);
         });
     },
-    async mountImage({ data }) {
+    async mountImage(_, { id, data }) {
       return await api
         .post(
-          `/redfish/v1/Managers/bmc/VirtualMedia/Slot_2/Actions/VirtualMedia.InsertMedia`,
+          `/redfish/v1/Managers/bmc/VirtualMedia/${id}/Actions/VirtualMedia.InsertMedia`,
           data
         )
         .catch((error) => {
@@ -84,10 +84,10 @@ const VirtualMediaStore = {
           throw new Error();
         });
     },
-    async unmountImage() {
+    async unmountImage(_, id) {
       return await api
         .post(
-          `/redfish/v1/Managers/bmc/VirtualMedia/Slot_2/Actions/VirtualMedia.EjectMedia`
+          `/redfish/v1/Managers/bmc/VirtualMedia/${id}/Actions/VirtualMedia.EjectMedia`
         )
         .catch((error) => {
           console.log('Unmount image:', error);
