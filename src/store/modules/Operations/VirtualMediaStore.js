@@ -32,11 +32,7 @@ const VirtualMediaStore = {
   },
   actions: {
     async getData({ commit }) {
-      const virtualMediaListEnabled =
-        process.env.VUE_APP_VIRTUAL_MEDIA_LIST_ENABLED === 'true'
-          ? true
-          : true;
-      if (!virtualMediaListEnabled) {
+      if (0) {
         const device = {
           id: i18n.t('pageVirtualMedia.defaultDeviceName'),
           websocket: '/vm/0/0',
