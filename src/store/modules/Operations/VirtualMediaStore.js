@@ -32,18 +32,6 @@ const VirtualMediaStore = {
   },
   actions: {
     async getData({ commit }) {
-      if (0) {
-        const device = {
-          id: i18n.t('pageVirtualMedia.defaultDeviceName'),
-          websocket: '/vm/0/0',
-          file: null,
-          transferProtocolType: transferProtocolType.OEM,
-          isActive: false,
-        };
-        commit('setProxyDevicesData', [device]);
-        return;
-      }
-
       return await api
         .get('/redfish/v1/Managers/bmc/VirtualMedia')
         .then((response) =>
