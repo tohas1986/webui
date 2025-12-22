@@ -1,5 +1,4 @@
 import api from '@/store/api';
-import i18n from '@/i18n';
 
 const transferProtocolType = {
   CIFS: 'CIFS',
@@ -77,7 +76,7 @@ const VirtualMediaStore = {
     async mountImage({ data }) {
       return await api
         .post(
-          `/redfish/v1/Managers/bmc/VirtualMedia/USB0/Actions/VirtualMedia.InsertMedia`,
+          `/redfish/v1/Managers/bmc/VirtualMedia/Slot_2/Actions/VirtualMedia.InsertMedia`,
           data
         )
         .catch((error) => {
@@ -88,7 +87,7 @@ const VirtualMediaStore = {
     async unmountImage() {
       return await api
         .post(
-          `/redfish/v1/Managers/bmc/VirtualMedia/USB0/Actions/VirtualMedia.EjectMedia`
+          `/redfish/v1/Managers/bmc/VirtualMedia/Slot_2/Actions/VirtualMedia.EjectMedia`
         )
         .catch((error) => {
           console.log('Unmount image:', error);
