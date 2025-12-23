@@ -34,7 +34,6 @@ import StatusIcon from '@/components/Global/StatusIcon';
 export default {
   name: 'SerialOverLanConsole',
   components: {
-    Alert,
     IconLaunch,
     StatusIcon,
   },
