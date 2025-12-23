@@ -1,20 +1,6 @@
 <template>
   <div :class="isFullWindow ? 'full-window-container' : 'terminal-container'">
     <b-row class="d-flex">
-      <b-col sm="4" md="6">
-        <alert
-          v-if="serverStatus === 'on' ? false : true"
-          variant="warning"
-          :small="true"
-          class="mt-4"
-        >
-          <p class="col-form-label">
-            {{ $t('pageSerialOverLan.alert.disconnectedAlertMessage') }}
-          </p>
-        </alert>
-      </b-col>
-    </b-row>
-    <b-row class="d-flex">
       <b-col class="d-flex flex-column justify-content-end">
         <dl class="mb-2" sm="6" md="6">
           <dt class="d-inline font-weight-bold mr-1">

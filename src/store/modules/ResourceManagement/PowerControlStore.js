@@ -61,12 +61,12 @@ const PowerControlStore = {
           console.log('Power control', error);
         });
     },
-    async setPowerControl({ state }, powerCapValue) {
+    async setPowerControl(powerCapValue) {
       const data = {
         PowerControl: [{ PowerLimit: { LimitInWatts: powerCapValue } }],
       };
       return await api
-        .patch(state.powerCapUri, data)
+        .patch('/redfish/v1/Chassis/2SFF_BP1_FRU/Power', data)
         .then(() =>
           i18n.t('pageServerPowerOperations.toast.successSaveSettings')
         )
