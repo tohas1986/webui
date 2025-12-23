@@ -24,7 +24,6 @@
 </template>
 
 <script>
-import Alert from '@/components/Global/Alert';
 import { AttachAddon } from 'xterm-addon-attach';
 import { FitAddon } from 'xterm-addon-fit';
 import { Terminal } from 'xterm';
