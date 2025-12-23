@@ -26,7 +26,7 @@ const PowerControlStore = {
     },
     async getChassisCollection() {
       return await api
-        .get('/redfish/v1/')
+        .get('/redfish/v1/Chassis/2SFF_BP1_FRU/Power')
         .then((response) => api.get(response.data.Chassis['@odata.id']))
         .then(({ data: { Members } }) =>
           Members.map((member) => member['@odata.id'])
