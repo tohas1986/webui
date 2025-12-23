@@ -61,7 +61,7 @@ const PowerControlStore = {
           console.log('Power control', error);
         });
     },
-    async setPowerControl({ state }, powerCapValue) {
+    async setPowerControl(powerCapValue) {
       const data = {
         PowerControl: [{ PowerLimit: { LimitInWatts: powerCapValue } }],
       };
