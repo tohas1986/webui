@@ -143,7 +143,7 @@ export default {
   created() {
     this.startLoader();
     this.$store
-      .dispatch('powerControl/getPowerControl')
+      .dispatch('powerControl/getPowerControl_legacy')
       .finally(() => this.endLoader());
   },
   validations: {
