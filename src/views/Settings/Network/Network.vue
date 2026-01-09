@@ -87,10 +87,10 @@ export default {
     ...mapState('network', ['ethernetData']),
     tabTitleMap() {
       return {
-        'eth0': 'Shared',
-        'eth1': 'Dedicated'
+        eth0: 'Shared',
+        eth1: 'Dedicated',
       };
-    }
+    },
   },
   watch: {
     ethernetData() {
