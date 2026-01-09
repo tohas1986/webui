@@ -16,7 +16,7 @@
               <b-tab
                 v-for="(data, index) in ethernetData"
                 :key="data.Id"
-                :title="data.Id"
+                :title="tabTitleMap[data.Id] || data.Id"
                 @click="getTabIndex(index)"
               >
                 <!-- Interface settings -->
@@ -85,6 +85,12 @@ export default {
   },
   computed: {
     ...mapState('network', ['ethernetData']),
+    tabTitleMap() {
+      return {
+        'eth0': 'Shared',
+        'eth1': 'Dedicated'
+      };
+    }
   },
   watch: {
     ethernetData() {
