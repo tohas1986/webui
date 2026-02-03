@@ -209,14 +209,14 @@ const routes = [
           title: i18n.t('appPageTitle.kvm'),
         },
       },
-      {
-        path: '/settings/fan-control',
-        name: 'FanControl',
-        component: FanSettings,
-        meta: {
-          title: 'Fan Control',
-        }
-      },
+      //{
+      //  path: '/settings/fan-control',
+      //  name: 'FanControl',
+      //  component: FanSettings,
+      //  meta: {
+      //    title: 'Fan Control',
+      //  }
+      //},
       {
         path: '/operations/firmware',
         name: 'firmware',
