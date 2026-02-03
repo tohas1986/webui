@@ -133,6 +133,11 @@ const AppNavigationMixin = {
               label: this.$t('appNavigation.powerRestorePolicy'),
               route: '/settings/power-restore-policy',
             },
+            {
+              id: 'fan-control',
+              label: this.$t('appNavigation.fanControl'),
+              route: '/settings/fan-control',
+            },
           ],
         },
         {
