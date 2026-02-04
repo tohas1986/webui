@@ -134,9 +134,9 @@ const AppNavigationMixin = {
               route: '/settings/power-restore-policy',
             },
             {
-              id: 'fan-control',
-              label: this.$t('appNavigation.fanControl'),
-              route: '/settings/fan-control',
+              id: 'ThermalControl',
+              label: this.$t('appNavigation.ipmiEntity.thermalControl'),
+              route: '/settings/ThermalControl',
             },
           ],
         },

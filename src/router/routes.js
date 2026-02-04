@@ -28,8 +28,8 @@ import SerialOverLan from '@/views/Operations/SerialOverLan';
 import SerialOverLanConsole from '@/views/Operations/SerialOverLan/SerialOverLanConsole';
 import ServerPowerOperations from '@/views/Operations/ServerPowerOperations';
 import Certificates from '@/views/SecurityAndAccess/Certificates';
-//import FanSettings from './FanSettings.vue';
 import VirtualMedia from '@/views/Operations/VirtualMedia';
+import ThermalControl from '@/views/Settings/ThermalControl';
 import Power from '@/views/ResourceManagement/Power';
 import i18n from '@/i18n';
 
@@ -209,14 +209,6 @@ const routes = [
           title: i18n.t('appPageTitle.kvm'),
         },
       },
-      //{
-      //  path: '/settings/fan-control',
-      //  name: 'FanControl',
-      //  component: FanSettings,
-      //  meta: {
-      //    title: 'Fan Control',
-      //  }
-      //},
       {
         path: '/operations/firmware',
         name: 'firmware',
@@ -231,6 +223,14 @@ const routes = [
         component: Network,
         meta: {
           title: i18n.t('appPageTitle.network'),
+        },
+      },
+      {
+        path: '/settings/ThermalControl',
+        name: 'thermal-control',
+        component: ThermalControl,
+        meta: {
+          title: 'appPageTitle.thermalControl',
         },
       },
       {

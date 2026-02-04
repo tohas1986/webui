@@ -129,6 +129,7 @@
     "certificates": "@:appPageTitle.certificates",
     "virtualMedia": "@:appPageTitle.virtualMedia",
     "power": "@:appPageTitle.power",
+    "thermalControl": "Управление охлаждением",
     "keyClear": "@:appPageTitle.keyClear"
   },
   "appPageTitle": {
@@ -159,7 +160,47 @@
     "serverPowerOperations": "Управление питанием сервера",
     "certificates": "Сертификаты",
     "virtualMedia": "Виртуальные носители",
+    "thermalControl": "Управление охлаждением",
     "keyClear": "Удаление ключей"
+  },
+  "pageThermalControl": {
+    "temperature": {
+      "title": "Режим",
+      "heatmap": "Карта нагрева",
+      "reading": "Чтение",
+      "caution": "Предупреждение",
+      "threshold": "Отсечка",
+      "fanSpeedAdjustment": "Определение скорости вращения",
+      "adjustFanSpeedMode": "Определение режима",
+      "silent": "Тихий",
+      "balanced": "Сбалансированный",
+      "powerful": "Производительный",
+      "standard": "Стандартный",
+      "auto": "Авто",
+      "custom": "Пользовательский",
+      "speedLevel": "Уровень скорости",
+      "toast": {
+        "successSaveFanSettings": "Успешно сохранена конфигурация. Подождите 2 минуты для обновления",
+        "erroeSaveFanSettings": "Ошибка установки режима",
+        "Confirmtitlefan": "Установка скорости вращения",
+        "ConfirmFanContext": "Изменения в этом разделе могут повредить оборудование. Вы точно уверены?"
+      }
+    },
+    "fans": {
+      "title": "Информация о вентиляторах",
+      "summary": "Общее",
+      "total": "Всего",
+      "present": "Наличие",
+      "details": "Детали",
+      "fan": "Вентилятор",
+      "location": "Расположение",
+      "F": "Front",
+      "R": "Rear",
+      "status": "Статус",
+      "model": "Модель",
+      "rotationSpeed": "Скорость вращения",
+      "dutyRatio": "Коэф-т ШИМ"
+    }
   },
   "pageChangePassword": {
     "changePassword": "Изменить пароль",

@@ -129,6 +129,7 @@
     "certificates": "@:appPageTitle.certificates",
     "virtualMedia": "@:appPageTitle.virtualMedia",
     "power": "@:appPageTitle.power",
+    "thermalControl": "Thermal Control",
     "keyClear": "@:appPageTitle.keyClear"
   },
   "appPageTitle": {
@@ -159,6 +160,7 @@
     "serverPowerOperations": "Server power operations",
     "certificates": "Certificates",
     "virtualMedia": "Virtual media",
+    "thermalControl": "Thermal Control",
     "keyClear": "Key clear"
   },
   "pageChangePassword": {
@@ -368,6 +370,45 @@
       "verifySwitchMessage": "Refresh the application to verify the running and backup images switched.",
       "verifyUpdate": "Verify update",
       "verifyUpdateMessage": "Refresh the application to verify firmware updated successfully"
+    }
+  },
+  "pageThermalControl": {
+    "temperature": {
+      "title": "Fan Mode",
+      "heatmap": "Heatmap",
+      "reading": "Reading",
+      "caution": "Caution",
+      "threshold": "Threshold",
+      "fanSpeedAdjustment": "Fan Speed Adjustment",
+      "adjustFanSpeedMode": "Adjust Fan Speed Mode",
+      "silent": "Silent",
+      "balanced": "Balanced",
+      "powerful": "Powerful",
+      "standard": "Standard",
+      "auto": "Auto",
+      "custom": "Custom",
+      "speedLevel": "Speed Level",
+      "toast": {
+        "successSaveFanSettings": "Successfully saved the fan speed configuration. Please wait for 2 minutes for the modification to take effect before refreshing the page to obtain the latest fan information",
+        "erroeSaveFanSettings": "Error updating fan speed settings.",
+        "Confirmtitlefan": "Set fan speed mode",
+        "ConfirmFanContext": "When setting the fan speed mode, please operate with caution to ensure understanding of hardware specifications and balancing cooling and performance requirements. Are you sure to proceed with this operation ?"
+      }
+    },
+    "fans": {
+      "title": "Fans Information",
+      "summary": "Summary",
+      "total": "Total",
+      "present": "Present",
+      "details": "Details",
+      "fan": "Fan",
+      "location": "Location",
+      "F": "Front",
+      "R": "Rear",
+      "status": "Status",
+      "model": "Model",
+      "rotationSpeed": "Rotation speed",
+      "dutyRatio": "Duty ratio"
     }
   },
   "pageInventory": {
