@@ -182,7 +182,7 @@ export default {
       fanFields: [
         { key: 'id', label: this.$t('pageFanSettings.fanId'), sortable: true },
         { key: 'name', label: this.$t('pageFanSettings.fanName'), sortable: true },
-        { key: 'speed', label: this.$t('pageFanSettings.currentSpeed'), sortable: true },
+        { key: 'speed', label: this.$t('pageFanSettings.currentSpeed'), sortable: true }
         { key: 'pwm', label: this.$t('pageFanSettings.pwmControl'), sortable: true }
       ]
     };
