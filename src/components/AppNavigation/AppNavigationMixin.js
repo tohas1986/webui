@@ -135,7 +135,7 @@ const AppNavigationMixin = {
             },
             {
               id: 'ThermalControl',
-              label: this.$t('appNavigation.ipmiEntity.thermalControl'),
+              label: this.$t('appNavigation.thermalControl'),
               route: '/settings/ThermalControl',
             },
           ],

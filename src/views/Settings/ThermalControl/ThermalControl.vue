@@ -6,7 +6,7 @@
       border-variant="light"
       @click="hideecharsinfo"
     >
-      <template v-if="COMPANY_NAME === 'egs'">
+      <template v-if="true">
         <b-tabs
           :value="activeTab"
           content-class="mt-4"
