@@ -142,7 +142,7 @@ export default {
     async getFanSpeedSettings() {
       this.startLoader();
       return await this.$store
-        .dispatch('ThermalControl/getFanSpeedSettings')
+        .dispatch('thermal/getFanSpeedSettings')
         .finally(() => this.$root.$emit('thermal-temperature-complete'));
     },
 
@@ -171,7 +171,7 @@ export default {
       };
 
       this.$store
-        .dispatch('ThermalControl/updateFanSpeedSettings', req)
+        .dispatch('thermal/updateFanSpeedSettings', req)
         .then((success) => {
           this.successToast(success);
         })
