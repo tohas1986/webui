@@ -32,6 +32,7 @@ import KeyClearStore from './modules/Operations/KeyClearStore';
 import WebSocketPlugin from './plugins/WebSocketPlugin';
 import DateTimeStore from './modules/Settings/DateTimeStore';
 import VirtualMediaStore from './modules/Operations/VirtualMediaStore';
+import ThermalControlStore from './modules/Settings/ThermalControl';
 
 Vue.use(Vuex);
 
@@ -69,6 +70,7 @@ export default new Vuex.Store({
     policies: PoliciesStore,
     factoryReset: FactoryResetStore,
     keyClear: KeyClearStore,
+    thermal: ThermalControlStore,
   },
   plugins: [WebSocketPlugin],
 });
