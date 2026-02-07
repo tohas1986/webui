@@ -84,9 +84,10 @@ export default {
       this.$root.$on('thermal-fan-complete', () => resolve());
     });
     let setloaderlist = [fanPromise];
-    if (true) {
-      setloaderlist.push(tempPromise);
-    }
+    setloaderlist.push(tempPromise);
+    //if (true) {
+    //  setloaderlist.push(tempPromise);
+    //}
     Promise.all(setloaderlist).finally(() => {
       this.endLoader();
     });
