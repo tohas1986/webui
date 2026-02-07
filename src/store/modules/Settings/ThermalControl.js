@@ -138,7 +138,7 @@ const ThermalControlStore = {
                 const { Oem, ReadingCelsius } = val;
                 if (Oem && ReadingCelsius != null) {
                   let flag = false;
-                  let healthyLevel = 0;
+                  //let healthyLevel = 0;
 
                   for (let i = 0; i < dataArray.length; i++) {
                     // 如果点位相同
@@ -172,7 +172,7 @@ const ThermalControlStore = {
                           fixed: true,
                         };
                         flag = true;
-                        healthyLevel = newPriority;
+                        //healthyLevel = newPriority;
                       } else if (newPriority === currentPriority) {
                         // 如果 Health 优先级相同，则比较 ReadingCelsius
                         if (dataArray[i][3] < ReadingCelsius) {
@@ -195,7 +195,7 @@ const ThermalControlStore = {
                             fixed: true,
                           };
                           flag = true;
-                          healthyLevel = newPriority;
+                          //healthyLevel = newPriority;
                         }
                       }
                     }
