@@ -236,7 +236,7 @@ const ThermalControlStore = {
 
     getFanSpeedSettings({ commit }) {
       return api
-        .get('/redfish/v1/Chassis/1/Thermal/FanSpeedSetting')
+        .get('/redfish/v1/Managers/bmc')
         .then((res) => {
           commit('setFanSpeedSettings', res.data);
         })
@@ -246,7 +246,7 @@ const ThermalControlStore = {
     },
     updateFanSpeedSettings({ dispatch }, req) {
       return api
-        .patch('/redfish/v1/Chassis/1/Thermal/FanSpeedSetting', req)
+        .patch('/redfish/v1/Managers/bmc', req)
         .then(() => {
           dispatch('getFanSpeedSettings');
           return i18n.t(
