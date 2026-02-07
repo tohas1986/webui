@@ -104,7 +104,7 @@ export default {
     return {
       searchTotalFilteredRows: 0,
       expandRowLabel: expandRowLabel,
-      is2u2: process.env.VUE_APP_COMPANY_NAME == 'egs' ? false : true,
+      is2u2: process.env.VUE_APP_COMPANY_NAME == 'egs' ? true : true,
     };
   },
   computed: {

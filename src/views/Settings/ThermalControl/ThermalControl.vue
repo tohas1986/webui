@@ -84,7 +84,7 @@ export default {
       this.$root.$on('thermal-fan-complete', () => resolve());
     });
     let setloaderlist = [fanPromise];
-    if (this.COMPANY_NAME === 'egs') {
+    if (true) {
       setloaderlist.push(tempPromise);
     }
     Promise.all(setloaderlist).finally(() => {
