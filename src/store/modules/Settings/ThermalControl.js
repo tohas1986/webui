@@ -57,7 +57,7 @@ const ThermalControlStore = {
             if (!fanMap.has(fanNumber)) {
               fanMap.set(fanNumber, {
                 name: `FAN${fanNumber}`,
-                location: this.getFanLocation(fanNumber),
+                location: getFanLocation(fanNumber),
                 status: '',
                 model: '',
                 speed: 0,
@@ -71,7 +71,7 @@ const ThermalControlStore = {
                 fan.MemberId?.match(/FAN\d+_([FR])_Speed/) ||
                 fan.Name.match(/FAN\d+\s+([FR])\s+Speed/);
               if (directionMatch) {
-                fanInfo.location = `${this.getFanLocation(fanNumber)} (${
+                fanInfo.location = `${getFanLocation(fanNumber)} (${
                   directionMatch[1]
                 })`;
               }
@@ -121,7 +121,7 @@ const ThermalControlStore = {
     },
 
     // Вспомогательный метод для определения местоположения вентилятора
-    getFanLocation(fanNumber) {
+    const getFanLocation = (fanNumber) => {
       const locationMap = {
         1: 'Front',
         2: 'Front',
@@ -129,7 +129,7 @@ const ThermalControlStore = {
         4: 'Rear',
       };
       return locationMap[fanNumber] || `Position ${fanNumber}`;
-    },
+    };
 
     async getThermalInfo({ commit }) {
       const sensors = await api
