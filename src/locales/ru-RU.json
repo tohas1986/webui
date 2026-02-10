@@ -486,6 +486,7 @@
       "totalSystemMemoryGiB": "Общий объём памяти",
       "totalThreads": "Общее количество потоков",
       "uuid": "UUID",
+      "total": "Всего",
       "version": "Версия"
     },
     "toast": {

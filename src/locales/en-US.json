@@ -486,6 +486,7 @@
       "totalSystemMemoryGiB": "Total system memory",
       "totalThreads": "Total threads",
       "uuid": "UUID",
+      "total": "Total",
       "version": "Version"
     },
     "toast": {

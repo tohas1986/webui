@@ -23,9 +23,7 @@
         <b-thead class="th-lightblue">
           <b-tr>
             <b-th>{{ $t('pageThermalControl.fans.fan') }}</b-th>
-            <b-th v-if="fanData[0] && fanData[0].val.length > 1">{{
-              $t('pageThermalControl.fans.location')
-            }}</b-th>
+            <b-th>{{ $t('pageThermalControl.fans.location') }}</b-th>
             <b-th>{{ $t('pageThermalControl.fans.status') }}</b-th>
             <b-th v-if="is2u2">{{ $t('pageThermalControl.fans.model') }}</b-th>
             <b-th>{{ $t('pageThermalControl.fans.rotationSpeed') }}</b-th>
@@ -34,39 +32,21 @@
         </b-thead>
         <b-tbody>
           <b-tr v-if="fanData.length == 0">
-            <b-td :colspan="5" class="text-center">{{
+            <b-td :colspan="6" class="text-center">{{
               $t('global.table.emptyMessage')
             }}</b-td>
           </b-tr>
-          <template v-for="(item, index) in fanData">
+          <template v-for="(fan, index) in fanData">
             <b-tr :key="index" :class="{ stripeMe: index % 2 == 1 }">
-              <b-td :rowspan="item.val.length">{{ item.name }}</b-td>
-              <b-td v-if="fanData[0].val.length > 1">{{
-                $t(`pageThermalControl.fans.${item.val[0].Location}`)
-              }}</b-td>
-              <b-td
-                ><status-icon :status="statusIcon(item.val[0].Status)" />
-                {{ item.val[0].Status | statusFilter }}</b-td
-              >
-              <b-td v-if="is2u2">{{ item.val[0].Model }}</b-td>
-              <b-td>{{ item.val[0].speed1 }} RPM</b-td>
-              <b-td>{{ item.val[0].speed2 }} %</b-td>
-            </b-tr>
-            <b-tr
-              v-for="(ele, idx) in item.val.length - 1"
-              :key="index + '-' + idx"
-              :class="{ stripeMe: index % 2 == 1 }"
-            >
-              <b-td v-if="fanData[0].val.length > 1">{{
-                $t(`pageThermalControl.fans.${item.val[ele].Location}`)
-              }}</b-td>
-              <b-td
-                ><status-icon :status="statusIcon(item.val[ele].Status)" />
-                {{ item.val[ele].Status | statusFilter }}</b-td
-              >
-              <b-td v-if="is2u2">{{ item.val[ele].Model }}</b-td>
-              <b-td>{{ item.val[ele].speed1 }} RPM</b-td>
-              <b-td>{{ item.val[ele].speed2 }} %</b-td>
+              <b-td>{{ fan.name }}</b-td>
+              <b-td>{{ fan.location }}</b-td>
+              <b-td>
+                <status-icon :status="statusIcon(fan.status)" />
+                {{ fan.status | statusFilter }}
+              </b-td>
+              <b-td v-if="is2u2">{{ fan.model }}</b-td>
+              <b-td>{{ fan.speed }} RPM</b-td>
+              <b-td>{{ fan.dutyRatio }} %</b-td>
             </b-tr>
           </template>
         </b-tbody>
@@ -77,9 +57,7 @@
 
 <script>
 import PageSection from '@/components/Global/PageSection';
-
 import StatusIcon from '@/components/Global/StatusIcon';
-
 import DataFormatterMixin from '@/components/Mixins/DataFormatterMixin';
 import TableSortMixin from '@/components/Mixins/TableSortMixin';
 import TableRowExpandMixin, {
@@ -95,6 +73,7 @@ export default {
         {
           OK: i18n.t('global.status.ok'),
           Warning: i18n.t('global.status.warning'),
+          Critical: i18n.t('global.status.critical'),
         }[value] || i18n.t('global.status.absent')
       );
     },
@@ -122,6 +101,14 @@ export default {
     });
   },
   methods: {
+    statusIcon(status) {
+      const statusMap = {
+        OK: 'success',
+        Warning: 'warning',
+        Critical: 'danger',
+      };
+      return statusMap[status] || 'secondary';
+    },
     sortCompare(a, b, key) {
       if (key === 'health') {
         return this.sortStatus(a, b, key);
@@ -130,17 +117,10 @@ export default {
     onFiltered(filteredItems) {
       this.searchTotalFilteredRows = filteredItems.length;
     },
-    toggleIdentifyLedValue(row) {
-      this.$store
-        .dispatch('memory/updateIdentifyLedValue', {
-          uri: row.uri,
-          identifyLed: row.identifyLed,
-        })
-        .catch(({ message }) => this.errorToast(message));
-    },
   },
 };
 </script>
+
 <style lang="scss" scoped>
 .info-con {
   display: flex;
