@@ -46,6 +46,17 @@ const ThermalControlStore = {
       return api
         .get('/redfish/v1/Chassis/System_FRU/Thermal')
         .then((res) => {
+          // Вспомогательный метод для определения местоположения вентилятора
+          const getFanLocation = (fanNumber) => {
+            const locationMap = {
+              1: 'Front',
+              2: 'Front',
+              3: 'Rear',
+              4: 'Rear',
+            };
+            return locationMap[fanNumber] || `Position ${fanNumber}`;
+          };
+          
           const fans = res.data.Fans;
           const fanMap = new Map();
           // Группировка данных по вентиляторам
@@ -119,17 +130,6 @@ const ThermalControlStore = {
           throw error;
         });
     },
-
-    // Вспомогательный метод для определения местоположения вентилятора
-    const getFanLocation = (fanNumber) => {
-      const locationMap = {
-        1: 'Front',
-        2: 'Front',
-        3: 'Rear',
-        4: 'Rear',
-      };
-      return locationMap[fanNumber] || `Position ${fanNumber}`;
-    };
 
     async getThermalInfo({ commit }) {
       const sensors = await api
