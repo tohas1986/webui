@@ -132,7 +132,6 @@ export default {
 
     updateFanProfile() {
       this.startLoader();
-      
       const requestData = {
         Oem: {
           OpenBmc: {
@@ -140,16 +139,16 @@ export default {
               Profile: this.fanMode === 'Manual' ? null : this.fanMode,
               ...(this.fanMode === 'Manual' && {
                 ManualPwmPercent: parseInt(this.fanSpeedLevel)
-              })
-            }
-          }
-        }
-      };
+              }),
+            },
+          },
+        },
+      },
 
       // Очищаем null значения
       const cleanRequest = (obj) => {
         Object.keys(obj).forEach(key => {
-          if (obj[key] === null || obj[key] === undefined) {
+          if (obj[(key)] === null || obj[(key)] === undefined) {
             delete obj[key];
           } else if (typeof obj[key] === 'object') {
             cleanRequest(obj[key]);
