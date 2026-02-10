@@ -92,7 +92,7 @@ export default {
         // Преобразуем Profile в fanMode
         if (val.Profile === 'Acoustic' || val.Profile === 'Performance') {
           this.fanMode = val.Profile;
-        } //else {
+        }//else {
           // Если режим ручной, определяем по ManualPwmPercent
         //  this.fanMode = 'Manual';
         //  if (val.ManualPwmPercent !== undefined) {
