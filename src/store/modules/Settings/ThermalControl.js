@@ -7,22 +7,20 @@ const ThermalControlStore = {
     pointData: [],
     meshdata: [],
     heatmapData: [],
-    fanSpeedSettings: {},
+    fanProfile: {},
     fanData: [],
     fansTotal: {
       total: 0,
       Present: 0,
     },
-    // 4U10GPU
     Backplane: 'n/a',
-    // ICX B03
     productBoardId: 0,
   },
   getters: {
     pointData: (state) => state.pointData,
     meshdata: (state) => state.meshdata,
     fanData: (state) => state.fanData,
-    fanSpeedSettings: (state) => state.fanSpeedSettings,
+    fanProfile: (state) => state.fanProfile,
     fansTotal: (state) => state.fansTotal,
     Backplane: (state) => state.Backplane,
     productBoardId: (state) => state.productBoardId,
@@ -31,7 +29,7 @@ const ThermalControlStore = {
     setpointData: (state, val) => (state.pointData = val),
     setMeshdata: (state, val) => (state.meshdata = val),
     setfanData: (state, val) => (state.fanData = val),
-    setFanSpeedSettings: (state, val) => (state.fanSpeedSettings = val),
+    setFanProfile: (state, val) => (state.fanProfile = val),
     setfansTotal: (state, data) => {
       state.fansTotal.total = data.Total;
       state.fansTotal.Present = data.count;
@@ -100,6 +98,7 @@ const ThermalControlStore = {
           console.log('Product Info error', error.message);
         });
     },
+
     async getThermalInfo({ commit }) {
       const sensors = await api
         .get(`/redfish/v1/Chassis`)
@@ -234,30 +233,38 @@ const ThermalControlStore = {
         });
     },
 
-    getFanSpeedSettings({ commit }) {
+    // Новый метод для получения профиля вентиляторов
+    async getFanProfile({ commit }) {
       return api
         .get('/redfish/v1/Managers/bmc')
         .then((res) => {
-          commit('setFanSpeedSettings', res.data);
-        })
-        .catch(() => {
-          throw new Error('get speed settings error');
-        });
-    },
-    updateFanSpeedSettings({ dispatch }, req) {
-      return api
-        .patch('/redfish/v1/Managers/bmc', req)
-        .then(() => {
-          dispatch('getFanSpeedSettings');
-          return i18n.t(
-            'pageThermalControl.temperature.toast.successSaveFanSettings'
-          );
+          const fanConfig = res.data?.Oem?.OpenBmc?.Fan || {};
+          commit('setFanProfile', {
+            Profile: fanConfig.Profile || 'Performance',
+            ManualPwmPercent: fanConfig.ManualPwmPercent || 20,
+            AllowableValues: fanConfig['Profile@Redfish.AllowableValues'] || ['Acoustic', 'Performance']
+          });
+          return fanConfig;
         })
         .catch((error) => {
-          console.log(error);
-          throw new Error(
-            i18n.t('pageThermalControl.temperature.toast.erroeSaveFanSettings')
-          );
+          console.error('Error getting fan profile:', error);
+          throw new Error(i18n.t('pageThermalControl.temperature.toast.errorGetFanProfile'));
+        });
+    },
+
+    // Новый метод для обновления профиля вентиляторов
+    async updateFanProfile({ dispatch }, requestData) {
+      return api
+        .patch('/redfish/v1/Managers/bmc', requestData)
+        .then(() => {
+          // Обновляем локальное состояние после успешного обновления
+          return dispatch('getFanProfile').then(() => {
+            return i18n.t('pageThermalControl.temperature.toast.successSaveFanSettings');
+          });
+        })
+        .catch((error) => {
+          console.error('Error updating fan profile:', error);
+          throw new Error(i18n.t('pageThermalControl.temperature.toast.errorSaveFanSettings'));
         });
     },
   },

@@ -1,8 +1,5 @@
 <template>
   <div>
-    <!-- <template v-if="showTe">
-      <point-echars :board-i-d="BoardID" />
-    </template> -->
     <h4>{{ $t('pageThermalControl.temperature.fanSpeedAdjustment') }}</h4>
     <b-form inline @submit.prevent="Confirm">
       <b-form-group
@@ -24,11 +21,11 @@
         v-show="fanMode == 'Manual'"
         label-class="Fixed-width-6"
         :label="$t('pageThermalControl.temperature.speedLevel')"
-        label-for="fan-mode"
+        label-for="fan-speed-level"
         label-align="right"
       >
         <b-form-select
-          id="fan-mode"
+          id="fan-speed-level"
           v-model="fanSpeedLevel"
           size="sm"
           :options="fanSpeedLevelOptions"
@@ -37,9 +34,6 @@
         </b-form-select>
       </b-form-group>
       <div class="center-in mt-4 ml_width">
-        <!-- <b-button  variant="light" class="mr-2" @click="resetFaninfo">
-          {{ $t('global.action.reset') }}
-        </b-button> -->
         <b-btn id="StartUpdate" type="submit" variant="primary">
           {{ $t('global.action.submit') }}
         </b-btn>
@@ -49,43 +43,35 @@
 </template>
 
 <script>
-// import PointEchars from './PointEchars.vue';
-
 import BVToastMixin from '@/components/Mixins/BVToastMixin';
 import LoadingBarMixin from '@/components/Mixins/LoadingBarMixin';
+
 export default {
-  components: {
-    // PointEchars,
-  },
   mixins: [BVToastMixin, LoadingBarMixin],
   data() {
     return {
-      fanMode: 'Automatic',
+      fanMode: 'Performance', // Значение по умолчанию из нового API
       fanModeOptions: [
         {
-          text: this.$t('pageThermalControl.temperature.silent'),
-          value: 'Silent',
+          text: this.$t('pageThermalControl.temperature.acoustic'),
+          value: 'Acoustic',
         },
         {
-          text: this.$t('pageThermalControl.temperature.standard'),
-          value: 'Automatic',
-        },
-        {
-          text: this.$t('pageThermalControl.temperature.powerful'),
-          value: 'Powerful',
+          text: this.$t('pageThermalControl.temperature.performance'),
+          value: 'Performance',
         },
         {
           text: this.$t('pageThermalControl.temperature.custom'),
           value: 'Manual',
         },
       ],
-      fanSpeedLevel: 'Level1',
+      fanSpeedLevel: '20',
       fanSpeedLevelOptions: [
-        { text: '20%', value: 'Level1' },
-        { text: '40%', value: 'Level2' },
-        { text: '60%', value: 'Level3' },
-        { text: '80%', value: 'Level4' },
-        { text: '100%', value: 'Level5' },
+        { text: '20%', value: '20' },
+        { text: '40%', value: '40' },
+        { text: '60%', value: '60' },
+        { text: '80%', value: '80' },
+        { text: '100%', value: '100' },
       ],
     };
   },
@@ -96,54 +82,35 @@ export default {
     Backplane() {
       return this.$store.getters['ThermalControl/Backplane'];
     },
-    showTe() {
-      const serverNames = [
-        '0x40054101', //G7466 X5
-        '0x40064101', //G7460-X6
-        '0x40052101', //R7260L X5
-        '0x40062101', //R7260L X6
-        '0x40052201', //R7260 X5
-        '0x40062201', //R7260 X6
-      ];
-      const isSupportedServer = serverNames.includes(this.BoardID);
-      if (this.BoardID === '0x40064101' && this.Backplane === 'n/a') {
-        return false;
-      }
-      if (this.BoardID === '0x40054101' && this.Backplane === 'n/a') {
-        return false;
-      }
-      return isSupportedServer;
-    },
-    fanSpeedSettings() {
-      return this.$store.getters['ThermalControl/fanSpeedSettings'];
+    fanProfile() {
+      return this.$store.getters['ThermalControl/fanProfile'];
     },
   },
   watch: {
-    fanSpeedSettings(val) {
-      const defaultFanSpeedLevel = 'Level1';
-      if (
-        !this.fanSpeedLevelOptions.find(
-          (option) => option.value === val.FanSpeedLevel
-        )
-      ) {
-        val.FanSpeedLevel = defaultFanSpeedLevel;
+    fanProfile(val) {
+      if (val && val.Profile) {
+        // Преобразуем Profile в fanMode
+        if (val.Profile === 'Acoustic' || val.Profile === 'Performance') {
+          this.fanMode = val.Profile;
+        } else {
+          // Если режим ручной, определяем по ManualPwmPercent
+          this.fanMode = 'Manual';
+          if (val.ManualPwmPercent !== undefined) {
+            this.fanSpeedLevel = val.ManualPwmPercent.toString();
+          }
+        }
       }
-      this.fanMode = val.FanSpeedMode;
-      this.fanSpeedLevel = val.FanSpeedLevel;
     },
   },
   created() {
-    this.getFanSpeedSettings();
+    this.getFanProfile();
   },
-
-  mounted() {},
-
   methods: {
-    async getFanSpeedSettings() {
+    async getFanProfile() {
       this.startLoader();
       return await this.$store
-        .dispatch('thermal/getFanSpeedSettings')
-        .finally(() => this.$root.$emit('thermal-temperature-complete'));
+        .dispatch('ThermalControl/getFanProfile')
+        .finally(() => this.endLoader());
     },
 
     Confirm() {
@@ -159,19 +126,45 @@ export default {
           }
         )
         .then((isSet) => {
-          if (isSet) this.setFanSpeedSettings();
+          if (isSet) this.updateFanProfile();
         });
     },
-    setFanSpeedSettings() {
+
+    updateFanProfile() {
       this.startLoader();
-      const req = {
-        FanSpeedMode: this.fanMode,
-        FanSpeedLevel:
-          this.fanMode == 'Automatic' ? 'Level0' : this.fanSpeedLevel,
+      
+      const requestData = {
+        Oem: {
+          OpenBmc: {
+            Fan: {
+              Profile: this.fanMode === 'Manual' ? null : this.fanMode,
+              ...(this.fanMode === 'Manual' && {
+                ManualPwmPercent: parseInt(this.fanSpeedLevel)
+              })
+            }
+          }
+        }
       };
 
+      // Очищаем null значения
+      const cleanRequest = (obj) => {
+        Object.keys(obj).forEach(key => {
+          if (obj[key] === null || obj[key] === undefined) {
+            delete obj[key];
+          } else if (typeof obj[key] === 'object') {
+            cleanRequest(obj[key]);
+            if (Object.keys(obj[key]).length === 0) {
+              delete obj[key];
+            }
+          }
+        });
+        return obj;
+      };
+
+      const cleanedRequest = cleanRequest(requestData);
+
       this.$store
-        .dispatch('thermal/updateFanSpeedSettings', req)
+        .dispatch('ThermalControl/updateFanProfile', cleanedRequest)
         .then((success) => {
           this.successToast(success);
         })
@@ -180,17 +173,11 @@ export default {
         })
         .finally(() => this.endLoader());
     },
-    resetFaninfo() {
-      this.getFanSpeedSettings().finally(() => {
-        this.endLoader();
-        document.activeElement.blur();
-      });
-    },
   },
 };
 </script>
+
 <style scoped>
-/* @import url(); 引入css类 */
 .ml_width {
   margin-left: 180px;
 }
