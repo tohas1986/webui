@@ -243,8 +243,8 @@ const ThermalControlStore = {
             Profile: fanConfig.Profile || 'Performance',
             ManualPwmPercent: fanConfig.ManualPwmPercent || 20,
             AllowableValues: fanConfig['Profile@Redfish.AllowableValues'] || [
-              'Acoustic', 
-              'Performance'
+              'Acoustic',
+              'Performance',
             ],
           });
           return fanConfig;
