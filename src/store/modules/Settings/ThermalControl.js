@@ -56,7 +56,6 @@ const ThermalControlStore = {
             };
             return locationMap[fanNumber] || `Position ${fanNumber}`;
           };
-          
           const fans = res.data.Fans;
           const fanMap = new Map();
           // Группировка данных по вентиляторам
