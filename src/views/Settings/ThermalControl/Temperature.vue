@@ -109,7 +109,7 @@ export default {
     async getFanProfile() {
       this.startLoader();
       return await this.$store
-        .dispatch('ThermalControl/getFanProfile')
+        .dispatch('thermal/getFanProfile')
         .finally(() => this.endLoader());
     },
 
@@ -163,7 +163,7 @@ export default {
       const cleanedRequest = cleanRequest(requestData);
 
       this.$store
-        .dispatch('ThermalControl/updateFanProfile', cleanedRequest)
+        .dispatch('thermal/updateFanProfile', cleanedRequest)
         .then((success) => {
           this.successToast(success);
         })
