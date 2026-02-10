@@ -109,14 +109,14 @@ export default {
   },
   computed: {
     fanData() {
-      return this.$store.getters['ThermalControl/fanData'];
+      return this.$store.getters['thermal/fanData'];
     },
     fansTotal() {
-      return this.$store.getters['ThermalControl/fansTotal'];
+      return this.$store.getters['thermal/fansTotal'];
     },
   },
   created() {
-    const thermal = this.$store.dispatch('ThermalControl/getThermal');
+    const thermal = this.$store.dispatch('thermal/getThermal');
     Promise.all([thermal]).finally(() => {
       this.$root.$emit('thermal-fan-complete');
     });
