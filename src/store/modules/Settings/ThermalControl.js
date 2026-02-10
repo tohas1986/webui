@@ -68,7 +68,7 @@ const ThermalControlStore = {
             if (fanType === 'Speed') {
               // Извлекаем направление (F/R) из MemberId или Name
               const directionMatch =
-               fan.MemberId?.match(/FAN\d+_([FR])_Speed/) ||
+                fan.MemberId?.match(/FAN\d+_([FR])_Speed/) ||
                 fan.Name.match(/FAN\d+\s+([FR])\s+Speed/);
               if (directionMatch) {
                 fanInfo.location = `${this.getFanLocation(fanNumber)} (${
