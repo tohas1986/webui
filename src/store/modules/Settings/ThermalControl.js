@@ -67,10 +67,12 @@ const ThermalControlStore = {
             const fanInfo = fanMap.get(fanNumber);
             if (fanType === 'Speed') {
               // Извлекаем направление (F/R) из MemberId или Name
-              const directionMatch = fan.MemberId?.match(/FAN\d+_([FR])_Speed/) || 
-                                   fan.Name.match(/FAN\d+\s+([FR])\s+Speed/);
+              const directionMatch = 
+              fan.MemberId?.match(/FAN\d+_([FR])_Speed/) || fan.Name.match(/FAN\d+\s+([FR])\s+Speed/);
               if (directionMatch) {
-                fanInfo.location = `${this.getFanLocation(fanNumber)} (${directionMatch[1]})`;
+                fanInfo.location = `${this.getFanLocation(fanNumber)} (${
+                  directionMatch[1]
+                })`;
               }
 
               fanInfo.speed = fan.Reading || 0;
@@ -96,16 +98,16 @@ const ThermalControlStore = {
             }
           });
           // Преобразуем Map в массив и сортируем по номеру вентилятора
-          const fanData = Array.from(fanMap.values())
-          .sort((a, b) => {
+          const fanData = Array.from(fanMap.values()).sort((a, b) => {
             const numA = parseInt(a.name.replace('FAN', ''));
             const numB = parseInt(b.name.replace('FAN', ''));
             return numA - numB;
           });
           datai.Total = fanData.length;
           datai.count = fanData.filter(
-            (fan) => fan.status && fan.status !== '').length;
-          
+            (fan) => fan.status && fan.status !== ''
+            ).length;
+
           commit('setfanData', fanData);
           commit('setfansTotal', datai);
           commit('setBackplane', res.data.Backplane || 'n/a');
