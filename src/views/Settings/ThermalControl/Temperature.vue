@@ -138,7 +138,7 @@ export default {
             Fan: {
               Profile: this.fanMode === 'Manual' ? null : this.fanMode,
               ...(this.fanMode === 'Manual' && {
-                ManualPwmPercent: parseInt(this.fanSpeedLevel)
+                ManualPwmPercent: parseInt(this.fanSpeedLevel),
               }),
             },
           },
@@ -147,8 +147,8 @@ export default {
 
       // Очищаем null значения
       const cleanRequest = (obj) => {
-        Object.keys(obj).forEach(key => {
-          if (obj[(key)] === null || obj[(key)] === undefined) {
+        Object.keys(obj).forEach((key) => {
+          if (obj[key] === null || obj[key] === undefined) {
             delete obj[key];
           } else if (typeof obj[key] === 'object') {
             cleanRequest(obj[key]);
