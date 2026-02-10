@@ -20,6 +20,7 @@
       "reset": "Сбросить",
       "save": "Сохранить",
       "saveSettings": "Сохранить настройки",
+      "submit": "Принять",
       "selected": "Выбрано"
     },
     "ariaLabel": {
@@ -179,6 +180,8 @@
       "auto": "Авто",
       "custom": "Пользовательский",
       "speedLevel": "Уровень скорости",
+      "performance": "Производительность",
+      "acoustic": "Тишина",
       "toast": {
         "successSaveFanSettings": "Успешно сохранена конфигурация. Подождите 2 минуты для обновления",
         "erroeSaveFanSettings": "Ошибка установки режима",

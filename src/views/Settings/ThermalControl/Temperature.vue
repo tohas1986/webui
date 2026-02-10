@@ -60,10 +60,10 @@ export default {
           text: this.$t('pageThermalControl.temperature.performance'),
           value: 'Performance',
         },
-        {
-          text: this.$t('pageThermalControl.temperature.custom'),
-          value: 'Manual',
-        },
+        //{
+        //  text: this.$t('pageThermalControl.temperature.custom'),
+        //  value: 'Manual',
+        //},
       ],
       fanSpeedLevel: '20',
       fanSpeedLevelOptions: [
@@ -92,13 +92,13 @@ export default {
         // Преобразуем Profile в fanMode
         if (val.Profile === 'Acoustic' || val.Profile === 'Performance') {
           this.fanMode = val.Profile;
-        } else {
+        } //else {
           // Если режим ручной, определяем по ManualPwmPercent
-          this.fanMode = 'Manual';
-          if (val.ManualPwmPercent !== undefined) {
-            this.fanSpeedLevel = val.ManualPwmPercent.toString();
-          }
-        }
+        //  this.fanMode = 'Manual';
+        //  if (val.ManualPwmPercent !== undefined) {
+        //    this.fanSpeedLevel = val.ManualPwmPercent.toString();
+        //  }
+        //}
       }
     },
   },

@@ -20,6 +20,7 @@
       "reset": "Reset",
       "save": "Save",
       "saveSettings": "Save settings",
+      "submit": "Submit",
       "selected": "Selected"
     },
     "ariaLabel": {
@@ -388,6 +389,8 @@
       "auto": "Auto",
       "custom": "Custom",
       "speedLevel": "Speed Level",
+      "performance": "Performance",
+      "acoustic": "Acoustic",
       "toast": {
         "successSaveFanSettings": "Successfully saved the fan speed configuration. Please wait for 2 minutes for the modification to take effect before refreshing the page to obtain the latest fan information",
         "erroeSaveFanSettings": "Error updating fan speed settings.",
