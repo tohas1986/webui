@@ -143,7 +143,7 @@ export default {
             },
           },
         },
-      },
+      };
 
       // Очищаем null значения
       const cleanRequest = (obj) => {
