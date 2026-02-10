@@ -242,13 +242,18 @@ const ThermalControlStore = {
           commit('setFanProfile', {
             Profile: fanConfig.Profile || 'Performance',
             ManualPwmPercent: fanConfig.ManualPwmPercent || 20,
-            AllowableValues: fanConfig['Profile@Redfish.AllowableValues'] || ['Acoustic', 'Performance']
+            AllowableValues: fanConfig['Profile@Redfish.AllowableValues'] || [
+              'Acoustic', 
+              'Performance'
+            ],
           });
           return fanConfig;
         })
         .catch((error) => {
           console.error('Error getting fan profile:', error);
-          throw new Error(i18n.t('pageThermalControl.temperature.toast.errorGetFanProfile'));
+          throw new Error(
+            i18n.t('pageThermalControl.temperature.toast.errorGetFanProfile')
+          );
         });
     },
 
@@ -259,12 +264,16 @@ const ThermalControlStore = {
         .then(() => {
           // Обновляем локальное состояние после успешного обновления
           return dispatch('getFanProfile').then(() => {
-            return i18n.t('pageThermalControl.temperature.toast.successSaveFanSettings');
+            return i18n.t(
+              'pageThermalControl.temperature.toast.successSaveFanSettings'
+            );
           });
         })
         .catch((error) => {
           console.error('Error updating fan profile:', error);
-          throw new Error(i18n.t('pageThermalControl.temperature.toast.errorSaveFanSettings'));
+          throw new Error(
+            i18n.t('pageThermalControl.temperature.toast.errorSaveFanSettings')
+          );
         });
     },
   },
