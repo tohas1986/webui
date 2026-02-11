@@ -75,7 +75,9 @@ const ThermalControlStore = {
               });
             }
             const fanInfo = fanMap.get(fanNumber);
-            if (fanType === 'Speed') {
+            if (fanType === 'PWM') {
+              fanInfo.dutyRatio = fan.Reading || 0;
+            } else {
               // Извлекаем направление (F/R) из MemberId или Name
               const directionMatch =
                 fan.MemberId?.match(/FAN\d+_([FR])_Speed/) ||
@@ -88,9 +90,10 @@ const ThermalControlStore = {
 
               fanInfo.speed = fan.Reading || 0;
               fanInfo.status = fan.Status?.Health || '';
-            } else if (fanType === 'PWM') {
-              fanInfo.dutyRatio = fan.Reading || 0;
-            }
+            } 
+            //else if (fanType === 'PWM') {
+            //  fanInfo.dutyRatio = fan.Reading || 0;
+            //}
             // Получаем модель, если есть
             if (fan.Model && !fanInfo.model) {
               fanInfo.model = fan.Model;
