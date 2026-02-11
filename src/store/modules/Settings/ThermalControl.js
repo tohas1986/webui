@@ -90,7 +90,7 @@ const ThermalControlStore = {
 
               fanInfo.speed = fan.Reading || 0;
               fanInfo.status = fan.Status?.Health || '';
-            } 
+            }
             //else if (fanType === 'PWM') {
             //  fanInfo.dutyRatio = fan.Reading || 0;
             //}
