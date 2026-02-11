@@ -65,6 +65,7 @@
       "on": "Вкл.",
       "success": "Успешно",
       "warning": "Предупреждение",
+      "ok": "OK",
       "informational": "Информация"
     },
     "table": {

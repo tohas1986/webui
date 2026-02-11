@@ -65,6 +65,7 @@
       "on": "On",
       "success": "Success",
       "warning": "Warning",
+      "ok": "OK",
       "informational": "Informational"
     },
     "table": {
