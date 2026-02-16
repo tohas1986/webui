@@ -80,10 +80,10 @@ export default {
       return this.$store.getters['global/serverConfig']?.BoardID;
     },
     Backplane() {
-      return this.$store.getters['ThermalControl/Backplane'];
+      return this.$store.getters['thermal/Backplane'];
     },
     fanProfile() {
-      return this.$store.getters['ThermalControl/fanProfile'];
+      return this.$store.getters['thermal/fanProfile'];
     },
   },
   watch: {
