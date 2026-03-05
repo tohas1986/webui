@@ -50,15 +50,15 @@ const FirmwareStore = {
       dispatch('getActiveBmcFirmware');
       return await dispatch('getFirmwareInventory');
     },
-    getActiveBmcFirmware({ commit }) {
-      return api
-        .get('/redfish/v1/Managers/bmc')
-        .then(({ data: { Links } }) => {
-          const id = Links?.ActiveSoftwareImage['@odata.id'].split('/').pop();
-          commit('setActiveBmcFirmwareId', id);
-        })
-        .catch((error) => console.log(error));
-    },
+    //getActiveBmcFirmware({ commit }) {
+    //  return api
+    //    .get('/redfish/v1/Managers/bmc')
+    //    .then(({ data: { Links } }) => {
+    //      const id = Links?.ActiveSoftwareImage['@odata.id'].split('/').pop();
+    //      commit('setActiveBmcFirmwareId', id);
+    //    })
+    //    .catch((error) => console.log(error));
+    //},
     getActiveBmcFirmware({ commit }) {
       return api
         .get('/redfish/v1/UpdateService/FirmwareInventory/bmc_active')
@@ -75,7 +75,7 @@ const FirmwareStore = {
     //    const version = data?.Version;
     //    if (version) {
     //      commit('setActiveBmcFirmwareVersion', version);
-          // Если также нужен ID, его можно получить из data.Id
+    // Если также нужен ID, его можно получить из data.Id
     //      commit('setActiveBmcFirmwareId', data?.Id);
     //    }
     //    return version;
