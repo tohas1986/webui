@@ -97,6 +97,7 @@ const FirmwareStore = {
             }
           });
           commit('setBmcFirmware', bmcFirmware);
+          commit('setActiveBmcFirmwareId', bmcFirmware);
           commit('setHostFirmware', hostFirmware);
         })
         .catch((error) => {
