@@ -11,7 +11,7 @@
           </template>
           <dl class="mb-0">
             <dt>{{ $t('pageFirmware.cardBodyVersion') }}</dt>
-            <dd class="mb-0">{{ runningVersion }}</dd>
+            <dd class="mb-0">{{ backupVersion }}</dd>
           </dl>
         </b-card>
 
