@@ -171,7 +171,7 @@
           </template>
 
           <!-- Status column -->
-          <template #cell(status)="row">
+          <!-- <template #cell(status)="row">
             <b-form-checkbox
               v-model="row.item.status"
               name="switch"
@@ -186,7 +186,7 @@
           </template>
           <template #cell(filterByStatus)="{ value }">
             {{ value }}
-          </template>
+          </template> -->
 
           <!-- Actions column -->
           <template #cell(actions)="row">
