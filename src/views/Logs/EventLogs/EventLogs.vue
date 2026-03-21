@@ -241,7 +241,7 @@
 
 <script>
 import IconDelete from '@carbon/icons-vue/es/trash-can/20';
-import IconTrashcan from '@carbon/icons-vue/es/trash-can/20';
+//import IconTrashcan from '@carbon/icons-vue/es/trash-can/20';
 import IconExport from '@carbon/icons-vue/es/document--export/20';
 import IconChevron from '@carbon/icons-vue/es/chevron--down/20';
 import IconDownload from '@carbon/icons-vue/es/download/20';
