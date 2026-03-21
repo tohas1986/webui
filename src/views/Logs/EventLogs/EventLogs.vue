@@ -189,7 +189,7 @@
           </template> -->
 
           <!-- Actions column -->
-          <template #cell(actions)="row">
+          <!--<template #cell(actions)="row">
             <table-row-action
               v-for="(action, index) in row.item.actions"
               :key="index"
@@ -202,10 +202,10 @@
             >
               <template #icon>
                 <icon-export v-if="action.value === 'export'" />
-                <!-- <icon-trashcan v-if="action.value === 'delete'" />-->
+                <icon-trashcan v-if="action.value === 'delete'" />
               </template>
             </table-row-action>
-          </template>
+          </template>-->
         </b-table>
       </b-col>
     </b-row>
