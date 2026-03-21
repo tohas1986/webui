@@ -202,7 +202,7 @@
             >
               <template #icon>
                 <icon-export v-if="action.value === 'export'" />
-                <icon-trashcan v-if="action.value === 'delete'" />
+                <!-- <icon-trashcan v-if="action.value === 'delete'" />-->
               </template>
             </table-row-action>
           </template>
@@ -348,10 +348,10 @@ export default {
           label: this.$t('pageEventLogs.table.description'),
           tdClass: 'text-break',
         },
-        {
-          key: 'status',
-          label: this.$t('pageEventLogs.table.status'),
-        },
+        //{
+        //  key: 'status',
+        //  label: this.$t('pageEventLogs.table.status'),
+        //},
         {
           key: 'actions',
           sortable: false,
@@ -365,11 +365,11 @@ export default {
           label: this.$t('pageEventLogs.table.severity'),
           values: ['OK', 'Warning', 'Critical'],
         },
-        {
-          key: 'filterByStatus',
-          label: this.$t('pageEventLogs.table.status'),
-          values: ['Resolved', 'Unresolved'],
-        },
+        //{
+        //  key: 'filterByStatus',
+        //  label: this.$t('pageEventLogs.table.status'),
+        //  values: ['Resolved', 'Unresolved'],
+        //},
       ],
       expandRowLabel,
       activeFilters: [],
