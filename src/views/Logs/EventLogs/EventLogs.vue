@@ -283,7 +283,7 @@ export default {
   components: {
     IconDelete,
     IconExport,
-    IconTrashcan,
+    //IconTrashcan,
     IconChevron,
     IconDownload,
     PageTitle,
