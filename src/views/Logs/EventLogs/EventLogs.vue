@@ -253,7 +253,7 @@ import Search from '@/components/Global/Search';
 import TableCellCount from '@/components/Global/TableCellCount';
 import TableDateFilter from '@/components/Global/TableDateFilter';
 import TableFilter from '@/components/Global/TableFilter';
-import TableRowAction from '@/components/Global/TableRowAction';
+//import TableRowAction from '@/components/Global/TableRowAction';
 import TableToolbar from '@/components/Global/TableToolbar';
 import TableToolbarExport from '@/components/Global/TableToolbarExport';
 
@@ -291,7 +291,7 @@ export default {
     StatusIcon,
     TableCellCount,
     TableFilter,
-    TableRowAction,
+    //TableRowAction,
     TableToolbar,
     TableToolbarExport,
     TableDateFilter,
