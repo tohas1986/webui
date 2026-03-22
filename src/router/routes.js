@@ -20,7 +20,7 @@ import PostCodeLogs from '@/views/Logs/PostCodeLogs';
 import PowerRestorePolicy from '@/views/Settings/PowerRestorePolicy';
 import ProfileSettings from '@/views/ProfileSettings';
 import RebootBmc from '@/views/Operations/RebootBmc';
-import SaveConfig from '@/views/Operations/SaveConfig';
+//import SaveConfig from '@/views/Operations/SaveConfig';
 import Policies from '@/views/SecurityAndAccess/Policies';
 import KeyClear from '@/views/Operations/KeyClear';
 import Sensors from '@/views/HardwareStatus/Sensors';
@@ -257,14 +257,14 @@ const routes = [
           title: i18n.t('appPageTitle.rebootBmc'),
         },
       },
-      {
-        path: '/operations/save-config',
-        name: 'save-config',
-        component: SaveConfig,
-        meta: {
-          title: i18n.t('appPageTitle.saveConfig'),
-        },
-      },
+      //{
+      //  path: '/operations/save-config',
+      //  name: 'save-config',
+      //  component: SaveConfig,
+      //  meta: {
+      //    title: i18n.t('appPageTitle.saveConfig'),
+      //  },
+      //},
       {
         path: '/operations/serial-over-lan',
         name: 'serial-over-lan',

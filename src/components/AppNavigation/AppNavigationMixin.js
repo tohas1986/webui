@@ -91,11 +91,11 @@ const AppNavigationMixin = {
               label: this.$t('appNavigation.rebootBmc'),
               route: '/operations/reboot-bmc',
             },
-            {
-              id: 'save-config',
-              label: this.$t('appNavigation.saveConfig'),
-              route: '/operations/save-config',
-            },
+            //{
+            //  id: 'save-config',
+            //  label: this.$t('appNavigation.saveConfig'),
+            //  route: '/operations/save-config',
+            //},
             {
               id: 'serial-over-lan',
               label: this.$t('appNavigation.serialOverLan'),
