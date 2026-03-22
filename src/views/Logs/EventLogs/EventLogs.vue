@@ -42,7 +42,7 @@
     </b-row>
     <b-row>
       <b-col>
-        <table-toolbar
+        <!--<table-toolbar
           ref="toolbar"
           :selected-items-count="selectedRows.length"
           :actions="batchActions"
@@ -61,7 +61,7 @@
               :file-name="exportFileNameByDate()"
             />
           </template>
-        </table-toolbar>
+        </table-toolbar>-->
         <b-table
           id="table-event-logs"
           ref="table"
