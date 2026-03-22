@@ -254,8 +254,8 @@ import TableCellCount from '@/components/Global/TableCellCount';
 import TableDateFilter from '@/components/Global/TableDateFilter';
 import TableFilter from '@/components/Global/TableFilter';
 //import TableRowAction from '@/components/Global/TableRowAction';
-import TableToolbar from '@/components/Global/TableToolbar';
-import TableToolbarExport from '@/components/Global/TableToolbarExport';
+//import TableToolbar from '@/components/Global/TableToolbar';
+//import TableToolbarExport from '@/components/Global/TableToolbarExport';
 
 import LoadingBarMixin from '@/components/Mixins/LoadingBarMixin';
 import TableFilterMixin from '@/components/Mixins/TableFilterMixin';
@@ -292,8 +292,8 @@ export default {
     TableCellCount,
     TableFilter,
     //TableRowAction,
-    TableToolbar,
-    TableToolbarExport,
+    //TableToolbar,
+    //TableToolbarExport,
     TableDateFilter,
   },
   mixins: [
