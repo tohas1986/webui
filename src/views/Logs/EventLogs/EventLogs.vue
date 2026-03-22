@@ -352,12 +352,12 @@ export default {
         //  key: 'status',
         //  label: this.$t('pageEventLogs.table.status'),
         //},
-        {
-          key: 'actions',
-          sortable: false,
-          label: '',
-          tdClass: 'text-right text-nowrap',
-        },
+        //{
+        //  key: 'actions',
+        //  sortable: false,
+        //  label: '',
+        //  tdClass: 'text-right text-nowrap',
+        //},
       ],
       tableFilters: [
         {
