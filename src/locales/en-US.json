@@ -304,9 +304,9 @@
         "item1": "All manual settings will be deleted.",
         "item2": "Partition configurations and the platform keystore may be recovered if backups exist."
       },
-      "resetToDefaultsTitle": "Reset BMC and server settings",
-      "resetToDefaultsHeader": "Do you want to reset both the BMC and server settings?",
-      "resetToDefaultsSubmitText": "Reset BMC and server settings",
+      "resetToDefaultsTitle": "Reset BMC settings",
+      "resetToDefaultsHeader": "Do you want to reset BMC settings?",
+      "resetToDefaultsSubmitText": "Reset BMC settings",
       "resetToDefaultsSettingsList": {
         "item1": "All manual settings will be deleted.",
         "item2": "Partition configurations and the platform keystore may be recovered if backups exist.",
