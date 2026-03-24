@@ -334,7 +334,7 @@
       "resetOptionsLabel": "Сбросить настройки",
       "resetBiosOptionLabel": "Сбросить настройки встроенного ПО сервера",
       "resetBiosOptionHelperText": "Сброс настроек встроенного ПО сервера, в том числе: хранилища ключей, разделов NVRAM и конфигурации разделов.",
-      "resetToDefaultsOptionLabel": "Сброс настроек BMC и сервера",
+      "resetToDefaultsOptionLabel": "Сброс настроек BMC",
       "resetToDefaultsOptionHelperText": "Эта опция сбрасывает настройки BMC, включая: все данные учётных записей BMC, все изменённые пароли, все политики, конфигурации LDAP и сетевые адреса"
     },
     "modal": {
