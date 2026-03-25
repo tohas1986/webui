@@ -104,10 +104,10 @@ const ThermalControlStore = {
                 location: getFanLocation(fanNumber),
                 status: '',
                 model: '',
-                frontSpeed: 0,    // скорость переднего вентилятора (F)
-                rearSpeed: 0,     // скорость заднего вентилятора (R)
-                dutyRatio: 0,     // PWM значение
-                avgSpeed: 0,      // средняя скорость
+                frontSpeed: 0,
+                rearSpeed: 0,
+                dutyRatio: 0,
+                avgSpeed: 0,
               });
             }
             const fanInfo = fanMap.get(fanNumber);
@@ -169,12 +169,12 @@ const ThermalControlStore = {
               const speeds = [];
               if (fan.frontSpeed > 0) speeds.push(fan.frontSpeed);
               if (fan.rearSpeed > 0) speeds.push(fan.rearSpeed);
-              fan.avgSpeed = 
-                speeds.length > 0 
+              fan.avgSpeed =
+                speeds.length > 0
                   ? Math.round(
                     speeds.reduce((a, b) => a + b, 0) / speeds.length
                   )
-                : 0;
+                  : 0;
               // Используем переднюю скорость как основную для отображения
               fan.speed = fan.frontSpeed || fan.rearSpeed || 0;
               // Обновляем локацию с информацией о наличии обоих вентиляторов
