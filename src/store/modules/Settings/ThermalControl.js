@@ -172,8 +172,8 @@ const ThermalControlStore = {
               fan.avgSpeed =
                 speeds.length > 0
                   ? Math.round(
-                    speeds.reduce((a, b) => a + b, 0) / speeds.length
-                  )
+                      speeds.reduce((a, b) => a + b, 0) / speeds.length
+                    )
                   : 0;
               // Используем переднюю скорость как основную для отображения
               fan.speed = fan.frontSpeed || fan.rearSpeed || 0;
