@@ -60,7 +60,9 @@ const ThermalControlStore = {
           const fanMap = new Map();
           // Группировка данных по вентиляторам
           fans.forEach((fan) => {
-            const nameMatch = fan.Name.match(/FAN(\d+)\s+([FR])\s+Speed/) || fan.Name.match(/FAN(\d+)\s+(PWM)/);
+            const nameMatch = 
+              fan.Name.match(/FAN(\d+)\s+([FR])\s+Speed/) || 
+              fan.Name.match(/FAN(\d+)\s+(PWM)/);
             if (!nameMatch) return;
             const fanNumber = nameMatch[1];
             const fanType = nameMatch[2];
