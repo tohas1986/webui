@@ -46,155 +46,93 @@ const ThermalControlStore = {
       return api
         .get('/redfish/v1/Chassis/System_FRU/Thermal')
         .then((res) => {
-          // Вспомогательный метод для определения местоположения вентилятора
-          const getFanLocation = (fanNumber) => {
+          const fans = res.data.Fans;
+          const fanMap = new Map(); // Используем Map для группировки по номеру вентилятора
+          const fanData = [];
+          // Вспомогательный метод для определения местоположения
+          const getFanLocation = (fanNumber, type) => {
             const locationMap = {
               1: 'Front',
               2: 'Front',
               3: 'Rear',
               4: 'Rear',
             };
-            return locationMap[fanNumber] || `Position ${fanNumber}`;
+            const baseLocation = locationMap[fanNumber] || `Position ${fanNumber}`;
+            if (type === 'F') return `${baseLocation} (Front)`;
+            if (type === 'R') return `${baseLocation} (Rear)`;
+            return baseLocation;
           };
-          const fans = res.data.Fans;
-          const fanMap = new Map();
-          // Группировка данных по вентиляторам
+          // Сначала собираем все PWM значения
+          const pwmMap = new Map();
+          fans.forEach((fan) => {
+            let fanNumber = null;
+            // Извлекаем номер вентилятора из PWM
+            if (fan.MemberId && fan.MemberId.includes('PWM')) {
+              const pwmMatch = fan.MemberId.match(/FAN(\d+)_PWM/);
+              if (pwmMatch) {
+                fanNumber = pwmMatch[1];
+                pwmMap.set(fanNumber, fan.Reading || 0);
+              }
+            } else if (fan.Name && fan.Name.includes('PWM')) {
+              const pwmMatch = fan.Name.match(/FAN(\d+)\s+PWM/);
+              if (pwmMatch) {
+                fanNumber = pwmMatch[1];
+                pwmMap.set(fanNumber, fan.Reading || 0);
+              }
+            }
+          });
+          // Обрабатываем только Speed вентиляторы (F и R)
           fans.forEach((fan) => {
             // Извлекаем номер вентилятора и тип из MemberId или Name
             let fanNumber = null;
-            let fanType = null;
-            // Пытаемся извлечь из MemberId (более надежный способ)
+            let fanType = null; // 'F' или 'R'
+            // Пытаемся извлечь из MemberId
             if (fan.MemberId) {
-              const memberMatch = fan.MemberId.match(
-                /FAN(\d+)_([FR]?)_?(PWM|Speed)?/
-              );
+              const memberMatch = fan.MemberId.match(/FAN(\d+)_([FR])_Speed/);
               if (memberMatch) {
                 fanNumber = memberMatch[1];
-                // Определяем тип по наличию PWM или Speed
-                if (memberMatch[3] === 'PWM') {
-                  fanType = 'PWM';
-                } else if (memberMatch[2] === 'F' || memberMatch[2] === 'R') {
-                  fanType = memberMatch[2];
-                } else {
-                  fanType = 'Speed';
-                }
+                fanType = memberMatch[2];
               }
             }
             // Если не нашли в MemberId, пробуем из Name
             if (!fanNumber && fan.Name) {
-              const nameMatch = fan.Name.match(
-                /FAN(\d+)\s+([FR]?)\s*(PWM|Speed)?/
-              );
+              const nameMatch = fan.Name.match(/FAN(\d+)\s+([FR])\s+Speed/);
               if (nameMatch) {
                 fanNumber = nameMatch[1];
-                if (nameMatch[3] === 'PWM') {
-                  fanType = 'PWM';
-                } else if (nameMatch[2] === 'F' || nameMatch[2] === 'R') {
-                  fanType = nameMatch[2];
-                } else {
-                  fanType = 'Speed';
-                }
+                fanType = nameMatch[2];
               }
             }
-            if (!fanNumber) return;
-            // Инициализируем запись для вентилятора, если её ещё нет
-            if (!fanMap.has(fanNumber)) {
-              fanMap.set(fanNumber, {
-                name: `FAN${fanNumber}`,
-                location: getFanLocation(fanNumber),
-                status: '',
-                model: '',
-                frontSpeed: 0,
-                rearSpeed: 0,
-                dutyRatio: 0,
-                avgSpeed: 0,
-              });
-            }
-            const fanInfo = fanMap.get(fanNumber);
-            // Обрабатываем разные типы данных
-            if (fanType === 'PWM') {
-              fanInfo.dutyRatio = fan.Reading || 0;
-            } else if (fanType === 'F') {
-              fanInfo.frontSpeed = fan.Reading || 0;
-              // Обновляем статус, если есть
-              if (fan.Status?.Health) {
-                const priority = {
-                  Critical: 3,
-                  Warning: 2,
-                  OK: 1,
-                  '': 0,
-                };
-                if (priority[fan.Status.Health] > priority[fanInfo.status]) {
-                  fanInfo.status = fan.Status.Health;
-                }
-              }
-            } else if (fanType === 'R') {
-              fanInfo.rearSpeed = fan.Reading || 0;
-              // Обновляем статус, если есть
-              if (fan.Status?.Health) {
-                const priority = {
-                  Critical: 3,
-                  Warning: 2,
-                  OK: 1,
-                  '': 0,
-                };
-                if (priority[fan.Status.Health] > priority[fanInfo.status]) {
-                  fanInfo.status = fan.Status.Health;
-                }
-              }
-            } else if (fanType === 'Speed') {
-              // Для обратной совместимости, если не удалось определить F/R
-              if (!fanInfo.frontSpeed) fanInfo.frontSpeed = fan.Reading || 0;
-              if (fan.Status?.Health) {
-                const priority = {
-                  Critical: 3,
-                  Warning: 2,
-                  OK: 1,
-                  '': 0,
-                };
-                if (priority[fan.Status.Health] > priority[fanInfo.status]) {
-                  fanInfo.status = fan.Status.Health;
-                }
-              }
-            }
-            // Получаем модель, если есть
-            if (fan.Model && !fanInfo.model) {
-              fanInfo.model = fan.Model;
-            }
+            if (!fanNumber || !fanType) return;
+            // Создаем уникальный ID для каждой записи
+            const uniqueId = `${fanNumber}_${fanType}`;
+            // Формируем название для отображения
+            const displayName = `FAN${fanNumber} ${fanType === 'F' ? 'Front' : 'Rear'}`;
+            // Получаем PWM значение для этого вентилятора
+            const pwmValue = pwmMap.get(fanNumber) || 0;
+            // Создаем запись для вентилятора
+            const fanEntry = {
+              id: uniqueId,
+              name: displayName,
+              fanNumber: parseInt(fanNumber),
+              type: fanType,
+              speed: fan.Reading || 0,
+              unit: 'RPM',
+              dutyRatio: pwmValue, // Добавляем PWM значение
+              status: fan.Status?.Health || '',
+              model: fan.Model || '',
+              location: getFanLocation(parseInt(fanNumber), fanType),
+              memberId: fan.MemberId || '',
+            };
+            fanData.push(fanEntry);
           });
-          // Вычисляем среднюю скорость и обновляем местоположение для каждого вентилятора
-          const fanData = Array.from(fanMap.values())
-            .map((fan) => {
-              // Вычисляем среднюю скорость
-              const speeds = [];
-              if (fan.frontSpeed > 0) speeds.push(fan.frontSpeed);
-              if (fan.rearSpeed > 0) speeds.push(fan.rearSpeed);
-              fan.avgSpeed =
-                speeds.length > 0
-                  ? Math.round(
-                      speeds.reduce((a, b) => a + b, 0) / speeds.length
-                    )
-                  : 0;
-              // Используем переднюю скорость как основную для отображения
-              fan.speed = fan.frontSpeed || fan.rearSpeed || 0;
-              // Обновляем локацию с информацией о наличии обоих вентиляторов
-              const fanNumber = parseInt(fan.name.replace('FAN', ''));
-              let location = getFanLocation(fanNumber);
-              if (fan.frontSpeed > 0 && fan.rearSpeed > 0) {
-                location = `${location} (F+R)`;
-              } else if (fan.frontSpeed > 0) {
-                location = `${location} (F)`;
-              } else if (fan.rearSpeed > 0) {
-                location = `${location} (R)`;
-              }
-              fan.location = location;
-              return fan;
-            })
-            .sort((a, b) => {
-              const numA = parseInt(a.name.replace('FAN', ''));
-              const numB = parseInt(b.name.replace('FAN', ''));
-              return numA - numB;
-            });
+          // Сортируем данные: сначала по номеру вентилятора, затем по типу (F, R)
+          const typeOrder = { 'F': 1, 'R': 2 };
+          fanData.sort((a, b) => {
+            if (a.fanNumber !== b.fanNumber) {
+              return a.fanNumber - b.fanNumber;
+            }
+            return (typeOrder[a.type] || 99) - (typeOrder[b.type] || 99);
+          });
           datai.Total = fanData.length;
           datai.count = fanData.filter(
             (fan) => fan.status && fan.status !== '' && fan.status !== 'OK'
