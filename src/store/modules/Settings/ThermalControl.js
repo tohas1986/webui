@@ -47,7 +47,7 @@ const ThermalControlStore = {
         .get('/redfish/v1/Chassis/System_FRU/Thermal')
         .then((res) => {
           const fans = res.data.Fans;
-          const fanMap = new Map(); // Используем Map для группировки по номеру вентилятора
+          //const fanMap = new Map(); 
           const fanData = [];
           // Вспомогательный метод для определения местоположения
           const getFanLocation = (fanNumber, type) => {
@@ -57,7 +57,8 @@ const ThermalControlStore = {
               3: 'Rear',
               4: 'Rear',
             };
-            const baseLocation = locationMap[fanNumber] || `Position ${fanNumber}`;
+            const baseLocation = 
+            locationMap[fanNumber] || `Position ${fanNumber}`;
             if (type === 'F') return `${baseLocation} (Front)`;
             if (type === 'R') return `${baseLocation} (Rear)`;
             return baseLocation;
@@ -106,7 +107,9 @@ const ThermalControlStore = {
             // Создаем уникальный ID для каждой записи
             const uniqueId = `${fanNumber}_${fanType}`;
             // Формируем название для отображения
-            const displayName = `FAN${fanNumber} ${fanType === 'F' ? 'Front' : 'Rear'}`;
+            const displayName = `FAN${fanNumber} ${
+              fanType === 'F' ? 'Front' : 'Rear'
+            }`;
             // Получаем PWM значение для этого вентилятора
             const pwmValue = pwmMap.get(fanNumber) || 0;
             // Создаем запись для вентилятора
@@ -126,7 +129,7 @@ const ThermalControlStore = {
             fanData.push(fanEntry);
           });
           // Сортируем данные: сначала по номеру вентилятора, затем по типу (F, R)
-          const typeOrder = { 'F': 1, 'R': 2 };
+          const typeOrder = { F: 1, R: 2 };
           fanData.sort((a, b) => {
             if (a.fanNumber !== b.fanNumber) {
               return a.fanNumber - b.fanNumber;
