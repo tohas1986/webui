@@ -55,7 +55,7 @@ const ThermalControlStore = {
               4: 'Rear',
             };
             return locationMap[fanNumber] || `Position ${fanNumber}`;
-          };      
+          };
           const fans = res.data.Fans;
           const fanMap = new Map();
           // Группировка данных по вентиляторам
@@ -164,13 +164,16 @@ const ThermalControlStore = {
           });
           // Вычисляем среднюю скорость и обновляем местоположение для каждого вентилятора
           const fanData = Array.from(fanMap.values())
-            .map(fan => {
+            .map((fan) => {
               // Вычисляем среднюю скорость
               const speeds = [];
               if (fan.frontSpeed > 0) speeds.push(fan.frontSpeed);
               if (fan.rearSpeed > 0) speeds.push(fan.rearSpeed);
-              fan.avgSpeed = speeds.length > 0 
-                ? Math.round(speeds.reduce((a, b) => a + b, 0) / speeds.length)
+              fan.avgSpeed = 
+                speeds.length > 0 
+                  ? Math.round(
+                    speeds.reduce((a, b) => a + b, 0) / speeds.length
+                  )
                 : 0;
               // Используем переднюю скорость как основную для отображения
               fan.speed = fan.frontSpeed || fan.rearSpeed || 0;
