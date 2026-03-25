@@ -57,7 +57,7 @@ const ThermalControlStore = {
               3: 'Rear',
               4: 'Rear',
             };
-            const baseLocation = 
+            const baseLocation =
               locationMap[fanNumber] || `Position ${fanNumber}`;
             if (type === 'F') return `${baseLocation} (Front)`;
             if (type === 'R') return `${baseLocation} (Rear)`;
