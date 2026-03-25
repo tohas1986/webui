@@ -47,7 +47,7 @@ const ThermalControlStore = {
         .get('/redfish/v1/Chassis/System_FRU/Thermal')
         .then((res) => {
           const fans = res.data.Fans;
-          //const fanMap = new Map(); 
+          //const fanMap = new Map();
           const fanData = [];
           // Вспомогательный метод для определения местоположения
           const getFanLocation = (fanNumber, type) => {
@@ -58,7 +58,7 @@ const ThermalControlStore = {
               4: 'Rear',
             };
             const baseLocation = 
-            locationMap[fanNumber] || `Position ${fanNumber}`;
+              locationMap[fanNumber] || `Position ${fanNumber}`;
             if (type === 'F') return `${baseLocation} (Front)`;
             if (type === 'R') return `${baseLocation} (Rear)`;
             return baseLocation;
