@@ -11,6 +11,11 @@
             {{ $t('global.status.notAvailable') }}
           </dd>
           <dd v-else>{{ powerConsumptionValue }} W</dd>
+          <dt>{{ $t('pageOverview.powerCpuConsumption') }}</dt>
+          <dd v-if="powerCpuConsumptionValue == null">
+            {{ $t('global.status.notAvailable') }}
+          </dd>
+          <dd v-else>{{ powerCpuConsumptionValue }} W</dd>
           <dt>{{ $t('pageOverview.powerCap') }}</dt>
           <dd v-if="powerCapValue == null">
             {{ $t('global.status.disabled') }}
@@ -37,6 +42,7 @@ export default {
     ...mapGetters({
       powerCapValue: 'powerControl/powerCapValue',
       powerConsumptionValue: 'powerControl/powerConsumptionValue',
+      powerCpuConsumptionValue: 'powerControl/powerCpuConsumptionValue',
     }),
   },
   created() {

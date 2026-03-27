@@ -673,6 +673,7 @@
     "networkInformation": "Network information",
     "powerCap": "Power cap",
     "powerConsumption": "Power consumption",
+    "powerCpuConsumption": "CPU Power consumption",
     "powerInformation": "Power information",
     "powerMode": "Power mode",
     "runningVersion": "Running",
@@ -856,6 +857,7 @@
     "powerCapSettingData": "Apply power cap",
     "powerCapSettingLabel": "Power cap setting",
     "powerConsumption": "Current power consumption",
+    "powerCpuConsumption": "Current CPU power consumption",
     "serverPowCapSetting": "Server power cap setting"
   },
   "pageSensors": {

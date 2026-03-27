@@ -20,11 +20,11 @@
     <b-row>
       <b-col sm="8" md="6" xl="12">
         <dl>
-          <dt>{{ $t('pagePower.powerConsumption') }}</dt>
+          <dt>{{ $t('pagePower.powerCpuConsumption') }}</dt>
           <dd>
             {{
-              powerConsumptionValue
-                ? `${powerConsumptionValue} W`
+              powerCpuConsumptionValue
+                ? `${powerCpuConsumptionValue} W`
                 : $t('global.status.notAvailable')
             }}
           </dd>
@@ -122,6 +122,7 @@ export default {
   computed: {
     ...mapGetters({
       powerConsumptionValue: 'powerControl/powerConsumptionValue',
+      powerCpuConsumptionValue: 'powerControl/powerCpuConsumptionValue',
     }),
 
     /**

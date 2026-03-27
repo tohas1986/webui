@@ -673,6 +673,7 @@
     "networkInformation": "Сетевые интерфейсы",
     "powerCap": "Ограничение мощности",
     "powerConsumption": "Потребление питания",
+    "powerCpuConsumption": "Потребление ЦПУ",
     "powerInformation": "Информация об энергопотреблении",
     "powerMode": "Под нагрузкой",
     "runningVersion": "Рабочий",
@@ -856,6 +857,7 @@
     "powerCapSettingData": "Применить ограничение мощности",
     "powerCapSettingLabel": "Настройки порога электропитания",
     "powerConsumption": "Текущее энергопотребление",
+    "powerCpuConsumption": "Текущее энергопотребление ЦПУ",
     "serverPowCapSetting": "Настройки ограничения электропитания сервера"
   },
   "pageSensors": {
