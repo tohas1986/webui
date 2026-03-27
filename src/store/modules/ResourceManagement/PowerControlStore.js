@@ -58,7 +58,7 @@ const PowerControlStore = {
         // Запрашиваем оба эндпоинта параллельно
         const [totalPowerRes, cpuPowerRes] = await Promise.all([
           api.get('/redfish/v1/Chassis/System_FRU/Sensors/Total_Power'),
-          api.get('/redfish/v1/Chassis/System_FRU/Sensors/CPU_Power')
+          api.get('/redfish/v1/Chassis/System_FRU/Sensors/CPU_Power'),
         ]);
         // Извлекаем значения из ответо
         const totalPower = totalPowerRes.data?.Reading || 0;
@@ -68,12 +68,12 @@ const PowerControlStore = {
         commit('setCpuPowerConsumptionValue', cpuPower);
         // Опционально: можно вернуть оба значения
         // return { totalPower, cpuPower };
-        } catch (error) {
-          console.log('Power control data error', error.message);
-          // В случае ошибки можно закоммитить значения по умолчанию
-          commit('setPowerConsumptionValue', 0);
-          commit('setCpuPowerConsumptionValue', 0);
-        }
+      } catch (error) {
+        console.log('Power control data error', error.message);
+        // В случае ошибки можно закоммитить значения по умолчанию
+        commit('setPowerConsumptionValue', 0);
+        commit('setCpuPowerConsumptionValue', 0);
+      }
     },
     async getPowerControl_legacy({ dispatch, commit }) {
       const collection = await dispatch('getChassisCollection');
