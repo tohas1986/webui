@@ -17,6 +17,21 @@
       </b-col>
     </b-row>
 
+    <b-row>
+      <b-col sm="8" md="6" xl="12">
+        <dl>
+          <dt>{{ $t('pagePower.powerConsumption') }}</dt>
+          <dd>
+            {{
+              powerConsumptionValue
+                ? `${powerConsumptionValue} W`
+                : $t('global.status.notAvailable')
+            }}
+          </dd>
+        </dl>
+      </b-col>
+    </b-row>
+
     <b-form @submit.prevent="submitForm">
       <b-form-group :disabled="loading">
         <b-row>
