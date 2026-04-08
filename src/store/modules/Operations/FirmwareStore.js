@@ -154,7 +154,7 @@ const FirmwareStore = {
         })
         .catch((error) => console.log(error));
     },
-    setApplyTimeImmediate({ commit }) {
+    /*setApplyTimeImmediate({ commit }) {
       const data = {
         HttpPushUriOptions: {
           HttpPushUriApplyTime: {
@@ -166,12 +166,24 @@ const FirmwareStore = {
         .patch('/redfish/v1/UpdateService', data)
         .then(() => commit('setApplyTime', 'Immediate'))
         .catch((error) => console.log(error));
+    },*/
+    setApplyTimeImmediate({ commit }, delayUpdate = false) {
+      const applyTimeValue = delayUpdate ? 'OnReset' : 'Immediate';
+      const data = {
+        HttpPushUriOptions: {
+          HttpPushUriApplyTime: {
+            ApplyTime: applyTimeValue,
+          },
+        },
+      };
+      return api
+      .patch('/redfish/v1/UpdateService', data)
+      .then(() => commit('setApplyTime', applyTimeValue))
+      .catch((error) => console.log(error));
     },
-    async uploadFirmware({ state, dispatch }, image) {
-      if (state.applyTime !== 'Immediate') {
-        // ApplyTime must be set to Immediate before making
-        // request to update firmware
-        await dispatch('setApplyTimeImmediate');
+    async uploadFirmware({ state, dispatch }, { image, delayUpdate = false }) {
+      if (state.applyTime !== (delayUpdate ? 'OnReset' : 'Immediate')) {
+        await dispatch('setApplyTimeImmediate', delayUpdate);
       }
       return await api
         .post(state.httpPushUri, image, {
@@ -183,15 +195,14 @@ const FirmwareStore = {
           //throw new Error(i18n.t('pageFirmware.toast.biosUpdateMessage'))
         });
     },
-    async uploadFirmwareTFTP({ state, dispatch }, fileAddress) {
+    async uploadFirmwareTFTP({ state, dispatch }, { fileAddress, delayUpdate = false }) {
       const data = {
         TransferProtocol: 'TFTP',
         ImageURI: fileAddress,
       };
-      if (state.applyTime !== 'Immediate') {
-        // ApplyTime must be set to Immediate before making
-        // request to update firmware
-        await dispatch('setApplyTimeImmediate');
+      const targetApplyTime = delayUpdate ? 'OnReset' : 'Immediate';
+      if (state.applyTime !== targetApplyTime) {
+        await dispatch('setApplyTimeImmediate', delayUpdate);
       }
       return await api
         .post(
