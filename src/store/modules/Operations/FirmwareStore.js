@@ -177,9 +177,9 @@ const FirmwareStore = {
         },
       };
       return api
-      .patch('/redfish/v1/UpdateService', data)
-      .then(() => commit('setApplyTime', applyTimeValue))
-      .catch((error) => console.log(error));
+        .patch('/redfish/v1/UpdateService', data)
+        .then(() => commit('setApplyTime', applyTimeValue))
+        .catch((error) => console.log(error));
     },
     async uploadFirmware({ state, dispatch }, { image, delayUpdate = false }) {
       if (state.applyTime !== (delayUpdate ? 'OnReset' : 'Immediate')) {
@@ -195,7 +195,10 @@ const FirmwareStore = {
           //throw new Error(i18n.t('pageFirmware.toast.biosUpdateMessage'))
         });
     },
-    async uploadFirmwareTFTP({ state, dispatch }, { fileAddress, delayUpdate = false }) {
+    async uploadFirmwareTFTP(
+      { state, dispatch },
+       { fileAddress, delayUpdate = false },
+         ) {
       const data = {
         TransferProtocol: 'TFTP',
         ImageURI: fileAddress,
