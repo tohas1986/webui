@@ -10,7 +10,7 @@ import CertificatesStore from './modules/SecurityAndAccess/CertificatesStore';
 import FirmwareStore from './modules/Operations/FirmwareStore';
 import BootSettingsStore from './modules/Operations/BootSettingsStore';
 import ControlStore from './modules/Operations/ControlStore';
-import PowerControlStore from './modules/ResourceManagement/PowerControlStore';
+//import PowerControlStore from './modules/ResourceManagement/PowerControlStore';
 import PowerPolicyStore from './modules/Settings/PowerPolicyStore';
 import NetworkStore from './modules/Settings/NetworkStore';
 import EventLogStore from './modules/Logs/EventLogStore';
@@ -50,7 +50,7 @@ export default new Vuex.Store({
     firmware: FirmwareStore,
     serverBootSettings: BootSettingsStore,
     controls: ControlStore,
-    powerControl: PowerControlStore,
+    //powerControl: PowerControlStore,
     powerPolicy: PowerPolicyStore,
     powerSupply: PowerSupplyStore,
     network: NetworkStore,
