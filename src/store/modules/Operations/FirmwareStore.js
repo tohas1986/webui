@@ -197,8 +197,8 @@ const FirmwareStore = {
     },
     async uploadFirmwareTFTP(
       { state, dispatch },
-       { fileAddress, delayUpdate = false },
-         ) {
+      { fileAddress, delayUpdate = false },
+    ) {
       const data = {
         TransferProtocol: 'TFTP',
         ImageURI: fileAddress,
