@@ -852,10 +852,10 @@
   },
   "pagePower": {
     "description": "Set a power cap to keep power consumption at or below the specified value in watts",
-    "powerCapLabel": "Power cap value (in watts)",
+    "powerCapLabel": "CPU power cap value (in watts)",
     "powerCapLabelTextInfo": " Value must be between %{min} and %{max}",
     "powerCapSettingData": "Apply power cap",
-    "powerCapSettingLabel": "Power cap setting",
+    "powerCapSettingLabel": "CPU Power cap setting",
     "powerConsumption": "Current power consumption",
     "powerCpuConsumption": "Current CPU power consumption",
     "serverPowCapSetting": "Server power cap setting"

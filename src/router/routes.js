@@ -30,7 +30,7 @@ import ServerPowerOperations from '@/views/Operations/ServerPowerOperations';
 import Certificates from '@/views/SecurityAndAccess/Certificates';
 import VirtualMedia from '@/views/Operations/VirtualMedia';
 import ThermalControl from '@/views/Settings/ThermalControl';
-import Power from '@/views/ResourceManagement/Power';
+//import Power from '@/views/ResourceManagement/Power';
 import i18n from '@/i18n';
 
 const routes = [
@@ -241,14 +241,14 @@ const routes = [
           title: i18n.t('appPageTitle.powerRestorePolicy'),
         },
       },
-      {
-        path: '/resource-management/power',
-        name: 'power',
-        component: Power,
-        meta: {
-          title: i18n.t('appPageTitle.power'),
-        },
-      },
+      //{
+      //  path: '/resource-management/power',
+      //  name: 'power',
+      //  component: Power,
+      //  meta: {
+      //    title: i18n.t('appPageTitle.power'),
+      //  },
+      //},
       {
         path: '/operations/reboot-bmc',
         name: 'reboot-bmc',
