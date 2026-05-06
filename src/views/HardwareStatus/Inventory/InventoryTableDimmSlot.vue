@@ -80,11 +80,10 @@
                 <dt>{{ $t('pageInventory.table.serialNumber') }}:</dt>
                 <dd>{{ dataFormatter(item.serialNumber) }}</dd>
               </dl>
-              <dl>
-                <!-- Spare Part Number -->
+              <!--<dl>
                 <dt>{{ $t('pageInventory.table.sparePartNumber') }}:</dt>
                 <dd>{{ dataFormatter(item.sparePartNumber) }}</dd>
-              </dl>
+              </dl>-->
               <dl>
                 <!-- Model -->
                 <dt>{{ $t('pageInventory.table.model') }}:</dt>
@@ -102,11 +101,10 @@
                 <dt>{{ $t('pageInventory.table.statusState') }}:</dt>
                 <dd>{{ dataFormatter(item.statusState) }}</dd>
               </dl>
-              <dl>
-                <!-- Enabled-->
+              <!--<dl>
                 <dt>{{ $t('pageInventory.table.enabled') }}:</dt>
                 <dd>{{ dataFormatter(item.enabled) }}</dd>
-              </dl>
+              </dl>-->
             </b-col>
           </b-row>
           <div class="section-divider mb-3 mt-3"></div>
@@ -122,23 +120,20 @@
                 <dt>{{ $t('pageInventory.table.memoryType') }}:</dt>
                 <dd>{{ dataFormatter(item.memoryType) }}</dd>
               </dl>
-              <dl>
-                <!-- Base Module Type -->
+              <!--<dl>
                 <dt>{{ $t('pageInventory.table.baseModuleType') }}:</dt>
                 <dd>{{ dataFormatter(item.baseModuleType) }}</dd>
-              </dl>
-              <dl>
-                <!-- Capacity MiB -->
+              </dl>-->
+              <!--<dl>
                 <dt>{{ $t('pageInventory.table.capacityMiB') }}:</dt>
                 <dd>{{ dataFormatter(item.capacityMiB) }}</dd>
-              </dl>
+              </dl>-->
             </b-col>
             <b-col sm="6" xl="6">
-              <dl>
-                <!-- Bus Width Bits -->
+              <!--<dl>
                 <dt>{{ $t('pageInventory.table.busWidthBits') }}:</dt>
                 <dd>{{ dataFormatter(item.busWidthBits) }}</dd>
-              </dl>
+              </dl>-->
               <dl>
                 <!-- Data Width Bits -->
                 <dt>{{ $t('pageInventory.table.dataWidthBits') }}:</dt>
