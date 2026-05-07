@@ -488,6 +488,7 @@
       "totalThreads": "Total threads",
       "uuid": "UUID",
       "total": "Total",
+      "vendor": "Vendor",
       "version": "Version"
     },
     "toast": {

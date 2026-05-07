@@ -28,6 +28,7 @@ const MemoryStore = {
           MemoryType,
           MemorySize,
           LocationIndicatorActive,
+          Vendor,
           Location,
         } = data;
         return {
@@ -42,6 +43,7 @@ const MemoryStore = {
           partNumber: PartNumber,
           serialNumber: SerialNumber,
           statusState: Status.State,
+          vendor: Vendor,
           sparePartNumber: SparePartNumber,
           description: Description,
           memoryType: MemoryType,

@@ -86,8 +86,8 @@
               </dl>-->
               <dl>
                 <!-- Model -->
-                <dt>{{ $t('pageInventory.table.model') }}:</dt>
-                <dd>{{ dataFormatter(item.model) }}</dd>
+                <dt>{{ $t('pageInventory.table.vendor') }}:</dt>
+                <dd>{{ dataFormatter(item.vendor) }}</dd>
               </dl>
             </b-col>
             <b-col sm="6" xl="6">

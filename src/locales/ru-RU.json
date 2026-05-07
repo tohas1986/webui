@@ -488,6 +488,7 @@
       "totalThreads": "Общее количество потоков",
       "uuid": "UUID",
       "total": "Всего",
+      "vendor": "Производитель",
       "version": "Версия"
     },
     "toast": {
